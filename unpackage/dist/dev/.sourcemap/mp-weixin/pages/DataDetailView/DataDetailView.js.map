@@ -1,0 +1,1 @@
+{"version":3,"file":"DataDetailView.js","sources":["../../../Application/HBuilderX/plugins/uniapp-cli-vite/uniPage:/cGFnZXMvRGF0YURldGFpbFZpZXcvRGF0YURldGFpbFZpZXcudnVl"],"sourcesContent":["import MiniProgramPage from 'D:/PRJ/uniapp/class_times_record/pages/DataDetailView/DataDetailView.vue'\nwx.createPage(MiniProgramPage)"],"names":[],"mappings":";;;;;;;AACA,GAAG,WAAW,eAAe;"}
