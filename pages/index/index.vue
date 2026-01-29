@@ -1,25 +1,31 @@
 <template>
 	<view class="content">
-		<view class="data-menu">
-
-		</view>
 		<view class="top">
-			<uni-search-bar
-				v-model="searchText"
-				placeholder="请输入搜索内容"
-				clearable
-				@search="handleSearch"
-				class="search-bar"
-				radius="50"
-			>
-			</uni-search-bar>
+			<view class="search-bar-line">
+				<uni-search-bar
+					v-model="searchText"
+					placeholder="请输入搜索内容"
+					clearable
+					cancelButton="false"
+					@search="handleSearch"
+					class="search-bar"
+					radius="50"
+				>
+				</uni-search-bar>
+			</view>
+			<view class="data-tabs">
+				<up-tabs :list="dataTabsList" class="data-menu-tabs"></up-tabs>
+				 </view>
 		</view>
 		<view class="bottom">
-			<uni-card v-for="item in dataList" :key="item.id" class="data-card" @click="handleClick(item)">
+			<uni-card v-for="item in dataList" :key="item.id" class="data-card">
 				<view>
 					<slot name="title" class="title">
 						<div class="card-title">
-							<div class="card-title-left">
+							<div
+								class="card-title-left"
+								@click="handleClick(item, dataDetailMap)"
+							>
 								<uni-icons
 									type="person-filled"
 									size="30"
@@ -32,20 +38,29 @@
 									type="more"
 									size="30"
 									color="#92dcd3"
-									@click="handleMore(item)"
+									class="more-icon"
+									@click.stop="handleMore(item)"
 								></uni-icons>
 							</div>
 						</div>
 					</slot>
-					<div class="card-content">课程名称：{{ item.courseName }}</div>
-					<div class="card-content">课程总次数：{{ item.courseTotalNum }}</div>
-					<div class="card-content">课程剩余次数：{{ item.courseLeftNum }}</div>
-					<div class="card-content">
-						最后上课时间：{{ item.courseLastTime }}
+					<div
+						v-for="(value, key) in dataIndexDetailMap"
+						:key="key"
+						class="card-content"
+						@click="handleClick(item, dataDetailMap)"
+					>
+						{{ value }}：{{ item[key] }}
 					</div>
-					<div class="card-content">备注：{{ item.remark }}</div>
 				</view>
 			</uni-card>
+		</view>
+		<view class="fab">
+			<uni-icons
+				type="plusempty"
+				size="30"
+				color="#fff"
+			></uni-icons>
 		</view>
 	</view>
 </template>
@@ -64,6 +79,48 @@
 						name: "删除",
 					},
 				],
+				dataTabsList: [
+					{
+						name: "全部",
+					},
+					{
+						name: "学习中",
+					},
+					{
+						name: "已完成",
+					},
+					
+				],
+				fabContent: [
+					{
+						iconPath: "../../static/icon/plus.png",
+						selectedIconPath: "../../static/icon/plus.png",
+						text: "添加课程",
+						active: false,
+					},
+					{
+						iconPath: "../../static/icon/plus.png",
+						selectedIconPath: "../../static/icon/plus.png",
+						text: "添加记录",
+						active: false,
+					},
+				],
+				dataIndexDetailMap: {
+					name: "姓名",
+					courseName: "课程名称",
+					courseTotalNum: "课程总次数",
+					courseLeftNum: "课程剩余次数",
+					courseLastTime: "最后上课时间",
+					remark: "备注",
+				},
+				dataDetailMap: {
+					name: "姓名",
+					courseName: "课程名称",
+					courseTotalNum: "课程总次数",
+					courseLeftNum: "课程剩余次数",
+					courseLastTime: "最后上课时间",
+					remark: "备注",
+				},
 				dataList: [
 					{
 						id: 1,
@@ -104,7 +161,9 @@
 				],
 			};
 		},
-		onLoad() {},
+		onLoad() {
+			console.log(uni.$u.config.v);
+		},
 		methods: {
 			handleSearch() {
 				console.log(this.searchText);
@@ -127,10 +186,14 @@
 					},
 				});
 			},
-			handleClick(item) {
+			handleClick(item, detailMap) {
+				item = {
+					detailMap: detailMap,
+					data: item,
+				};
 				// console.log(item);
 				uni.navigateTo({
-					url: "/pages/detail/detail?id=" + item.id,
+					url: "/pages/detail/detail?detail=" + JSON.stringify(item),
 				});
 			},
 		},
@@ -149,22 +212,52 @@
 		align-items: center;
 		justify-content: flex-start;
 	}
+	.fab {
+		position: fixed;
+		bottom: 5%;
+		right: 5%;
+		width: 65px;
+		height: 65px;
+		z-index: 3;
+		border-radius: 50%;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: #92dcd3;
+		color: #fff;
+		font-size: 20px;
+	}
+	.fab:active {
+		background-color: #7ccac0;
+	}
 	.top {
 		width: 100%;
-		height: 10%;
+		height: 15%;
+		top: -5%;
 		display: flex;
 		flex-wrap: nowrap;
 		flex-direction: column;
 		align-content: center;
 		align-items: center;
 		justify-content: center;
+		position: fixed;
+		background-color: #92dcd3;
+		z-index: 2;
+	}
+	.search-bar-line {
+		width: 100%;
+		background-color: #92dcd3;
 	}
 	.search-bar {
-		width: 80%;
+		width: 70%;
+		height: 50px;
+		background-color: #92dcd3;
 	}
+
 	.bottom {
 		width: 100%;
-		margin-top: 10%;
+		margin-top: 20%;
 		padding-top: 20px;
 		background-color: #fff;
 		border-radius: 20px;
@@ -211,5 +304,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;
+	}
+	.more-icon {
+		z-index: 1;
 	}
 </style>

@@ -9,12 +9,12 @@
 		{
 			"path": "pages/detail/detail",
 			"style": {
-				"navigationBarTitleText": "课时详情"
+				"navigationBarTitleText": "课程详情"
 			}
 		}
 	],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
+		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "课时管理",
 		"navigationBarBackgroundColor": "#92dcd3",
 		"backgroundColor": "#92dcd3"
