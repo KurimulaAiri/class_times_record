@@ -15,7 +15,7 @@
 			</view>
 			<view class="data-tabs">
 				<up-tabs :list="dataTabsList" class="data-menu-tabs"></up-tabs>
-				 </view>
+			</view>
 		</view>
 		<view class="bottom">
 			<uni-card v-for="item in dataList" :key="item.id" class="data-card">
@@ -56,148 +56,130 @@
 			</uni-card>
 		</view>
 		<view class="fab">
-			<uni-icons
-				type="plusempty"
-				size="30"
-				color="#fff"
-			></uni-icons>
+			<uni-icons type="plusempty" size="30" color="#fff"></uni-icons>
 		</view>
 	</view>
 </template>
 
-<script>
-	export default {
-		data() {
-			return {
-				searchText: "",
-				selectData: {},
-				dataMenuList: [
-					{
-						name: "编辑",
-					},
-					{
-						name: "删除",
-					},
-				],
-				dataTabsList: [
-					{
-						name: "全部",
-					},
-					{
-						name: "学习中",
-					},
-					{
-						name: "已完成",
-					},
-					
-				],
-				fabContent: [
-					{
-						iconPath: "../../static/icon/plus.png",
-						selectedIconPath: "../../static/icon/plus.png",
-						text: "添加课程",
-						active: false,
-					},
-					{
-						iconPath: "../../static/icon/plus.png",
-						selectedIconPath: "../../static/icon/plus.png",
-						text: "添加记录",
-						active: false,
-					},
-				],
-				dataIndexDetailMap: {
-					name: "姓名",
-					courseName: "课程名称",
-					courseTotalNum: "课程总次数",
-					courseLeftNum: "课程剩余次数",
-					courseLastTime: "最后上课时间",
-					remark: "备注",
-				},
-				dataDetailMap: {
-					name: "姓名",
-					courseName: "课程名称",
-					courseTotalNum: "课程总次数",
-					courseLeftNum: "课程剩余次数",
-					courseLastTime: "最后上课时间",
-					remark: "备注",
-				},
-				dataList: [
-					{
-						id: 1,
-						name: "张三",
-						courseName: "1",
-						courseTotalNum: 10,
-						courseLeftNum: 5,
-						courseLastTime: "2023-01-01 00:00:00",
-						remark: "无",
-					},
-					{
-						id: 2,
-						name: "李四",
-						courseName: "2",
-						courseTotalNum: 10,
-						courseLeftNum: 5,
-						courseLastTime: "2023-01-01 00:00:00",
-						remark: "无",
-					},
-					{
-						id: 3,
-						name: "王五",
-						courseName: "3",
-						courseTotalNum: 10,
-						courseLeftNum: 5,
-						courseLastTime: "2023-01-01 00:00:00",
-						remark: "无",
-					},
-					{
-						id: 4,
-						name: "赵六",
-						courseName: "4",
-						courseTotalNum: 10,
-						courseLeftNum: 5,
-						courseLastTime: "2023-01-01 00:00:00",
-						remark: "无",
-					},
-				],
-			};
+<script setup>
+	import { onLoad } from "@dcloudio/uni-app";
+	import { ref } from "vue";
+
+	// 响应式数据（替代原 data 中的内容）
+	const searchText = ref("");
+	const selectData = ref({});
+	const dataMenuList = ref([
+		{
+			name: "编辑",
 		},
-		onLoad() {
-			console.log(uni.$u.config.v);
+		{
+			name: "删除",
 		},
-		methods: {
-			handleSearch() {
-				console.log(this.searchText);
-			},
-			handleMore(item) {
-				// console.log(item);
-				this.selectData = item;
-				uni.showActionSheet({
-					itemList: this.dataMenuList.map((item) => item.name),
-					success: (res) => {
-						// console.log(res);
-						switch (res.tapIndex) {
-							case 0:
-								console.log("编辑");
-								break;
-							case 1:
-								console.log("删除");
-								break;
-						}
-					},
-				});
-			},
-			handleClick(item, detailMap) {
-				item = {
-					detailMap: detailMap,
-					data: item,
-				};
-				// console.log(item);
-				uni.navigateTo({
-					url: "/pages/detail/detail?detail=" + JSON.stringify(item),
-				});
-			},
+	]);
+	const dataTabsList = ref([
+		{
+			name: "全部",
 		},
+		{
+			name: "学习中",
+		},
+		{
+			name: "已完成",
+		},
+	]);
+	const dataIndexDetailMap = ref({
+		name: "姓名",
+		courseName: "课程名称",
+		courseTotalNum: "课程总次数",
+		courseLeftNum: "课程剩余次数",
+		courseLastTime: "最后上课时间",
+		remark: "备注",
+	});
+	const dataDetailMap = ref({
+		name: "姓名",
+		courseName: "课程名称",
+		courseTotalNum: "课程总次数",
+		courseLeftNum: "课程剩余次数",
+		courseLastTime: "最后上课时间",
+		remark: "备注",
+	});
+	const dataList = ref([
+		{
+			id: 1,
+			name: "张三",
+			courseName: "1",
+			courseTotalNum: 10,
+			courseLeftNum: 5,
+			courseLastTime: "2023-01-01 00:00:00",
+			remark: "无",
+		},
+		{
+			id: 2,
+			name: "李四",
+			courseName: "2",
+			courseTotalNum: 10,
+			courseLeftNum: 5,
+			courseLastTime: "2023-01-01 00:00:00",
+			remark: "无",
+		},
+		{
+			id: 3,
+			name: "王五",
+			courseName: "3",
+			courseTotalNum: 10,
+			courseLeftNum: 5,
+			courseLastTime: "2023-01-01 00:00:00",
+			remark: "无",
+		},
+		{
+			id: 4,
+			name: "赵六",
+			courseName: "4",
+			courseTotalNum: 10,
+			courseLeftNum: 5,
+			courseLastTime: "2023-01-01 00:00:00",
+			remark: "无",
+		},
+	]);
+
+	// 生命周期函数（替代原 onLoad）
+	onLoad(() => {
+		// console.log(uni.$u.config.v);
+	});
+
+	// 方法定义（替代原 methods 中的内容）
+	const handleSearch = () => {
+		console.log(searchText.value); // Vue3 响应式数据需通过 .value 访问
 	};
+
+	const handleMore = (item) => {
+		selectData.value = item; // 赋值需用 .value
+		uni.showActionSheet({
+			itemList: dataMenuList.value.map((item) => item.name),
+			success: (res) => {
+				switch (res.tapIndex) {
+					case 0:
+						console.log("编辑");
+						break;
+					case 1:
+						console.log("删除");
+						break;
+				}
+			},
+		});
+	};
+
+	const handleClick = (item, detailMap) => {
+		const navItem = {
+			detailMap: detailMap,
+			data: item,
+		};
+		uni.navigateTo({
+			url: "/pages/detail/detail?detail=" + JSON.stringify(navItem),
+		});
+	};
+
+	// 如果模板中需要使用这些方法，需暴露出去（setup 语法自动暴露，无需 return，仅需确保函数定义在 setup 内）
 </script>
 
 <style lang="scss">
@@ -230,6 +212,9 @@
 	}
 	.fab:active {
 		background-color: #7ccac0;
+		transform: scale(0.95);
+		transition: transform 0.3s ease-in-out;
+		transition: background-color 0.3s ease-in-out;
 	}
 	.top {
 		width: 100%;

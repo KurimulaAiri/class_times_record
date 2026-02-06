@@ -45,11 +45,5 @@
   },
   "author": "KurimulaAiri",
   "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "uview-plus": "^3.6.29"
-  },
-  "devDependencies": {
-    "@dcloudio/hbuilderx-cli": "^1.2.0"
-  }
+  "description": ""
 }

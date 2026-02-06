@@ -11,6 +11,18 @@
 			"style": {
 				"navigationBarTitleText": "课程详情"
 			}
+		},
+		{
+			"path": "pages/edit/edit",
+			"style": {
+				"navigationBarTitleText": "编辑信息"
+			}
+		},
+		{
+			"path": "pages/adjust/adjust",
+			"style": {
+				"navigationBarTitleText": "调整课时"
+			}
 		}
 	],
 	"globalStyle": {

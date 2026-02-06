@@ -16,6 +16,22 @@
 				</view>
 			</uni-card>
 		</view>
+		<view class="bottom">
+			<view class="button-group">
+				<view class="button" @click="jump('adjust')">
+					<uni-icons type="edit" size="20" color="#fff"></uni-icons>
+					调整课时
+				</view>
+				<view class="button" @click="jump('edit')">
+					<uni-icons type="edit" size="20" color="#fff"></uni-icons>
+					编辑信息
+				</view>
+				<view class="button" @click="jump('share')">
+					<uni-icons type="share" size="20" color="#fff"></uni-icons>
+					分享
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -33,6 +49,11 @@
 		console.log("data", selectData.value);
 		console.log("detailMap", dataDetailMap.value);
 	});
+	const jump = (type) => {
+		uni.navigateTo({
+			url: "/pages/" + type + "/" + type + "?detail=" + JSON.stringify(selectData.value),
+		});
+	};
 </script>
 
 <style lang="scss">
@@ -43,7 +64,7 @@
 		flex-direction: column;
 		align-content: flex-start;
 		align-items: center;
-		justify-content: flex-start;
+		justify-content: space-around;
 		background-color: #92dcd3;
 	}
 	.top {
@@ -77,5 +98,36 @@
 		margin-top: 10%;
 		padding-top: 20px;
 		border-radius: 20px;
+	}
+	.bottom {
+		margin-top: 10%;
+		width: 95%;
+	}
+	.button-group {
+		display: flex;
+		flex-direction: row;
+		align-content: center;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.button {
+		display: flex;
+		flex-direction: row;
+		align-content: center;
+		align-items: center;
+		justify-content: center;
+		width: 30%;
+		height: 40px;
+		border-radius: 20px;
+		background-color: #70a9a2;
+		color: #fff;
+		font-size: 14px;
+
+	}
+	.button:active {
+		transform: scale(0.95);
+		transition: transform 0.3s ease-in-out;
+		transition: background-color 0.3s ease-in-out;
+		background-color: #4e7571;
 	}
 </style>
