@@ -18,42 +18,47 @@
 			</view>
 		</view>
 		<view class="bottom">
-			<uni-card v-for="item in dataList" :key="item.id" class="data-card">
-				<view>
-					<slot name="title" class="title">
-						<div class="card-title">
-							<div
-								class="card-title-left"
-								@click="handleClick(item, dataDetailMap)"
-							>
-								<uni-icons
-									type="person-filled"
-									size="30"
-									color="#92dcd3"
-								></uni-icons>
-								<div class="name">{{ item.name }}</div>
+			<view v-if="dataList.length > 0">
+				<uni-card v-for="item in dataList" :key="item.id" class="data-card">
+					<view>
+						<slot name="title" class="title">
+							<div class="card-title">
+								<div
+									class="card-title-left"
+									@click="handleClick(item, dataDetailMap)"
+								>
+									<uni-icons
+										type="person-filled"
+										size="30"
+										color="#92dcd3"
+									></uni-icons>
+									<div class="name">{{ item.name }}</div>
+								</div>
+								<div class="card-title-right">
+									<uni-icons
+										type="more"
+										size="30"
+										color="#92dcd3"
+										class="more-icon"
+										@click.stop="handleMore(item)"
+									></uni-icons>
+								</div>
 							</div>
-							<div class="card-title-right">
-								<uni-icons
-									type="more"
-									size="30"
-									color="#92dcd3"
-									class="more-icon"
-									@click.stop="handleMore(item)"
-								></uni-icons>
-							</div>
+						</slot>
+						<div
+							v-for="(value, key) in dataIndexDetailMap"
+							:key="key"
+							class="card-content"
+							@click="handleClick(item, dataDetailMap)"
+						>
+							{{ value }}：{{ item[key] }}
 						</div>
-					</slot>
-					<div
-						v-for="(value, key) in dataIndexDetailMap"
-						:key="key"
-						class="card-content"
-						@click="handleClick(item, dataDetailMap)"
-					>
-						{{ value }}：{{ item[key] }}
-					</div>
-				</view>
-			</uni-card>
+					</view>
+				</uni-card>
+			</view>
+			<view v-else>
+				<view class="no-data">暂无数据</view>
+			</view>
 		</view>
 		<view class="fab">
 			<uni-icons type="plusempty" size="30" color="#fff"></uni-icons>
@@ -64,6 +69,7 @@
 <script setup>
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
+	import { post } from "../../utils/request";
 
 	// 响应式数据（替代原 data 中的内容）
 	const searchText = ref("");
@@ -144,7 +150,24 @@
 
 	// 生命周期函数（替代原 onLoad）
 	onLoad(() => {
-		// console.log(uni.$u.config.v);
+		// 在 login.vue 或 App.vue 中
+		uni.login({
+			provider: "weixin",
+			success: (res) => {
+				if (res.code) {
+					// 将 code 发送到你的后端服务器
+					post("/auth/login", {
+						code: res.code,
+					}).then((res) => {
+						console.log("登录响应:", res);
+						// 缓存 token
+						// res 现在就是你后端 data 里的内容
+						uni.setStorageSync("token", res.token);
+						console.log("Token 已缓存");
+					});
+				}
+			},
+		});
 	});
 
 	// 方法定义（替代原 methods 中的内容）
@@ -193,6 +216,13 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: flex-start;
+	}
+	.no-data {
+		font-size: 20px;
+		color: #666;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 	.fab {
 		position: fixed;

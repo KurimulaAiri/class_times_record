@@ -1,8 +1,21 @@
 // 基础域名（根据环境切换，如开发/生产环境）
-const baseUrl = process.env.NODE_ENV === 'development' 
-  ? 'localhost:9999'  // 开发环境
-  : 'https://api.xxx.com';     // 生产环境
-
+let baseUrl;
+console.log("process.env.NODE_ENV:", process.env.NODE_ENV);
+switch (process.env.NODE_ENV) {
+	case "development":
+		// baseUrl = "https://api.kurimula-airi.top"; // 生产环境
+		baseUrl = "http://localhost:9999"; // 开发环境
+		break;
+	case "production":
+		baseUrl = "https://api.kurimula-airi.top"; // 生产环境
+		break;
+	case "trial":
+		baseUrl = "https://api.kurimula-airi.top"; // 试用环境
+		break;
+	default:
+		baseUrl = "https://api.kurimula-airi.top"; // 默认生产环境
+		break;
+}
 // 请求超时时间（毫秒）
 const timeout = 10000;
 
@@ -17,129 +30,165 @@ const timeout = 10000;
  * @returns {Promise} 返回请求结果
  */
 const request = (options) => {
-  // 解构参数，设置默认值
-  const {
-    url,
-    method = 'GET',
-    data = {},
-    header = {},
-    loading = true
-  } = options;
+	// 解构参数，设置默认值
+	const {
+		url,
+		method = "GET",
+		data = {},
+		header = {},
+		loading = true,
+	} = options;
 
-  // 显示加载中（可自定义样式）
-  if (loading) {
-    uni.showLoading({
-      title: '加载中...',
-      mask: true // 防止点击穿透
-    });
-  }
+	// 显示加载中（可自定义样式）
+	if (loading) {
+		uni.showLoading({
+			title: "加载中...",
+			mask: true, // 防止点击穿透
+		});
+	}
 
-  // 拼接完整接口地址
-  const fullUrl = baseUrl + url;
+	// 拼接完整接口地址
+	// 2. 检查 url 字符串逻辑
+	// 确保 url 是以 / 开头的，防止拼接出 localhost:9999course_record/get
+	const safeUrl = url.startsWith("/") ? url : "/" + url;
+	const fullUrl = baseUrl + safeUrl;
 
-  // 返回Promise，统一处理请求
-  return new Promise((resolve, reject) => {
-    uni.request({
-      url: fullUrl,
-      method,
-      data,
-      header: {
-        // 默认请求头（可根据后端要求调整，如JSON格式、token）
-        'Content-Type': 'application/json',
-        'token': uni.getStorageSync('token') || '', // 从本地缓存取token
-        ...header // 合并自定义请求头（优先级更高）
-      },
-      timeout,
-      // 请求成功回调
-      success: (res) => {
-        // 响应拦截：统一处理状态码
-        const { statusCode, data } = res;
-        
-        // 200表示请求成功（具体状态码根据后端约定调整）
-        if (statusCode === 200) {
-          // 后端自定义状态码（示例：code=0表示业务成功）
-          if (data.code === 0) {
-            resolve(data.data); // 只返回核心数据，简化业务层处理
-          } else {
-            // 业务错误（如参数错误、token过期）
-            uni.showToast({
-              title: data.msg || '请求失败',
-              icon: 'none'
-            });
-            reject(data); // 抛出业务错误
-          }
-        } else {
-          // HTTP状态码错误（如404/500）
-          uni.showToast({
-            title: `请求错误：${statusCode}`,
-            icon: 'none'
-          });
-          reject({
-            code: statusCode,
-            msg: `HTTP错误：${statusCode}`
-          });
-        }
-      },
-      // 请求失败回调（网络错误、超时等）
-      fail: (err) => {
-        let errMsg = '网络异常，请检查网络';
-        if (err.errMsg.includes('timeout')) {
-          errMsg = '请求超时，请稍后重试';
-        }
-        uni.showToast({
-          title: errMsg,
-          icon: 'none'
-        });
-        reject(err);
-      },
-      // 无论成功失败，最终执行（隐藏加载中）
-      complete: () => {
-        if (loading) {
-          uni.hideLoading();
-        }
-      }
-    });
-  });
+	console.log("请求URL:", fullUrl);
+
+	// 返回Promise，统一处理请求
+	return new Promise((resolve, reject) => {
+		uni.request({
+			url: fullUrl,
+			method,
+			data,
+			header: {
+				// 默认请求头（可根据后端要求调整，如JSON格式、token）
+				"Content-Type": "application/json",
+				token: uni.getStorageSync("token") || "", // 从本地缓存取token
+				...header, // 合并自定义请求头（优先级更高）
+			},
+			timeout,
+			// 请求成功回调
+			success: (res) => {
+				// 1. 自动检测响应头是否有新 Token
+				// 注意：微信小程序中 header 的 key 通常是小写
+				const newToken = res.header["new-token"] || res.header["New-Token"];
+				if (newToken) {
+					uni.setStorageSync("token", newToken);
+					console.log("Token 已自动延期");
+				}
+
+				const { statusCode, data } = res;
+
+				switch (statusCode) {
+					case 200:
+						// HTTP 请求成功，开始判断业务逻辑状态码
+						if (data.code === 200) {
+							resolve(data.data); // 业务逻辑成功
+						} else {
+							// 业务逻辑错误（如：参数非法、权限不足但非登录失效）
+							uni.showToast({
+								title: data.message || "业务逻辑错误",
+								icon: "none",
+							});
+							reject(data);
+						}
+						break;
+
+					case 401:
+						// Token 过期或无效
+						uni.removeStorageSync("token");
+						uni.showToast({
+							title: "登录已过期，请重新登录",
+							icon: "none",
+						});
+						// 延迟跳转
+						setTimeout(() => {
+							uni.reLaunch({ url: "/pages/login/login" });
+						}, 1500);
+						reject(res);
+						break;
+
+					case 404:
+						uni.showToast({ title: "资源不存在 (404)", icon: "none" });
+						reject(res);
+						break;
+
+					case 500:
+						uni.showToast({ title: "服务器开小差了 (500)", icon: "none" });
+						reject(res);
+						break;
+
+					default:
+						// 其他 HTTP 错误
+						uni.showToast({
+							title: `系统错误：${statusCode}`,
+							icon: "none",
+						});
+						reject(res);
+						break;
+				}
+			},
+			// 请求失败回调（网络错误、超时等）
+			fail: (err) => {
+				let errMsg = "网络异常，请检查网络";
+				if (err.errMsg.includes("timeout")) {
+					errMsg = "请求超时，请稍后重试";
+				}
+				uni.showToast({
+					title: errMsg,
+					icon: "none",
+				});
+				reject(err);
+			},
+			// 无论成功失败，最终执行（隐藏加载中）
+			complete: () => {
+				if (loading) {
+					uni.hideLoading();
+				}
+			},
+		});
+	});
 };
 
 // 封装GET请求
 export const get = (url, data = {}, options = {}) => {
-  return request({
-    url,
-    method: 'GET',
-    data,
-    ...options
-  });
+	return request({
+		url,
+		method: "GET",
+		data,
+		...options,
+	});
 };
 
 // 封装POST请求
 export const post = (url, data = {}, options = {}) => {
-  return request({
-    url,
-    method: 'POST',
-    data,
-    ...options
-  });
+	return request({
+		url,
+		method: "POST",
+		data,
+		...options,
+	});
 };
 
 // 封装PUT请求（按需扩展）
 export const put = (url, data = {}, options = {}) => {
-  return request({
-    url,
-    method: 'PUT',
-    data,
-    ...options
-  });
+	return request({
+		url,
+		method: "PUT",
+		data,
+		...options,
+	});
 };
 
 // 封装DELETE请求（按需扩展）
 export const del = (url, data = {}, options = {}) => {
-  return request({
-    url,
-    method: 'DELETE',
-    data,
-    ...options
-  });
+	return request({
+		url,
+		method: "DELETE",
+		data,
+		...options,
+	});
 };
 
 // 暴露默认请求方法（如需自定义method时使用）
