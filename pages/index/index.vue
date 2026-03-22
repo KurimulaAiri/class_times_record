@@ -4,17 +4,26 @@
 			<view class="search-bar-line">
 				<uni-search-bar
 					v-model="searchText"
-					placeholder="请输入搜索内容"
+					placeholder="请输入搜索内容(姓名、课程名称、备注)"
 					clearable
 					cancelButton="false"
 					@search="handleSearch"
+					@confirm="handleSearch"
 					class="search-bar"
 					radius="50"
 				>
 				</uni-search-bar>
 			</view>
 			<view class="data-tabs">
-				<up-tabs :list="dataTabsList" class="data-menu-tabs"></up-tabs>
+				<view
+					class="tab-item"
+					v-for="(item, index) in dataTabsList"
+					:key="index"
+					@click="handleTabClick(index)"
+					:class="{ active: currentTabIndex === index }"
+				>
+					<view class="tab-text">{{ item.name }}</view>
+				</view>
 			</view>
 		</view>
 		<view class="bottom">
@@ -33,7 +42,8 @@
 										size="30"
 										color="#92dcd3"
 									></uni-icons>
-									<div class="name">{{ item.name }}</div>
+									<div class="name">{{ item.stuName }}</div>
+									<div class="status">{{ item.courseStatus === 1 ? "" : "已完成" }}</div>
 								</div>
 								<div class="card-title-right">
 									<uni-icons
@@ -54,7 +64,7 @@
 						>
 							{{ value }}：{{ item[key] === null ? "无记录" : item[key] }}
 						</div>
-						<button class="button" @click="jump('adjust')">计课时</button>
+						<button class="button" @click="jump('adjust', item)">计课时</button>
 					</view>
 				</uni-card>
 			</view>
@@ -82,6 +92,9 @@
 
 	// 响应式数据（替代原 data 中的内容）
 	const searchText = ref("");
+
+	// 1. 声明当前选中的索引（tab默认选中第一个）
+	const currentTabIndex = ref(0);
 	const selectData = ref({});
 	const dataMenuList = ref([
 		{
@@ -97,9 +110,11 @@
 		},
 		{
 			name: "学习中",
+			status: 1,
 		},
 		{
 			name: "已完成",
+			status: 2,
 		},
 	]);
 	const dataIndexDetailMap = ref({
@@ -157,7 +172,10 @@
 		},
 	]);
 	const queryDataForm = ref({
-		studentName: "",
+		stuName: "",
+		courseName: "",
+		courseRemark: "",
+		courseStatus: null,
 		currentPage: 1,
 		pageSize: 10,
 	});
@@ -227,8 +245,21 @@
 
 	// 方法定义（替代原 methods 中的内容）
 	const handleSearch = () => {
+		queryDataForm.value.stuName = searchText.value;
+		queryDataForm.value.courseName = searchText.value;
+		queryDataForm.value.courseRemark = searchText.value;
 		getData(true);
 		console.log(searchText.value); // Vue3 响应式数据需通过 .value 访问
+	};
+
+	// 2. 切换 Tab 的方法
+	const handleTabClick = (index) => {
+		currentTabIndex.value = index;
+		// 这里可以根据 index 过滤数据或重新请求 getData(true)
+		// 例如：queryDataForm.value.status = dataTabsList.value[index].status || null;
+		queryDataForm.value.courseStatus = dataTabsList.value[index].status || null;
+		console.log("上传数据" ,queryDataForm.value);
+		getData(true);
 	};
 
 	// 处理更多操作
@@ -308,6 +339,67 @@
 		align-items: center;
 		justify-content: space-between;
 	}
+	// 简单的线条出现动画
+	@keyframes lineMove {
+		from {
+			width: 0;
+			opacity: 0;
+		}
+		to {
+			width: 40rpx;
+			opacity: 1;
+		}
+	}
+	.data-tabs {
+		width: 90%;
+		display: flex;
+		color: #dfdfdf;
+		font-size: 15px;
+		align-content: center;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-evenly;
+		position: relative; // 必须开启定位，才能使用 absolute 定位子元素
+		.tab-item {
+			padding: 10px 0;
+			position: relative;
+			transition: all 0.3s;
+
+			.tab-text {
+				color: rgba(255, 255, 255, 0.7); // 未选中时略显透明
+				transition: color 0.3s;
+			}
+
+			// 选中的样式
+			&.active {
+				.tab-text {
+					color: #fff; // 选中后纯白
+					font-weight: bold;
+				}
+
+				// 底部横线
+				&::after {
+					content: "";
+					position: absolute;
+					bottom: 0;
+					left: 50%;
+					transform: translateX(-50%); // 居中
+					width: 40rpx; // 横线宽度
+					height: 4rpx; // 横线粗细
+					background-color: #fff; // 横线颜色
+					border-radius: 4rpx;
+					animation: lineMove 0.3s ease-out; // 切换时的弹性动画
+				}
+			}
+		}
+	}
+
+	.status {
+		margin-left: 10px;
+		font-size: 12px;
+		color: #999;
+	}
+
 	.no-data {
 		height: calc(85vh);
 		bottom: -5vh;
@@ -346,7 +438,6 @@
 	.top {
 		width: 100%;
 		height: 15%;
-		top: -5%;
 		display: flex;
 		flex-wrap: nowrap;
 		flex-direction: column;
@@ -369,7 +460,7 @@
 
 	.bottom {
 		width: 100%;
-		margin-top: 20%;
+		margin-top: 25%;
 		padding-top: 10%;
 		background-color: #fff;
 		border-radius: 20px;
@@ -392,6 +483,7 @@
 		justify-content: space-around;
 		flex-wrap: nowrap;
 		flex-direction: row;
+		gap: 1;
 	}
 	.card-title {
 		font-size: 20px;

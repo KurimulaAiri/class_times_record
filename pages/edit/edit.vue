@@ -7,18 +7,37 @@
 					v-for="(item, index) in dataDetailMap"
 					:key="index"
 				>
-					<view class="form-label">{{ item }}</view>
-					<view class="form-input">
-						<input class="form-input-text" v-model="tempData[index]" />
-					</view>
+					<template v-if="index !== 'courseStatus'">
+						<view class="form-label">{{ item }}</view>
+						<view class="form-input">
+							<input class="form-input-text" v-model="tempData[index]" />
+						</view>
+					</template>
+					<template v-else>
+						<view class="form-label">{{ item }}</view>
+						<view class="form-input">
+							<view class="status-group">
+								<view
+									class="status-btn"
+									:class="{ active: tempData[index] === 1 }"
+									@click="tempData[index] = 1"
+									>未完成</view
+								>
+								<view
+									class="status-btn"
+									:class="{ active: tempData[index] === 2 }"
+									@click="tempData[index] = 2"
+									>已完成</view
+								>
+							</view>
+						</view>
+					</template>
 				</view>
 			</view>
 		</view>
 		<view class="bottom">
 			<view class="button-group">
-				<button class="button" @click="jump('detail', selectData.value)">
-					取消
-				</button>
+				<button class="button" @click="back">取消</button>
 				<button class="button" @click="confirm">确认</button>
 			</view>
 		</view>
@@ -47,11 +66,11 @@
 
 				// 4. 赋值给响应式变量
 				selectData.value = navItem.data;
-				tempData.value = navItem.data;
+				tempData.value = { ...navItem.data }; // 深拷贝，避免直接修改原始数据
 
 				console.log("原始 detailMap:", navItem.detailMap);
 				const { courseLastTimeStr, ...left } = navItem.detailMap;
-				const newDetailMap = {...left, courseStatus: "课程状态"};
+				const newDetailMap = { ...left, courseStatus: "课程状态" };
 				dataDetailMap.value = newDetailMap;
 
 				console.log("解析后的 data:", selectData.value);
@@ -63,6 +82,10 @@
 			console.warn("未接收到名为 data 的跳转参数");
 		}
 	});
+
+	const back = () => {
+		uni.navigateBack();
+	};
 
 	const jump = (type, data) => {
 		// 关键点：使用 encodeURIComponent 包装 JSON 字符串
@@ -134,7 +157,16 @@
 		flex-direction: row;
 		flex-wrap: nowrap;
 		justify-content: space-between;
-		margin-bottom: 20px;
+		margin-bottom: 10px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid #f0f0f0; // 添加浅灰色底边框
+
+		// 最后一项去掉边框，避免多出一道线
+		&:last-child {
+			border-bottom: none;
+			margin-bottom: 0;
+			padding-bottom: 0;
+		}
 	}
 
 	.form-label {
@@ -143,6 +175,7 @@
 	}
 
 	.form-input {
+		width: 50%;
 		font-size: 15px;
 	}
 
@@ -152,6 +185,39 @@
 
 	.bottom {
 		margin-top: 20px;
+	}
+
+	.status-group {
+		display: flex;
+		justify-content: center;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		overflow: hidden;
+		.status-btn {
+			width: 50%;
+			background-color: #f8f8f8;
+			text-align: center;
+			padding: 5px 15px;
+			font-size: 14px;
+			color: #666;
+			transition: all 0.3s;
+
+			// 选中状态的样式
+			&.active {
+				background-color: $theme-color; // 使用你的主题色
+				color: #fff;
+			}
+
+			// 第一个按钮加个右边框区分
+			&:first-child {
+				border-right: 1px solid #ddd;
+			}
+		}
+	}
+
+	.status-btn.active {
+		background-color: $theme-color;
+		color: #fff;
 	}
 
 	.button-group {
@@ -165,5 +231,9 @@
 	.button {
 		width: 100px;
 		margin: 0 10px;
+		font-size: 15px;
+		font-weight: bold;
+		border-radius: 5px;
+		padding: 5px 0;
 	}
 </style>

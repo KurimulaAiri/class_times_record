@@ -3,7 +3,7 @@
 		<view class="top">
 			<uni-card class="card">
 				<view class="card-title">
-					<div class="name">{{ selectData.name }}</div>
+					<div class="name">{{ selectData.stuName }}</div>
 				</view>
 				<view
 					v-for="(value, key) in dataDetailMap"
@@ -17,16 +17,30 @@
 			</uni-card>
 		</view>
 		<view class="bottom">
+			<view class="record-list">
+
+			</view>
 			<view class="button-group">
-				<view class="button" @click="jump('adjust', { data: selectData, detailMap: dataDetailMap})">
+				<view
+					class="button"
+					@click="
+						jump('adjust', selectData)
+					"
+				>
 					<uni-icons type="edit" size="20" color="#fff"></uni-icons>
 					调整课时
 				</view>
-				<view class="button" @click="jump('edit', { data: selectData, detailMap: dataDetailMap})">
+				<view
+					class="button"
+					@click="jump('edit', { data: selectData, detailMap: dataDetailMap })"
+				>
 					<uni-icons type="edit" size="20" color="#fff"></uni-icons>
 					编辑信息
 				</view>
-				<view class="button" @click="jump('share', { data: selectData, detailMap: dataDetailMap})">
+				<view
+					class="button"
+					@click="jump('share', { data: selectData, detailMap: dataDetailMap })"
+				>
 					<uni-icons type="share" size="20" color="#fff"></uni-icons>
 					分享
 				</view>
@@ -38,13 +52,14 @@
 <script setup>
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
+import { post } from "../../utils/request";
 	const dataDetailMap = ref({});
 	const selectData = ref({});
+	const recordList = ref([]);
 
 	onLoad((options) => {
 		// 1. 打印原始 options 看看结构
 		console.log("收到原始 options:", options);
-
 		// 2. 这里的 options.data 才是你 jump 函数里传过来的那个 JSON 字符串
 		if (options.data) {
 			try {
@@ -64,6 +79,21 @@
 		} else {
 			console.warn("未接收到名为 data 的跳转参数");
 		}
+
+		post("/record/get", {
+			courseRecordId: selectData.value.id,
+		}).then((res) => {
+			console.log("获取记录响应:", res);
+			if (res.code === 200) {
+				recordList.value = res.data;
+			} else {
+				uni.showToast({
+					title: res.msg || "获取记录失败",
+					icon: "none",
+				});
+			}
+		});
+
 	});
 	const jump = (type, data) => {
 		console.log("跳转类型:", type);
@@ -85,7 +115,7 @@
 		flex-direction: column;
 		align-content: flex-start;
 		align-items: center;
-		justify-content: space-around;
+		justify-content: space-between;
 		background-color: $theme-color;
 	}
 	.top {
@@ -130,6 +160,7 @@
 		align-content: center;
 		align-items: center;
 		justify-content: space-between;
+		margin-bottom: 20px;
 	}
 	.button {
 		display: flex;
