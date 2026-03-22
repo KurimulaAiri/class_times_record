@@ -18,15 +18,15 @@
 		</view>
 		<view class="bottom">
 			<view class="button-group">
-				<view class="button" @click="jump('adjust')">
+				<view class="button" @click="jump('adjust', { data: selectData, detailMap: dataDetailMap})">
 					<uni-icons type="edit" size="20" color="#fff"></uni-icons>
 					调整课时
 				</view>
-				<view class="button" @click="jump('edit')">
+				<view class="button" @click="jump('edit', { data: selectData, detailMap: dataDetailMap})">
 					<uni-icons type="edit" size="20" color="#fff"></uni-icons>
 					编辑信息
 				</view>
-				<view class="button" @click="jump('share')">
+				<view class="button" @click="jump('share', { data: selectData, detailMap: dataDetailMap})">
 					<uni-icons type="share" size="20" color="#fff"></uni-icons>
 					分享
 				</view>
@@ -37,26 +37,47 @@
 
 <script setup>
 	import { onLoad } from "@dcloudio/uni-app";
-	onLoad((options) => {
-		console.log("detail", options);
-	});
 	import { ref } from "vue";
 	const dataDetailMap = ref({});
 	const selectData = ref({});
+
 	onLoad((options) => {
-		selectData.value = JSON.parse(options.detail).data;
-		dataDetailMap.value = JSON.parse(options.detail).detailMap;
-		console.log("data", selectData.value);
-		console.log("detailMap", dataDetailMap.value);
+		// 1. 打印原始 options 看看结构
+		console.log("收到原始 options:", options);
+
+		// 2. 这里的 options.data 才是你 jump 函数里传过来的那个 JSON 字符串
+		if (options.data) {
+			try {
+				// 3. 先解码（对应发送端的 encodeURIComponent），再解析
+				const decodedData = decodeURIComponent(options.data);
+				const navItem = JSON.parse(decodedData);
+
+				// 4. 赋值给响应式变量
+				selectData.value = navItem.data;
+				dataDetailMap.value = navItem.detailMap;
+
+				console.log("解析后的 data:", selectData.value);
+				console.log("解析后的 detailMap:", dataDetailMap.value);
+			} catch (e) {
+				console.error("解析失败，数据格式可能不对:", e);
+			}
+		} else {
+			console.warn("未接收到名为 data 的跳转参数");
+		}
 	});
-	const jump = (type) => {
+	const jump = (type, data) => {
+		console.log("跳转类型:", type);
+		// 关键点：使用 encodeURIComponent 包装 JSON 字符串
+		const dataStr = encodeURIComponent(JSON.stringify(data));
 		uni.navigateTo({
-			url: "/pages/" + type + "/" + type + "?detail=" + JSON.stringify(selectData.value),
+			url: `/pages/${type}/${type}?data=${dataStr}`,
 		});
 	};
 </script>
 
 <style lang="scss">
+	@import "../../static/scss/index.scss";
+
 	.content {
 		width: 100%;
 		height: 100vh;
@@ -65,7 +86,7 @@
 		align-content: flex-start;
 		align-items: center;
 		justify-content: space-around;
-		background-color: #92dcd3;
+		background-color: $theme-color;
 	}
 	.top {
 		margin-top: 5%;
@@ -119,10 +140,9 @@
 		width: 30%;
 		height: 40px;
 		border-radius: 20px;
-		background-color: #70a9a2;
-		color: #fff;
+		background-color: white;
+		color: #5c5c5c;
 		font-size: 14px;
-
 	}
 	.button:active {
 		transform: scale(0.95);

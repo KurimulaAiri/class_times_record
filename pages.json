@@ -3,7 +3,8 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "课时管理"
+				"navigationBarTitleText": "课时管理",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -23,13 +24,19 @@
 			"style": {
 				"navigationBarTitleText": "调整课时"
 			}
+		},
+		{
+			"path": "pages/addCourse/addCourse",
+			"style": {
+				"navigationBarTitleText": "添加课程"
+			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "课时管理",
-		"navigationBarBackgroundColor": "#92dcd3",
-		"backgroundColor": "#92dcd3"
+		"navigationBarBackgroundColor": "#70a9a2",
+		"backgroundColor": "#70a9a2"
 	},
 	"uniIdRouter": {}
 }

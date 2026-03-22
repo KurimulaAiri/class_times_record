@@ -70,6 +70,7 @@ const request = (options) => {
 			timeout,
 			// 请求成功回调
 			success: (res) => {
+				// console.log("请求成功:", res);
 				// 1. 自动检测响应头是否有新 Token
 				// 注意：微信小程序中 header 的 key 通常是小写
 				const newToken = res.header["new-token"] || res.header["New-Token"];
@@ -84,7 +85,7 @@ const request = (options) => {
 					case 200:
 						// HTTP 请求成功，开始判断业务逻辑状态码
 						if (data.code === 200) {
-							resolve(data.data); // 业务逻辑成功
+							resolve(data); // 业务逻辑成功
 						} else {
 							// 业务逻辑错误（如：参数非法、权限不足但非登录失效）
 							uni.showToast({
@@ -99,12 +100,12 @@ const request = (options) => {
 						// Token 过期或无效
 						uni.removeStorageSync("token");
 						uni.showToast({
-							title: "登录已过期，请重新登录",
+							title: "重新登录",
 							icon: "none",
 						});
 						// 延迟跳转
 						setTimeout(() => {
-							uni.reLaunch({ url: "/pages/login/login" });
+							uni.reLaunch({ url: "/pages/index/index" });
 						}, 1500);
 						reject(res);
 						break;
@@ -188,6 +189,26 @@ export const del = (url, data = {}, options = {}) => {
 		method: "DELETE",
 		data,
 		...options,
+	});
+};
+
+export const login = () => {
+	uni.login({
+		provider: "weixin",
+		success: (res) => {
+			if (res.code) {
+				// 将 code 发送到你的后端服务器
+				post("/auth/login", {
+					code: res.code,
+				}).then((res) => {
+					console.log("登录响应:", res);
+					// 缓存 token
+					// res 现在就是你后端 data 里的内容
+					uni.setStorageSync("token", res.data.token);
+					console.log("Token 已缓存");
+				});
+			}
+		},
 	});
 };
 
