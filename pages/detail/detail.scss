@@ -202,3 +202,71 @@
 		color: #ff0000;
 	}
 }
+
+/* 分享弹窗容器 */
+.share-container {
+	background-color: #f7f7f7; // 微信原生底板色
+	padding-bottom: env(safe-area-inset-bottom);
+
+	.share-header {
+		height: 100rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 26rpx;
+		color: #888;
+		background-color: #f8f8f8;
+	}
+
+	.share-list {
+		background-color: #f8f8f8;
+	}
+
+	.share-item {
+		width: 90%;
+		height: 110rpx;
+		padding: 30rpx 0;
+		border-radius: 10rpx;
+		display: flex;
+		background-color: #fff;
+		margin-top: 10rpx;
+		justify-content: space-evenly;
+		align-content: center;
+		flex-wrap: nowrap;
+		flex-direction: column;
+		align-items: center;
+		border-top: 1rpx solid #f0f0f0;
+
+		&:active {
+			background-color: #f2f2f2;
+		}
+
+		&-main {
+			height: 40rpx;
+			font-size: 34rpx;
+			color: #000;
+			margin-bottom: 8rpx;
+		}
+
+		&-note {
+			height: 40rpx;
+			font-size: 24rpx;
+			color: #999;
+		}
+	}
+
+	.share-cancel {
+		margin-top: 20rpx;
+		height: 100rpx;
+		background-color: #fff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 34rpx;
+		color: #000;
+
+		&:active {
+			background-color: #f2f2f2;
+		}
+	}
+}

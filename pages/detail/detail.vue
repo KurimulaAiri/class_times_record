@@ -54,6 +54,36 @@
 			</view>
 		</scroll-view>
 
+		<uni-popup ref="sharePopup" type="bottom" border-radius="20px 20px 0 0">
+			<view class="share-container">
+				<view class="share-header">选择分享类型</view>
+
+				<view class="share-list">
+					<button
+						class="share-item"
+						@click="handleShare('admin')"
+						open-type="share"
+					>
+						<view class="share-item-main">邀请管理员</view>
+						<view class="share-item-note"
+							>其他管理员也可以一起修改课程信息和记录课时</view
+						>
+					</button>
+
+					<button
+						class="share-item"
+						@click="handleShare('guest')"
+						open-type="share"
+					>
+						<view class="share-item-main">分享给他人</view>
+						<view class="share-item-note">他人仅能查看相关信息，不能修改</view>
+					</button>
+				</view>
+
+				<view class="share-cancel" @click="closeShare">取消</view>
+			</view>
+		</uni-popup>
+
 		<view class="bottom-action-bar">
 			<view class="button-group">
 				<view class="action-btn primary" @click="jump('adjust', selectData)">
@@ -80,12 +110,20 @@
 </template>
 
 <script setup>
-	import { onLoad, onShow } from "@dcloudio/uni-app";
+	import { onLoad, onShow, onShareAppMessage } from "@dcloudio/uni-app";
 	import { ref } from "vue";
-	import { post } from "../../utils/request";
+	import { login, post } from "../../utils/request";
 	const dataDetailMap = ref({});
 	const selectData = ref({});
 	const recordList = ref([]);
+
+	const bindForm = ref({
+		courseRecordId: 0,
+		permissionType: "",
+	});
+
+	const shareType = ref("");
+	const sharePopup = ref(null);
 
 	const loadStatus = ref("more");
 	const total = ref(0);
@@ -104,6 +142,30 @@
 	onLoad((options) => {
 		// 1. 打印原始 options 看看结构
 		console.log("收到原始 options:", options);
+
+		// 新增：处理分享进入的情况
+		if (options.courseRecordId && options.fromShare === "true") {
+			console.log("分享进入，课程记录ID:", options.courseRecordId);
+			
+			const shareId = options.courseRecordId;
+
+			// 2. 先登录，确保有用户信息
+			login();
+
+			bindForm.value.courseRecordId = shareId;
+			bindForm.value.permissionType = options.shareType;
+
+			// 调用后端接口，将此课程记录关联到当前登录用户的账户下
+			post("/permission_record/bind", bindForm.value).then((res) => {
+				if (res.code === 200) {
+					uni.showToast({ title: "已保存至我的课程", icon: "success" });
+					// 绑定成功后，重新加载数据
+					queryForm.value.courseRecordId = shareId;
+					getData(true);
+				}
+			});
+		}
+
 		// 2. 这里的 options.data 才是你 jump 函数里传过来的那个 JSON 字符串
 		if (options.data) {
 			try {
@@ -190,7 +252,42 @@
 		getData(false); // 执行分页请求
 	};
 
+	const closeShare = () => {
+		sharePopup.value.close();
+	};
+
+	// 定义分享卡片的内容
+	onShareAppMessage((res) => {
+		// 关闭弹窗
+		sharePopup.value.close();
+
+		// 这里的 path 是关键：好友点击后进入哪个页面，并带上当前课程的 ID
+		const sharePath = `/pages/detail/detail?courseRecordId=${selectData.value.id}&fromShare=true&shareType=${shareType.value}`;
+
+		return {
+			title: `【课时记录】${selectData.value.stuName} 的课程详情`,
+			path: sharePath,
+			imageUrl: "", // 可以自定义分享图，不传则默认截取当前页面
+		};
+	});
+
+	const handleShare = (shareType) => {
+		if (shareType === "link") {
+			// 这种方式在小程序中无法通过 JS 直接唤起转发
+			// 必须引导用户点击 open-type="share" 的按钮
+			shareType.value = shareType;
+			console.log("准备分享小程序卡片");
+		} else {
+			// 其他分享逻辑（如生成海报）
+		}
+	};
+
 	const jump = (type, data) => {
+		if (type === "share") {
+			sharePopup.value.open();
+			return;
+		}
+
 		console.log("跳转类型:", type);
 		// 关键点：使用 encodeURIComponent 包装 JSON 字符串
 		const dataStr = encodeURIComponent(JSON.stringify(data));
