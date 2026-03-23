@@ -1,0 +1,189 @@
+@import "../../static/scss/index.scss";
+
+.content {
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+	flex-direction: column;
+}
+
+.top {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	align-content: center;
+	flex-direction: column;
+	justify-content: flex-end;
+	margin-bottom: 20px;
+}
+
+.adjust-form {
+	width: 90%;
+	padding: 0 20px 20px 20px;
+	border: 1px solid #ddd;
+	margin: 20px auto;
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	align-content: center;
+	flex-wrap: nowrap;
+	flex-direction: column;
+	box-sizing: border-box;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-item {
+	line-height: 40px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	align-content: center;
+	flex-direction: row;
+	border-bottom: 1px solid #ddd;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	// 最后一项去掉边框，避免多出一道线
+	&:last-child {
+		border-bottom: none;
+		margin-bottom: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+}
+
+.form-label {
+	width: 30%;
+	font-size: 15px;
+	font-weight: bold;
+	float: left;
+}
+
+.form-input {
+	width: 65%;
+	float: left;
+	font-size: 15px;
+}
+
+.status-group {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	overflow: hidden;
+	.status-btn {
+		width: 33%;
+		height: 20px;
+		line-height: 20px;
+		background-color: #f8f8f8;
+		text-align: center;
+		padding: 5px 15px;
+		font-size: 14px;
+		color: #666;
+		transition: all 0.3s;
+
+		// 选中状态的样式
+		&.active {
+			background-color: $theme-color; // 使用你的主题色
+			color: #fff;
+		}
+
+		// 第一个按钮加个右边框区分
+		&:first-child {
+			border-right: 1px solid #ddd;
+		}
+	}
+}
+
+.course-list {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	align-content: center;
+	flex-direction: column;
+
+	&-item {
+		width: 80%;
+		position: relative;
+		padding: 15px;
+		margin-bottom: 10px;
+		margin-top: 10px;
+		border: 2rpx solid #eee;
+		border-radius: 8px;
+		background-color: #fff;
+		transition: all 0.2s ease; // 让颜色变换更平滑
+
+		// 选中后的样式变换
+		&.is-selected {
+			background-color: #f0f7ff; // 浅蓝色背景
+			border-color: $theme-color; // 主题色边框
+
+			.list-label {
+				color: $theme-color; // 标签文字变色
+			}
+		}
+	}
+}
+
+.select-icon {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+
+.list-item {
+	width: 100%;
+	font-size: 15px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	align-content: center;
+	flex-direction: row;
+}
+
+.confirm-btn {
+	width: 90%;
+	height: 40px;
+	line-height: 40px;
+	background-color: $theme-color;
+	color: #fff;
+	font-size: 16px;
+	text-align: center;
+	border-radius: 4px;
+}
+
+.scroll-view-box {
+	height: calc(100vh - 100px);
+}
+
+.scroll-view {
+	flex: 1;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 100vh;
+	overflow-y: auto;
+}
+
+.confirm-select-btn {
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto; /* 核心：自动分配剩余空间 */
+	position: fixed;
+	display: block;
+	bottom: 20px;
+	width: 90%;
+	height: 40px;
+	line-height: 40px;
+	background-color: $theme-color;
+	color: #fff;
+	font-size: 16px;
+	text-align: center;
+	border-radius: 4px;
+}

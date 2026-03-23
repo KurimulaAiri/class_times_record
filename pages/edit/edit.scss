@@ -1,0 +1,112 @@
+@import "../../static/scss/index.scss";
+
+.content {
+	display: flex;
+	align-content: space-around;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100vh;
+	background-color: $theme-color;
+}
+
+.top {
+	padding: 20px;
+	margin-bottom: 20px;
+}
+
+.update-form {
+	display: flex;
+	align-content: space-between;
+	flex-direction: column;
+	align-items: center;
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-item {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #f0f0f0; // 添加浅灰色底边框
+
+	// 最后一项去掉边框，避免多出一道线
+	&:last-child {
+		border-bottom: none;
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+}
+
+.form-label {
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.form-input {
+	width: 50%;
+	font-size: 15px;
+	&-text {
+		font-size: 15px;
+	}
+}
+
+.bottom {
+	margin-top: 20px;
+}
+
+.status-group {
+	display: flex;
+	justify-content: center;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	overflow: hidden;
+	.status-btn {
+		width: 50%;
+		background-color: #f8f8f8;
+		text-align: center;
+		padding: 5px 15px;
+		font-size: 14px;
+		color: #666;
+		transition: all 0.3s;
+
+		// 选中状态的样式
+		&.active {
+			background-color: $theme-color; // 使用你的主题色
+			color: #fff;
+		}
+
+		// 第一个按钮加个右边框区分
+		&:first-child {
+			border-right: 1px solid #ddd;
+		}
+	}
+}
+
+.status-btn.active {
+	background-color: $theme-color;
+	color: #fff;
+}
+
+.button-group {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+	margin-bottom: 20px;
+}
+
+.button {
+	width: 100px;
+	margin: 0 10px;
+	font-size: 15px;
+	font-weight: bold;
+	border-radius: 5px;
+	padding: 5px 0;
+}
