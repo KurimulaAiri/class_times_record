@@ -1,6 +1,8 @@
 <template>
 	<view class="content">
+		<!-- 页面上半部分 -->
 		<view class="top">
+			<!-- 搜索栏 -->
 			<view class="search-bar-line">
 				<uni-search-bar
 					v-model="searchText"
@@ -14,6 +16,7 @@
 				>
 				</uni-search-bar>
 			</view>
+			<!-- 数据视图切换 -->
 			<view class="data-tabs">
 				<view
 					class="tab-item"
@@ -26,8 +29,9 @@
 				</view>
 			</view>
 		</view>
-		<view class="bottom">
-			<uni-load-more :status="loadStatus" />
+
+		<!-- 页面下半部分 -->
+		<scroll-view scroll-y class="bottom" enable-flex="true">
 			<view v-if="dataList.length > 0" class="data-card-container">
 				<uni-card v-for="item in dataList" :key="item.id" class="data-card">
 					<view>
@@ -43,7 +47,9 @@
 										color="#92dcd3"
 									></uni-icons>
 									<div class="name">{{ item.stuName }}</div>
-									<div class="status">{{ item.courseStatus === 1 ? "" : "已完成" }}</div>
+									<div class="status">
+										{{ item.courseStatus === 1 ? "" : "已完成" }}
+									</div>
 								</div>
 								<div class="card-title-right">
 									<uni-icons
@@ -67,13 +73,14 @@
 						<button class="button" @click="jump('adjust', item)">计课时</button>
 					</view>
 				</uni-card>
+				<uni-load-more :status="loadStatus" />
 			</view>
 			<view v-else>
 				<view class="no-data">
 					<span class="no-data-text">暂无数据</span>
 				</view>
 			</view>
-		</view>
+		</scroll-view>
 		<view class="fab" @click="jump('addCourse')">
 			<uni-icons type="plusempty" size="30" color="#fff"></uni-icons>
 		</view>
@@ -134,57 +141,38 @@
 		courseRemark: "备注",
 	});
 	const dataList = ref([
-		{
-			id: 1,
-			name: "张三",
-			courseName: "1",
-			courseTotalTime: 10,
-			courseRestTime: 5,
-			courseLastTime: "2023-01-01 00:00:00",
-			courseRemark: "无",
-		},
-		{
-			id: 2,
-			name: "李四",
-			courseName: "2",
-			courseTotalNum: 10,
-			courseLeftNum: 5,
-			courseLastTime: "2023-01-01 00:00:00",
-			courseRemark: "无",
-		},
-		{
-			id: 3,
-			name: "王五",
-			courseName: "3",
-			courseTotalNum: 10,
-			courseLeftNum: 5,
-			courseLastTime: "2023-01-01 00:00:00",
-			courseRemark: "无",
-		},
-		{
-			id: 4,
-			name: "赵六",
-			courseName: "4",
-			courseTotalNum: 10,
-			courseLeftNum: 5,
-			courseLastTime: "2023-01-01 00:00:00",
-			courseRemark: "无",
-		},
+		/**
+		 * 课程记录数据示例
+		 *	{
+		 *		id: 1,
+		 *		name: "张三",
+		 *		courseName: "1",
+		 *		courseTotalTime: 10,
+		 *		courseRestTime: 5,
+		 *		courseLastTime: "2023-01-01 00:00:00",
+		 *		courseRemark: "无",
+		 *	}
+		 */
 	]);
+
 	const queryDataForm = ref({
 		stuName: "",
 		courseName: "",
 		courseRemark: "",
 		courseStatus: null,
 		currentPage: 1,
-		pageSize: 10,
+		pageSize: 5,
 	});
+
+	const total = ref(0);
 
 	// 定义加载状态
 	const loadStatus = ref("more"); // more, loading, noMore
 
 	// 获取数据方法 (核心修改)
 	const getData = (isRefresh = false) => {
+		console.log("当前页:", queryDataForm.value.currentPage);
+
 		if (isRefresh) {
 			queryDataForm.value.currentPage = 1;
 			loadStatus.value = "loading";
@@ -196,6 +184,7 @@
 			.then((res) => {
 				console.log("获取数据响应:", res);
 				// 假设后端返回的数据在 res.data 中，总数在 res.total 中
+				total.value = res.data.total || 0;
 				const newList = res.data.courseRecords || [];
 				if (isRefresh) {
 					dataList.value = newList;
@@ -212,6 +201,7 @@
 				}
 			})
 			.catch(() => {
+				loadStatus.value = "more"; // 发生错误时，允许用户再次尝试
 				if (isRefresh) uni.stopPullDownRefresh();
 			});
 	};
@@ -223,8 +213,14 @@
 
 	// 3. 实现上拉加载
 	onReachBottom(() => {
+		console.log("dataList.value.length:", dataList.value.length);
+		console.log("total.value:", total.value);
+		if (dataList.value.length >= total.value) {
+			console.log("没有更多数据了");
+			loadStatus.value = "noMore";
+			return;
+		}
 		if (loadStatus.value === "noMore" || loadStatus.value === "loading") return;
-
 		queryDataForm.value.currentPage++;
 		loadStatus.value = "loading";
 		getData(false);
@@ -258,7 +254,14 @@
 		// 这里可以根据 index 过滤数据或重新请求 getData(true)
 		// 例如：queryDataForm.value.status = dataTabsList.value[index].status || null;
 		queryDataForm.value.courseStatus = dataTabsList.value[index].status || null;
-		console.log("上传数据" ,queryDataForm.value);
+		console.log("上传数据", queryDataForm.value);
+
+		// 切换标签时回到顶部
+		uni.pageScrollTo({
+			scrollTop: 0,
+			duration: 100,
+		});
+
 		getData(true);
 	};
 
@@ -411,6 +414,11 @@
 		// overflow: hidden;
 	}
 	.data-card-container {
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin: 0 auto;
 		width: 90%;
 	}
 	.fab {
@@ -465,6 +473,7 @@
 		background-color: #fff;
 		border-radius: 20px;
 		display: flex;
+		align-content: center;
 		flex-wrap: nowrap;
 		flex-direction: column;
 		align-items: center;
