@@ -61,14 +61,22 @@
 				<view class="share-header">选择分享类型</view>
 
 				<view class="share-list">
-					<button class="share-item" @click="handleShare(1)" open-type="share">
+					<button
+						class="share-item"
+						@click="handleShare('1')"
+						open-type="share"
+					>
 						<view class="share-item-main">邀请管理员</view>
 						<view class="share-item-note"
 							>其他管理员也可以一起修改课程信息和记录课时</view
 						>
 					</button>
 
-					<button class="share-item" @click="handleShare(2)" open-type="share">
+					<button
+						class="share-item"
+						@click="handleShare('2')"
+						open-type="share"
+					>
 						<view class="share-item-main">分享给他人</view>
 						<view class="share-item-note">他人仅能查看相关信息，不能修改</view>
 					</button>
@@ -109,6 +117,8 @@
 		permissionType: "",
 	});
 
+	const test = ref("");
+
 	const shareType = ref("");
 	const sharePopup = ref(null);
 
@@ -132,6 +142,8 @@
 
 		// 新增：处理分享进入的情况
 		if (options.courseRecordId && options.fromShare === "true") {
+			console.log("分享进入，分享类型:", options.shareType);
+
 			console.log("分享进入，课程记录ID:", options.courseRecordId);
 
 			const shareId = options.courseRecordId;
@@ -149,10 +161,13 @@
 					// 绑定成功后，重新加载数据
 					queryForm.value.courseRecordId = shareId;
 
+					
+
 					post("/course_record/get", {
 						id: shareId,
-						isShare: true,
+						share: true,
 					}).then((res) => {
+						console.log("在分享的前提下请求了一次get接口");
 						if (res.code === 200) {
 							console.log("获取课程记录响应:", res);
 							selectData.value = res.data.courseRecords[0];
@@ -272,7 +287,7 @@
 
 		// 这里的 path 是关键：好友点击后进入哪个页面，并带上当前课程的 ID
 		const sharePath = `/pages/detail/detail?courseRecordId=${selectData.value.id}&fromShare=true&shareType=${shareType.value}`;
-
+		console.log("分享路径:", sharePath);
 		return {
 			title: `【课时记录】${selectData.value.stuName} 的课程详情`,
 			path: sharePath,
