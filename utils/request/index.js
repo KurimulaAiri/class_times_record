@@ -3,8 +3,8 @@ let baseUrl;
 console.log("process.env.NODE_ENV:", process.env.NODE_ENV);
 switch (process.env.NODE_ENV) {
 	case "development":
-		// baseUrl = "https://api.kurimula-airi.top"; // 生产环境
-		baseUrl = "http://localhost:9999"; // 开发环境
+		baseUrl = "https://api.kurimula-airi.top"; // 生产环境
+		// baseUrl = "http://localhost:9999"; // 开发环境
 		break;
 	case "production":
 		baseUrl = "https://api.kurimula-airi.top"; // 生产环境

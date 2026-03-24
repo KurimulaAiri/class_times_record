@@ -115,7 +115,7 @@
 
 .top {
 	width: 100%;
-	height: 15%;
+	height: 200rpx;
 	display: flex;
 	flex-wrap: nowrap;
 	flex-direction: column;
@@ -139,7 +139,7 @@
 
 .bottom {
 	width: 100%;
-	margin-top: 25%;
+	margin-top: 200rpx;
 	padding-top: 10%;
 	background-color: #fff;
 	border-radius: 20px;
@@ -194,22 +194,49 @@
 .more-icon {
 	z-index: 1;
 }
+// 通用按钮基础样式
 .button {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 30%;
-	height: 40px;
-	border-radius: 20px;
-	border: 1px solid #bebebe;
-	background-color: rgb(250, 250, 250);
-	color: #5c5c5c;
-	width: 30%;
+	font-size: 14px;
+	font-weight: 500;
+	transition: all 0.1s ease-in-out; // 统一过渡效果
+	border: none; // 默认去掉原生边框
 	margin-top: 10px;
+
+	// 图标样式
+	.btn-icon {
+		margin-right: 4px; // 图标与文字的间距
+	}
+
+	// 通用点击反馈：轻微缩小
 	&:active {
-		background-color: #e0e0e0;
-		transform: scale(0.97);
-		transition: transform 0.1s ease-in-out;
-		transition: background-color 0.1s ease-in-out;
+		transform: scale(0.96);
+	}
+}
+
+// 管理员专用按钮修饰样式 (计课时)
+.admin-btn {
+	width: 400rpx; // 稍微加宽，视觉更平衡
+	height: 42px;
+	border-radius: 10px; // 精致的大圆角矩形，比纯半圆更现代
+	border: 1px solid $theme-color; 
+	background-color: transparent; // 透明背景，更有活力
+	color: $theme-color; // 主题色文字
+	font-weight: bold; // 加粗文字，强调核心操作
+	letter-spacing: 0.5px; // 微调字间距
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03); // 极其微弱的浮起阴影
+
+	// 管理员按钮特有的点击反馈
+	&:active {
+		background-color: $theme-color; // 点击时背景变主题色
+		color: #fff; // 文字变白，反色切换，反馈极强
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); // 阴影变小，营造压下去的感觉
+
+		// 同时把图标也变白
+		.btn-icon :deep(.uni-icons) {
+			color: #fff !important;
+		}
 	}
 }

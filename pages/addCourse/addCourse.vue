@@ -62,7 +62,7 @@
 	</view>
 </template>
 
-<script setup lang="ts">
+<script setup>
 	import { ref } from "vue";
 	import { post } from "../../utils/request";
 
@@ -76,7 +76,7 @@
 
 	const submit = () => {
 		console.log(data.value);
-		if (data.value.studentName === "") {
+		if (data.value.stuName === "") {
 			uni.showToast({
 				title: "请输入学生姓名",
 				icon: "none",

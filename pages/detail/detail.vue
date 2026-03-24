@@ -7,6 +7,7 @@
 			@scrolltolower="loadMore"
 			:lower-threshold="100"
 		>
+			<view class="text"> 课程详情 </view>
 			<view class="detail-card">
 				<view class="card-title">
 					<div class="name">{{ selectData.stuName }}</div>
@@ -21,6 +22,7 @@
 					<view class="card-content-right"> {{ selectData[key] }}</view>
 				</view>
 			</view>
+			<view class="text">课时记录</view>
 			<view class="record-list">
 				<view
 					v-for="(item, index) in recordList"
@@ -50,7 +52,7 @@
 						<view class="record-remark">{{ item.recordRemark }}</view>
 					</view>
 				</view>
-				<uni-load-more :status="loadStatus" />
+				<uni-load-more :status="loadStatus" class="uni-load-more" />
 			</view>
 		</scroll-view>
 
@@ -59,22 +61,14 @@
 				<view class="share-header">选择分享类型</view>
 
 				<view class="share-list">
-					<button
-						class="share-item"
-						@click="handleShare(1)"
-						open-type="share"
-					>
+					<button class="share-item" @click="handleShare(1)" open-type="share">
 						<view class="share-item-main">邀请管理员</view>
 						<view class="share-item-note"
 							>其他管理员也可以一起修改课程信息和记录课时</view
 						>
 					</button>
 
-					<button
-						class="share-item"
-						@click="handleShare(2)"
-						open-type="share"
-					>
+					<button class="share-item" @click="handleShare(2)" open-type="share">
 						<view class="share-item-main">分享给他人</view>
 						<view class="share-item-note">他人仅能查看相关信息，不能修改</view>
 					</button>
@@ -84,10 +78,7 @@
 			</view>
 		</uni-popup>
 
-		<view
-			class="bottom-action-bar"
-			v-if="selectData.permissionType === 1"
-		>
+		<view class="bottom-action-bar" v-if="selectData.permissionType === 1">
 			<view class="button-group">
 				<view class="action-btn primary" @click="jump('adjust', selectData)">
 					<uni-icons type="compose" size="18" color="#fff"></uni-icons>
@@ -193,7 +184,18 @@
 		}
 		getData(true);
 	});
+
 	onShow(() => {
+		console.log("onShow");
+		post("/course_record/get", {
+			id: selectData.value.id,
+			isShare: true,
+		}).then((res) => {
+			if (res.code === 200) {
+				console.log("获取课程记录响应:", res);
+				selectData.value = res.data.courseRecords[0];
+			}
+		});
 		getData(true);
 	});
 
@@ -241,6 +243,9 @@
 			.catch(() => {
 				loadStatus.value = "more";
 				console.error("请求异常:", e);
+			})
+			.finally(() => {
+				uni.hideLoading();
 			});
 	};
 

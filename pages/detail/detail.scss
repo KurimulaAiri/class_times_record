@@ -26,6 +26,7 @@
 	flex-wrap: nowrap;
 	flex-direction: column;
 	background-color: white;
+	box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
 }
 .card-title {
 	width: 95%;
@@ -67,6 +68,13 @@
 	border-top-left-radius: 30rpx;
 	border-top-right-radius: 30rpx;
 	box-shadow: 0 -10rpx 30rpx rgba(0, 0, 0, 0.08);
+}
+
+.text {
+	color: #fff;
+	font-size: 20px;
+	font-weight: bold;
+	margin: 20rpx 0;
 }
 
 .button-group {
@@ -140,6 +148,7 @@
 	align-content: space-between;
 	align-items: center;
 	justify-content: flex-start;
+	box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
 	&:first-child {
 		margin-top: 0;
 	}
@@ -270,3 +279,8 @@
 		}
 	}
 }
+
+.uni-load-more {
+	color: white;
+}
+

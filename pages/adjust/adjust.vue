@@ -107,7 +107,7 @@
 								<view class="list-input">{{ item.courseRestTime }}</view>
 							</view>
 						</view>
-						<uni-load-more :status="loadStatus" />
+						<uni-load-more :status="loadStatus" @click="loadMore" />
 					</view>
 					<button class="confirm-select-btn" @click="confirmSelect">
 						确认
@@ -140,13 +140,17 @@
 	const queryForm = ref({
 		courseStatus: 1,
 		currentPage: 1,
-		pageSize: 5,
+		pageSize: 10,
 	});
 
 	const loadMore = () => {
+		if (courseRecordList.value.length >= total.value) {
+			console.log("没有更多数据了");
+			loadStatus.value = "noMore";
+			return;
+		}
 		// 这里的逻辑和你之前写在 onReachBottom 里的基本一致
 		if (loadStatus.value === "noMore" || loadStatus.value === "loading") return;
-
 		console.log("scroll-view 触底了，加载下一页");
 		queryForm.value.currentPage++;
 		getData(false);
@@ -217,7 +221,7 @@
 				total.value = res.data.total;
 
 				if (isRefresh) {
-					courseRecordList.value = [];
+					courseRecordList.value = [...adjustList.value];
 				}
 				// 查询得到的课程记录列表
 				let newList = res.data.courseRecords;
@@ -257,6 +261,8 @@
 					title: err.msg || "获取课程记录失败",
 					icon: "none",
 				});
+			}).finally(() => {
+				uni.hideLoading();
 			});
 	};
 
@@ -318,10 +324,11 @@
 			});
 			return;
 		}
-		// 校验是否为数字
-		if (isNaN(record.value.recordChange)) {
+
+		// 校验是否为正整数
+		if (isNaN(Number(record.value.recordChange)) || Number(record.value.recordChange) <= 0) {
 			uni.showToast({
-				title: "课时调整必须为数字",
+				title: "课时调整必须为正整数",
 				icon: "none",
 			});
 			return;
@@ -346,6 +353,8 @@
 					icon: "none",
 				});
 			}
+		}).finally(() => {
+			uni.hideLoading();
 		});
 		console.log("提交前:", record.value);
 	};

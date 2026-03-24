@@ -37,8 +37,8 @@
 		</view>
 		<view class="bottom">
 			<view class="button-group">
-				<button class="button" @click="back">取消</button>
-				<button class="button" @click="confirm">确认</button>
+				<button class="button btn-cancel" @click="back">取消</button>
+				<button class="button btn-confirm" @click="confirm">确认</button>
 			</view>
 		</view>
 	</view>

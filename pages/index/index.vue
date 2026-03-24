@@ -70,7 +70,10 @@
 						>
 							{{ value }}：{{ item[key] === null ? "无记录" : item[key] }}
 						</div>
-						<button class="button" @click="jump('adjust', item)" v-if="item.permissionType === 1">计课时</button>
+						<button class="button admin-btn" @click="jump('adjust', item)" v-if="item.permissionType === 1">
+							<uni-icons type="compose" size="16" color="$theme-color" class="btn-icon"></uni-icons>
+							计课时
+						</button>
 					</view>
 				</uni-card>
 				<uni-load-more :status="loadStatus" />
@@ -96,7 +99,7 @@
 	} from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { post, login } from "../../utils/request";
-	import { DATA_INDEX_MAP, DATA_DETAIL_MAP } from "../../config/common";
+	import { DATA_INDEX_MAP } from "../../config/common";
 
 	// 响应式数据（替代原 data 中的内容）
 	const searchText = ref("");
@@ -146,7 +149,7 @@
 		courseRemark: "",
 		courseStatus: null,
 		currentPage: 1,
-		pageSize: 5,
+		pageSize: 7,
 	});
 
 	const total = ref(0);
