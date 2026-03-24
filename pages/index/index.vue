@@ -39,7 +39,7 @@
 							<div class="card-title">
 								<div
 									class="card-title-left"
-									@click="handleClick(item, dataDetailMap)"
+									@click="handleClick(item)"
 								>
 									<uni-icons
 										type="person-filled"
@@ -63,14 +63,14 @@
 							</div>
 						</slot>
 						<div
-							v-for="(value, key) in dataIndexDetailMap"
+							v-for="(value, key) in DATA_INDEX_MAP"
 							:key="key"
 							class="card-content"
-							@click="handleClick(item, dataDetailMap)"
+							@click="handleClick(item)"
 						>
 							{{ value }}：{{ item[key] === null ? "无记录" : item[key] }}
 						</div>
-						<button class="button" @click="jump('adjust', item)">计课时</button>
+						<button class="button" @click="jump('adjust', item)" v-if="item.permissionType === 1">计课时</button>
 					</view>
 				</uni-card>
 				<uni-load-more :status="loadStatus" />
@@ -96,6 +96,7 @@
 	} from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { post, login } from "../../utils/request";
+	import { DATA_INDEX_MAP, DATA_DETAIL_MAP } from "../../config/common";
 
 	// 响应式数据（替代原 data 中的内容）
 	const searchText = ref("");
@@ -124,22 +125,6 @@
 			status: 2,
 		},
 	]);
-	const dataIndexDetailMap = ref({
-		stuName: "姓名",
-		courseName: "课程名称",
-		courseTotalTime: "课程总次数",
-		courseRestTime: "课程剩余次数",
-		courseLastTimeStr: "最后上课时间",
-		courseRemark: "备注",
-	});
-	const dataDetailMap = ref({
-		stuName: "姓名",
-		courseName: "课程名称",
-		courseTotalTime: "课程总次数",
-		courseRestTime: "课程剩余次数",
-		courseLastTimeStr: "最后上课时间",
-		courseRemark: "备注",
-	});
 	const dataList = ref([
 		/**
 		 * 课程记录数据示例
@@ -275,7 +260,7 @@
 				switch (res.tapIndex) {
 					case 0:
 						console.log("编辑");
-						jump("edit", { data: item, detailMap: dataDetailMap.value });
+						jump("edit", item);
 						break;
 					case 1:
 						console.log("删除");
@@ -317,9 +302,8 @@
 		});
 	};
 
-	const handleClick = (item, detailMap) => {
+	const handleClick = (item) => {
 		const navItem = {
-			detailMap: detailMap,
 			data: item,
 		};
 		jump("detail", navItem);

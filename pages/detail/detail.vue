@@ -12,7 +12,7 @@
 					<div class="name">{{ selectData.stuName }}</div>
 				</view>
 				<view
-					v-for="(value, key) in dataDetailMap"
+					v-for="(value, key) in DATA_DETAIL_MAP"
 					:key="key"
 					class="card-content"
 				>
@@ -61,7 +61,7 @@
 				<view class="share-list">
 					<button
 						class="share-item"
-						@click="handleShare('admin')"
+						@click="handleShare(1)"
 						open-type="share"
 					>
 						<view class="share-item-main">邀请管理员</view>
@@ -72,7 +72,7 @@
 
 					<button
 						class="share-item"
-						@click="handleShare('guest')"
+						@click="handleShare(2)"
 						open-type="share"
 					>
 						<view class="share-item-main">分享给他人</view>
@@ -84,23 +84,20 @@
 			</view>
 		</uni-popup>
 
-		<view class="bottom-action-bar">
+		<view
+			class="bottom-action-bar"
+			v-if="selectData.permissionType === 1"
+		>
 			<view class="button-group">
 				<view class="action-btn primary" @click="jump('adjust', selectData)">
 					<uni-icons type="compose" size="18" color="#fff"></uni-icons>
 					<text>调课时</text>
 				</view>
-				<view
-					class="action-btn secondary"
-					@click="jump('edit', { data: selectData, detailMap: dataDetailMap })"
-				>
+				<view class="action-btn secondary" @click="jump('edit', selectData)">
 					<uni-icons type="edit" size="18" color="#5c5c5c"></uni-icons>
 					<text>编辑</text>
 				</view>
-				<view
-					class="action-btn secondary"
-					@click="jump('share', { data: selectData, detailMap: dataDetailMap })"
-				>
+				<view class="action-btn secondary" @click="jump('share', selectData)">
 					<uni-icons type="share" size="18" color="#5c5c5c"></uni-icons>
 					<text>分享</text>
 				</view>
@@ -110,13 +107,12 @@
 </template>
 
 <script setup>
+	import { DATA_DETAIL_MAP } from "../../config/common";
 	import { onLoad, onShow, onShareAppMessage } from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { login, post } from "../../utils/request";
-	const dataDetailMap = ref({});
 	const selectData = ref({});
 	const recordList = ref([]);
-
 	const bindForm = ref({
 		courseRecordId: 0,
 		permissionType: "",
@@ -146,7 +142,7 @@
 		// 新增：处理分享进入的情况
 		if (options.courseRecordId && options.fromShare === "true") {
 			console.log("分享进入，课程记录ID:", options.courseRecordId);
-			
+
 			const shareId = options.courseRecordId;
 
 			// 2. 先登录，确保有用户信息
@@ -161,31 +157,39 @@
 					uni.showToast({ title: "已保存至我的课程", icon: "success" });
 					// 绑定成功后，重新加载数据
 					queryForm.value.courseRecordId = shareId;
+
+					post("/course_record/get", {
+						id: shareId,
+						isShare: true,
+					}).then((res) => {
+						if (res.code === 200) {
+							console.log("获取课程记录响应:", res);
+							selectData.value = res.data.courseRecords[0];
+						}
+					});
 					getData(true);
 				}
 			});
-		}
-
-		// 2. 这里的 options.data 才是你 jump 函数里传过来的那个 JSON 字符串
-		if (options.data) {
-			try {
-				// 3. 先解码（对应发送端的 encodeURIComponent），再解析
-				const decodedData = decodeURIComponent(options.data);
-				const navItem = JSON.parse(decodedData);
-
-				// 4. 赋值给响应式变量
-				selectData.value = navItem.data;
-				dataDetailMap.value = navItem.detailMap;
-
-				console.log("解析后的 data:", selectData.value);
-				console.log("解析后的 detailMap:", dataDetailMap.value);
-
-				queryForm.value.courseRecordId = selectData.value.id;
-			} catch (e) {
-				console.error("解析失败，数据格式可能不对:", e);
-			}
 		} else {
-			console.warn("未接收到名为 data 的跳转参数");
+			// 2. 这里的 options.data 才是你 jump 函数里传过来的那个 JSON 字符串
+			if (options.data) {
+				try {
+					// 3. 先解码（对应发送端的 encodeURIComponent），再解析
+					const decodedData = decodeURIComponent(options.data);
+					const navItem = JSON.parse(decodedData);
+
+					// 4. 赋值给响应式变量
+					selectData.value = navItem.data;
+
+					console.log("解析后的 data:", selectData.value);
+
+					queryForm.value.courseRecordId = selectData.value.id;
+				} catch (e) {
+					console.error("解析失败，数据格式可能不对:", e);
+				}
+			} else {
+				console.warn("未接收到名为 data 的跳转参数");
+			}
 		}
 		getData(true);
 	});
@@ -271,15 +275,11 @@
 		};
 	});
 
-	const handleShare = (shareType) => {
-		if (shareType === "link") {
-			// 这种方式在小程序中无法通过 JS 直接唤起转发
-			// 必须引导用户点击 open-type="share" 的按钮
-			shareType.value = shareType;
-			console.log("准备分享小程序卡片");
-		} else {
-			// 其他分享逻辑（如生成海报）
-		}
+	const handleShare = (shareTypeIn) => {
+		// 这种方式在小程序中无法通过 JS 直接唤起转发
+		// 必须引导用户点击 open-type="share" 的按钮
+		// 其他分享逻辑（如生成海报）
+		shareType.value = shareTypeIn;
 	};
 
 	const jump = (type, data) => {

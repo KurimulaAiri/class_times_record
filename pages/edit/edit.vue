@@ -4,7 +4,7 @@
 			<view class="update-form">
 				<view
 					class="form-item"
-					v-for="(item, index) in dataDetailMap"
+					v-for="(item, index) in EDIT_DATA_DETAIL_MAP"
 					:key="index"
 				>
 					<template v-if="index !== 'courseStatus'">
@@ -45,13 +45,13 @@
 </template>
 
 <script setup>
+	import { EDIT_DATA_DETAIL_MAP } from "../../config/common";
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { post } from "../../utils/request";
 
 	const selectData = ref({});
 	const tempData = ref({});
-	const dataDetailMap = ref({});
 
 	onLoad((options) => {
 		// 1. 打印原始 options 看看结构
@@ -64,17 +64,13 @@
 				const decodedData = decodeURIComponent(options.data);
 				const navItem = JSON.parse(decodedData);
 
-				// 4. 赋值给响应式变量
-				selectData.value = navItem.data;
-				tempData.value = { ...navItem.data }; // 深拷贝，避免直接修改原始数据
+				console.log("navItem:", navItem);
 
-				console.log("原始 detailMap:", navItem.detailMap);
-				const { courseLastTimeStr, ...left } = navItem.detailMap;
-				const newDetailMap = { ...left, courseStatus: "课程状态" };
-				dataDetailMap.value = newDetailMap;
+				// 4. 赋值给响应式变量
+				selectData.value = navItem;
+				tempData.value = { ...navItem }; // 深拷贝，避免直接修改原始数据
 
 				console.log("解析后的 data:", selectData.value);
-				console.log("解析后的 detailMap:", dataDetailMap.value);
 			} catch (e) {
 				console.error("解析失败，数据格式可能不对:", e);
 			}
@@ -118,6 +114,9 @@
 					title: "更新失败",
 					icon: "none",
 				});
+			})
+			.finally(() => {
+				uni.hideLoading();
 			});
 	};
 </script>
