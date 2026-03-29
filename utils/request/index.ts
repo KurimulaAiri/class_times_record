@@ -29,7 +29,17 @@ const timeout = 10000;
  * @param {boolean} [options.loading=true] - 是否显示加载中提示
  * @returns {Promise} 返回请求结果
  */
-const request = (options) => {
+
+type RequestOptions = {
+	url: string;
+	method?: "GET" | "POST" | "PUT" | "DELETE";
+	data?: any;
+	header?: any;
+	loading?: boolean;
+};
+
+
+const request = <T>(options: RequestOptions): Promise<T> => {
 	// 解构参数，设置默认值
 	const {
 		url,
@@ -79,20 +89,21 @@ const request = (options) => {
 					console.log("Token 已自动延期");
 				}
 
-				const { statusCode, data } = res;
+				const statusCode = res.statusCode;
+				const  data = res.data as ApiResponse<any>;
 
 				switch (statusCode) {
 					case 200:
 						// HTTP 请求成功，开始判断业务逻辑状态码
 						if (data.code === 200) {
-							resolve(data); // 业务逻辑成功
+							resolve(data as T); // 业务逻辑成功
 						} else {
 							// 业务逻辑错误（如：参数非法、权限不足但非登录失效）
 							uni.showToast({
 								title: data.message || "业务逻辑错误",
 								icon: "none",
 							});
-							reject(data);
+							reject(data as T);
 						}
 						break;
 
@@ -107,17 +118,17 @@ const request = (options) => {
 						setTimeout(() => {
 							uni.reLaunch({ url: "/pages/index/index" });
 						}, 1500);
-						reject(res);
+						reject(res as T);
 						break;
 
 					case 404:
 						uni.showToast({ title: "资源不存在 (404)", icon: "none" });
-						reject(res);
+						reject(res as T);
 						break;
 
 					case 500:
 						uni.showToast({ title: "服务器开小差了 (500)", icon: "none" });
-						reject(res);
+						reject(res as T);
 						break;
 
 					default:
@@ -126,7 +137,7 @@ const request = (options) => {
 							title: `系统错误：${statusCode}`,
 							icon: "none",
 						});
-						reject(res);
+						reject(res as T);
 						break;
 				}
 			},
@@ -153,8 +164,8 @@ const request = (options) => {
 };
 
 // 封装GET请求
-export const get = (url, data = {}, options = {}) => {
-	return request({
+export const get = <T>(url: string, data = {}, options = {}): Promise<T> => {
+	return request<T>({
 		url,
 		method: "GET",
 		data,
@@ -163,8 +174,8 @@ export const get = (url, data = {}, options = {}) => {
 };
 
 // 封装POST请求
-export const post = (url, data = {}, options = {}) => {
-	return request({
+export const post = <T>(url: string, data = {}, options = {}): Promise<T> => {
+	return request<T>({
 		url,
 		method: "POST",
 		data,
@@ -173,8 +184,8 @@ export const post = (url, data = {}, options = {}) => {
 };
 
 // 封装PUT请求（按需扩展）
-export const put = (url, data = {}, options = {}) => {
-	return request({
+export const put = <T>(url: string, data = {}, options = {}): Promise<T> => {
+	return request<T>({
 		url,
 		method: "PUT",
 		data,
@@ -183,32 +194,12 @@ export const put = (url, data = {}, options = {}) => {
 };
 
 // 封装DELETE请求（按需扩展）
-export const del = (url, data = {}, options = {}) => {
-	return request({
+export const del = <T>(url: string, data = {}, options = {}) => {
+	return request<T>({
 		url,
 		method: "DELETE",
 		data,
 		...options,
-	});
-};
-
-export const login = () => {
-	uni.login({
-		provider: "weixin",
-		success: (res) => {
-			if (res.code) {
-				// 将 code 发送到你的后端服务器
-				post("/auth/login", {
-					code: res.code,
-				}).then((res) => {
-					console.log("登录响应:", res);
-					// 缓存 token
-					// res 现在就是你后端 data 里的内容
-					uni.setStorageSync("token", res.data.token);
-					console.log("Token 已缓存");
-				});
-			}
-		},
 	});
 };
 

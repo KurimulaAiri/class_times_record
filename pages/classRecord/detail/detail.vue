@@ -88,15 +88,21 @@
 
 		<view class="bottom-action-bar" v-if="selectData.permissionType === 1">
 			<view class="button-group">
-				<view class="action-btn primary" @click="jump('adjust', selectData)">
+				<view
+					class="action-btn primary"
+					@click="toJump('/pages/classRecord/adjust/adjust', selectData)"
+				>
 					<uni-icons type="compose" size="18" color="#fff"></uni-icons>
 					<text>调课时</text>
 				</view>
-				<view class="action-btn secondary" @click="jump('edit', selectData)">
+				<view
+					class="action-btn secondary"
+					@click="toJump('/pages/classRecord/edit/edit', selectData)"
+				>
 					<uni-icons type="edit" size="18" color="#5c5c5c"></uni-icons>
 					<text>编辑</text>
 				</view>
-				<view class="action-btn secondary" @click="jump('share', selectData)">
+				<view class="action-btn secondary" @click="toJump('share', selectData)">
 					<uni-icons type="share" size="18" color="#5c5c5c"></uni-icons>
 					<text>分享</text>
 				</view>
@@ -106,10 +112,11 @@
 </template>
 
 <script setup>
-	import { DATA_DETAIL_MAP } from "../../config/common";
+	import { DATA_DETAIL_MAP } from "@/config/common";
 	import { onLoad, onShow, onShareAppMessage } from "@dcloudio/uni-app";
 	import { ref } from "vue";
-	import { login, post } from "../../utils/request";
+	import { jump } from "@/utils/common";
+	import { login, post } from "@/utils/request";
 	const selectData = ref({});
 	const recordList = ref([]);
 	const bindForm = ref({
@@ -160,8 +167,6 @@
 					uni.showToast({ title: "已保存至我的课程", icon: "success" });
 					// 绑定成功后，重新加载数据
 					queryForm.value.courseRecordId = shareId;
-
-					
 
 					post("/course_record/get", {
 						id: shareId,
@@ -302,18 +307,12 @@
 		shareType.value = shareTypeIn;
 	};
 
-	const jump = (type, data) => {
+	const toJump = (type, data) => {
 		if (type === "share") {
 			sharePopup.value.open();
 			return;
 		}
-
-		console.log("跳转类型:", type);
-		// 关键点：使用 encodeURIComponent 包装 JSON 字符串
-		const dataStr = encodeURIComponent(JSON.stringify(data));
-		uni.navigateTo({
-			url: `/pages/${type}/${type}?data=${dataStr}`,
-		});
+		jump(type, data);
 	};
 </script>
 

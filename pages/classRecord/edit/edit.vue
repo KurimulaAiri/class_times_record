@@ -45,10 +45,11 @@
 </template>
 
 <script setup>
-	import { EDIT_DATA_DETAIL_MAP } from "../../config/common";
+	import { EDIT_DATA_DETAIL_MAP } from "@/config/common";
 	import { onLoad } from "@dcloudio/uni-app";
+	import { jump } from "@/utils/common";
 	import { ref } from "vue";
-	import { post } from "../../utils/request";
+	import { post } from "@/utils/request";
 
 	const selectData = ref({});
 	const tempData = ref({});
@@ -81,15 +82,6 @@
 
 	const back = () => {
 		uni.navigateBack();
-	};
-
-	const jump = (type, data) => {
-		// 关键点：使用 encodeURIComponent 包装 JSON 字符串
-		const dataStr = encodeURIComponent(JSON.stringify(data));
-
-		uni.navigateTo({
-			url: `/pages/${type}/${type}?data=${dataStr}`,
-		});
 	};
 
 	const confirm = () => {

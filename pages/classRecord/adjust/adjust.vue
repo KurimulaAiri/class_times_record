@@ -121,7 +121,7 @@
 <script setup>
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
-	import { post } from "../../utils/request";
+	import { post } from "@/utils/request";
 
 	const adjustList = ref([]);
 

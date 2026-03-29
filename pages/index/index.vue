@@ -37,10 +37,7 @@
 					<view>
 						<slot name="title" class="title">
 							<div class="card-title">
-								<div
-									class="card-title-left"
-									@click="handleClick(item)"
-								>
+								<div class="card-title-left" @click="handleClick(item)">
 									<uni-icons
 										type="person-filled"
 										size="30"
@@ -70,8 +67,17 @@
 						>
 							{{ value }}：{{ item[key] === null ? "无记录" : item[key] }}
 						</div>
-						<button class="button admin-btn" @click="jump('adjust', item)" v-if="item.permissionType === 1">
-							<uni-icons type="compose" size="16" color="$theme-color" class="btn-icon"></uni-icons>
+						<button
+							class="button admin-btn"
+							@click="jump('/pages/classRecord/adjust/adjust', item)"
+							v-if="item.permissionType === 1"
+						>
+							<uni-icons
+								type="compose"
+								size="16"
+								color="$theme-color"
+								class="btn-icon"
+							></uni-icons>
 							计课时
 						</button>
 					</view>
@@ -84,7 +90,7 @@
 				</view>
 			</view>
 		</scroll-view>
-		<view class="fab" @click="jump('addCourse')">
+		<view class="fab" @click="jump('/pages/classRecord/addCourse/addCourse')">
 			<uni-icons type="plusempty" size="30" color="#fff"></uni-icons>
 		</view>
 	</view>
@@ -98,8 +104,9 @@
 		onShow,
 	} from "@dcloudio/uni-app";
 	import { ref } from "vue";
-	import { post, login } from "../../utils/request";
-	import { DATA_INDEX_MAP } from "../../config/common";
+	import { jump } from "@/utils/common";
+	import { post, login } from "@/utils/request";
+	import { DATA_INDEX_MAP } from "@/config/common";
 
 	// 响应式数据（替代原 data 中的内容）
 	const searchText = ref("");
@@ -263,7 +270,7 @@
 				switch (res.tapIndex) {
 					case 0:
 						console.log("编辑");
-						jump("edit", item);
+						jump("/pages/classRecord/edit/edit", item);
 						break;
 					case 1:
 						console.log("删除");
@@ -296,20 +303,11 @@
 		});
 	};
 
-	const jump = (type, data) => {
-		// 关键点：使用 encodeURIComponent 包装 JSON 字符串
-		const dataStr = encodeURIComponent(JSON.stringify(data));
-
-		uni.navigateTo({
-			url: `/pages/${type}/${type}?data=${dataStr}`,
-		});
-	};
-
 	const handleClick = (item) => {
 		const navItem = {
 			data: item,
 		};
-		jump("detail", navItem);
+		jump("/pages/classRecord/detail/detail", navItem);
 	};
 
 	// 如果模板中需要使用这些方法，需暴露出去（setup 语法自动暴露，无需 return，仅需确保函数定义在 setup 内）

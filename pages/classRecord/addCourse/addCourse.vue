@@ -64,7 +64,7 @@
 
 <script setup>
 	import { ref } from "vue";
-	import { post } from "../../utils/request";
+	import { post } from "@/utils/request";
 
 	const data = ref({
 		stuName: "",

@@ -45,5 +45,11 @@
   },
   "author": "KurimulaAiri",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@dcloudio/types": "^3.4.30",
+    "@dcloudio/uni-app": "^2.0.2-5000520260324002",
+    "@types/node": "^25.5.0",
+    "vue": "^2.6.14"
+  }
 }
