@@ -1,0 +1,10 @@
+{
+	"configurations": [
+		{
+			"name": "Uniapp Run",
+			"type": "uniapp-run",
+			"request": "launch",
+			"platform": "mp-weixin"
+		}
+	]
+}
