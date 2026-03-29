@@ -4,7 +4,9 @@
 			"name": "Uniapp Run",
 			"type": "uniapp-run",
 			"request": "launch",
-			"platform": "mp-weixin"
+			"platform": "mp-weixin",
+			"openDevTool": true,
+			"vueVersion": "v3"
 		}
 	]
 }
