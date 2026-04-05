@@ -1,6 +1,6 @@
-import { post } from "../../utils/request";
+import { post } from "@/utils/request";
 
-export const jump = (path: string, data: any) => {
+const jump = (path: string, data?: any) => {
 	// 关键点：使用 encodeURIComponent 包装 JSON 字符串
 	const dataStr = encodeURIComponent(JSON.stringify(data));
 
@@ -9,7 +9,7 @@ export const jump = (path: string, data: any) => {
 	});
 };
 
-export const login = () => {
+const login = () => {
 	uni.login({
 		provider: "weixin",
 		success: (res) => {
@@ -28,3 +28,28 @@ export const login = () => {
 		},
 	});
 };
+
+/**
+ * 重写类型 T 中的属性 K
+ * @param T 原类型
+ * @param K 要重写的属性键名 (联合类型)
+ * @returns 重写后的属性映射对象
+ */
+type Overwrite<T, U> = Omit<T, keyof U> & U;
+
+/**
+ * 专门用于表单：挑选属性并允许部分字段为 null
+ * @param T 原类型
+ * @param K 要重写的属性键名 (联合类型)
+ * @returns 重写后的属性映射对象
+ */
+type FormModel<T, K extends keyof T> = Overwrite<
+	Pick<T, K>,
+	{
+		[P in K]?: T[P] | null;
+	}
+>;
+
+export { jump, login };
+
+export type { Overwrite, FormModel };

@@ -4,4 +4,6 @@ type ApiResponse<T> = {
 	data: T;
 };
 
-type LoginResponse = ApiResponse<{ token: string }>
+type LoginResponse = {
+	token: string;
+}

@@ -6,7 +6,8 @@
 			"request": "launch",
 			"platform": "mp-weixin",
 			"openDevTool": true,
-			"vueVersion": "v3"
+			"vueVersion": "v3",
+			"trace": true
 		}
 	]
 }

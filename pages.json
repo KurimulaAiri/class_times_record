@@ -10,25 +10,25 @@
 			}
 		},
 		{
-			"path": "pages/classRecord/detail/detail",
+			"path": "pages/class-record/detail/index",
 			"style": {
 				"navigationBarTitleText": "课程详情"
 			}
 		},
 		{
-			"path": "pages/classRecord/edit/edit",
+			"path": "pages/class-record/edit/index",
 			"style": {
 				"navigationBarTitleText": "编辑信息"
 			}
 		},
 		{
-			"path": "pages/classRecord/adjust/adjust",
+			"path": "pages/class-record/adjust/index",
 			"style": {
 				"navigationBarTitleText": "调整课时"
 			}
 		},
 		{
-			"path": "pages/classRecord/addCourse/addCourse",
+			"path": "pages/class-record/add-course/index",
 			"style": {
 				"navigationBarTitleText": "添加课程"
 			}

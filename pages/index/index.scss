@@ -1,4 +1,4 @@
-@import "../../static/scss/index.scss";
+@import "../../static/scss/_index.scss";
 
 .content {
 	width: 100%;
@@ -221,7 +221,7 @@
 	width: 400rpx; // 稍微加宽，视觉更平衡
 	height: 42px;
 	border-radius: 10px; // 精致的大圆角矩形，比纯半圆更现代
-	border: 1px solid $theme-color; 
+	border: 1px solid $theme-color;
 	background-color: transparent; // 透明背景，更有活力
 	color: $theme-color; // 主题色文字
 	font-weight: bold; // 加粗文字，强调核心操作

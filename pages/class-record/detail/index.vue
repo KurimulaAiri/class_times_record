@@ -111,23 +111,28 @@
 	</view>
 </template>
 
-<script setup>
+<script setup lang="ts">
+	import type {
+		SelectData,
+		RecordList,
+		GetCourseRecordResponse,
+		GetRecordResponse,
+	} from ".";
 	import { DATA_DETAIL_MAP } from "@/config/common";
 	import { onLoad, onShow, onShareAppMessage } from "@dcloudio/uni-app";
 	import { ref } from "vue";
-	import { jump } from "@/utils/common";
-	import { login, post } from "@/utils/request";
-	const selectData = ref({});
-	const recordList = ref([]);
+	import { jump, login } from "@/utils/common";
+	import { post } from "@/utils/request";
+
+	const selectData = ref<SelectData>({} as SelectData);
+	const recordList = ref<RecordList>([]);
 	const bindForm = ref({
 		courseRecordId: 0,
 		permissionType: "",
 	});
 
-	const test = ref("");
-
 	const shareType = ref("");
-	const sharePopup = ref(null);
+	const sharePopup = ref<any>(null!);
 
 	const loadStatus = ref("more");
 	const total = ref(0);
@@ -146,60 +151,61 @@
 	onLoad((options) => {
 		// 1. 打印原始 options 看看结构
 		console.log("收到原始 options:", options);
+		if (options) {
+			// 新增：处理分享进入的情况
+			if (options.courseRecordId && options.fromShare === "true") {
+				console.log("分享进入，分享类型:", options.shareType);
 
-		// 新增：处理分享进入的情况
-		if (options.courseRecordId && options.fromShare === "true") {
-			console.log("分享进入，分享类型:", options.shareType);
+				console.log("分享进入，课程记录ID:", options.courseRecordId);
 
-			console.log("分享进入，课程记录ID:", options.courseRecordId);
+				const shareId = options.courseRecordId;
 
-			const shareId = options.courseRecordId;
+				// 2. 先登录，确保有用户信息
+				login();
 
-			// 2. 先登录，确保有用户信息
-			login();
+				bindForm.value.courseRecordId = shareId;
+				bindForm.value.permissionType = options.shareType;
 
-			bindForm.value.courseRecordId = shareId;
-			bindForm.value.permissionType = options.shareType;
+				// 调用后端接口，将此课程记录关联到当前登录用户的账户下
+				post("/permission_record/bind", bindForm.value).then((res) => {
+					if (res.code === 200) {
+						uni.showToast({ title: "已保存至我的课程", icon: "success" });
+						// 绑定成功后，重新加载数据
+						queryForm.value.courseRecordId = shareId;
 
-			// 调用后端接口，将此课程记录关联到当前登录用户的账户下
-			post("/permission_record/bind", bindForm.value).then((res) => {
-				if (res.code === 200) {
-					uni.showToast({ title: "已保存至我的课程", icon: "success" });
-					// 绑定成功后，重新加载数据
-					queryForm.value.courseRecordId = shareId;
-
-					post("/course_record/get", {
-						id: shareId,
-						share: true,
-					}).then((res) => {
-						console.log("在分享的前提下请求了一次get接口");
-						if (res.code === 200) {
-							console.log("获取课程记录响应:", res);
-							selectData.value = res.data.courseRecords[0];
-						}
-					});
-					getData(true);
-				}
-			});
-		} else {
-			// 2. 这里的 options.data 才是你 jump 函数里传过来的那个 JSON 字符串
-			if (options.data) {
-				try {
-					// 3. 先解码（对应发送端的 encodeURIComponent），再解析
-					const decodedData = decodeURIComponent(options.data);
-					const navItem = JSON.parse(decodedData);
-
-					// 4. 赋值给响应式变量
-					selectData.value = navItem.data;
-
-					console.log("解析后的 data:", selectData.value);
-
-					queryForm.value.courseRecordId = selectData.value.id;
-				} catch (e) {
-					console.error("解析失败，数据格式可能不对:", e);
-				}
+						post<GetCourseRecordResponse>("/course_record/get", {
+							id: shareId,
+							share: true,
+						}).then((res) => {
+							console.log("在分享的前提下请求了一次get接口");
+							if (res.code === 200) {
+								console.log("获取课程记录响应:", res);
+								selectData.value = res.data.courseRecords[0];
+							}
+						});
+						getData(true);
+					}
+				});
 			} else {
-				console.warn("未接收到名为 data 的跳转参数");
+				// 2. 这里的 options.data 才是你 jump 函数里传过来的那个 JSON 字符串
+				if (options.data) {
+					try {
+						// 3. 先解码（对应发送端的 encodeURIComponent），再解析
+						const decodedData = decodeURIComponent(options.data);
+						const navItem = JSON.parse(decodedData);
+
+						// 4. 赋值给响应式变量
+						selectData.value = navItem.data;
+
+						console.log("解析后的 data:", selectData.value);
+
+						queryForm.value.courseRecordId = selectData.value.id;
+					} catch (e) {
+						console.error("解析失败，数据格式可能不对:", e);
+					}
+				} else {
+					console.warn("未接收到名为 data 的跳转参数");
+				}
 			}
 		}
 		getData(true);
@@ -207,7 +213,7 @@
 
 	onShow(() => {
 		console.log("onShow");
-		post("/course_record/get", {
+		post<GetCourseRecordResponse>("/course_record/get", {
 			id: selectData.value.id,
 			isShare: true,
 		}).then((res) => {
@@ -230,7 +236,7 @@
 		} else {
 			loadStatus.value = "loading";
 		}
-		post("/record/get", queryForm.value)
+		post<GetRecordResponse>("/record/get", queryForm.value)
 			.then((res) => {
 				console.log("获取记录响应:", res);
 
@@ -255,12 +261,12 @@
 				} else {
 					loadStatus.value = "more"; // 失败了重置为 more，允许用户重试
 					uni.showToast({
-						title: res.msg || "获取记录失败",
+						title: res.message || "获取记录失败",
 						icon: "none",
 					});
 				}
 			})
-			.catch(() => {
+			.catch((e) => {
 				loadStatus.value = "more";
 				console.error("请求异常:", e);
 			})
@@ -316,4 +322,4 @@
 	};
 </script>
 
-<style lang="scss" scoped src="./detail.scss"></style>
+<style lang="scss" scoped src="./index.scss"></style>

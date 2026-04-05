@@ -62,15 +62,16 @@
 	</view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 	import { ref } from "vue";
 	import { post } from "@/utils/request";
+	import type { AddCourseRequest } from ".";
 
-	const data = ref({
+	const data = ref<AddCourseRequest>({
 		stuName: "",
 		courseName: "",
-		courseTotalTime: "",
-		courseRestTime: "",
+		courseTotalTime: null,
+		courseRestTime: null,
 		courseRemark: "",
 	});
 
@@ -83,7 +84,7 @@
 			});
 			return;
 		}
-		console.log(data.value.studentName);
+		console.log(data.value.stuName);
 		if (data.value.courseName === "") {
 			uni.showToast({
 				title: "请输入课程名称",
@@ -91,14 +92,14 @@
 			});
 			return;
 		}
-		if (data.value.courseTotalTime === "") {
+		if (data.value.courseTotalTime === null) {
 			uni.showToast({
 				title: "请输入总课时",
 				icon: "none",
 			});
 			return;
 		}
-		if (data.value.courseRestTime === "") {
+		if (data.value.courseRestTime === null) {
 			uni.showToast({
 				title: "请输入剩余课时",
 				icon: "none",
@@ -109,7 +110,7 @@
 		// 定义数字校验正则（正整数）
 		const numReg = /^\d+$/;
 
-		if (!numReg.test(data.value.courseTotalTime)) {
+		if (!numReg.test(data.value.courseTotalTime?.toString() || "")) {
 			uni.showToast({
 				title: "总课时必须是正整数",
 				icon: "none",
@@ -117,7 +118,7 @@
 			return;
 		}
 
-		if (!numReg.test(data.value.courseRestTime)) {
+		if (!numReg.test(data.value.courseRestTime?.toString() || "")) {
 			uni.showToast({
 				title: "剩余课时必须是正整数",
 				icon: "none",
@@ -137,7 +138,7 @@
 				});
 			} else {
 				uni.showToast({
-					title: res.msg,
+					title: res.message,
 					icon: "none",
 				});
 			}
@@ -145,4 +146,4 @@
 	};
 </script>
 
-<style lang="scss" scoped src="./addCourse.scss"></style>
+<style lang="scss" scoped src="./index.scss"></style>

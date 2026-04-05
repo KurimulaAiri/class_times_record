@@ -69,7 +69,7 @@
 						</div>
 						<button
 							class="button admin-btn"
-							@click="jump('/pages/classRecord/adjust/adjust', item)"
+							@click="jump('/pages/classRecord/adjust/index', item)"
 							v-if="item.permissionType === 1"
 						>
 							<uni-icons
@@ -90,13 +90,18 @@
 				</view>
 			</view>
 		</scroll-view>
-		<view class="fab" @click="jump('/pages/classRecord/addCourse/addCourse')">
+		<view class="fab" @click="jump('/pages/classRecord/addCourse/index')">
 			<uni-icons type="plusempty" size="30" color="#fff"></uni-icons>
 		</view>
 	</view>
 </template>
 
-<script setup>
+<script setup lang="ts">
+	import type {
+		CourseRecordList,
+		GetCourseRecordResponse,
+		GetCourseRecordForm,
+	} from ".";
 	import {
 		onLoad,
 		onReachBottom,
@@ -104,8 +109,8 @@
 		onShow,
 	} from "@dcloudio/uni-app";
 	import { ref } from "vue";
-	import { jump } from "@/utils/common";
-	import { post, login } from "@/utils/request";
+	import { jump, login } from "@/utils/common";
+	import { post } from "@/utils/request";
 	import { DATA_INDEX_MAP } from "@/config/common";
 
 	// 响应式数据（替代原 data 中的内容）
@@ -135,22 +140,8 @@
 			status: 2,
 		},
 	]);
-	const dataList = ref([
-		/**
-		 * 课程记录数据示例
-		 *	{
-		 *		id: 1,
-		 *		name: "张三",
-		 *		courseName: "1",
-		 *		courseTotalTime: 10,
-		 *		courseRestTime: 5,
-		 *		courseLastTime: "2023-01-01 00:00:00",
-		 *		courseRemark: "无",
-		 *	}
-		 */
-	]);
-
-	const queryDataForm = ref({
+	const dataList = ref<CourseRecordList>([]);
+	const queryDataForm = ref<GetCourseRecordForm>({
 		stuName: "",
 		courseName: "",
 		courseRemark: "",
@@ -173,7 +164,7 @@
 			loadStatus.value = "loading";
 		}
 
-		post("/course_record/get", {
+		post<GetCourseRecordResponse>("/course_record/get", {
 			...queryDataForm.value,
 		})
 			.then((res) => {
@@ -286,7 +277,7 @@
 								getData(true); // 刷新数据
 							} else {
 								uni.showToast({
-									title: res.msg || "删除失败",
+									title: res.message || "删除失败",
 									icon: "none",
 								});
 							}

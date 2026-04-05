@@ -14,8 +14,8 @@
 						>
 							{{ item.stuName }} -
 							{{ item.courseName }}
-						</view></view
-					>
+						</view>
+					</view>
 					<uni-icons type="right" @click="openDrawer()" />
 				</view>
 				<view class="form-item">
@@ -118,24 +118,31 @@
 	</view>
 </template>
 
-<script setup>
+<script setup lang="ts">
+	import type {
+		CourseRecord,
+		AdjustList,
+		CourseRecordList,
+		GetRespDataCourseRecord,
+		addRecordForm,
+	} from ".";
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { post } from "@/utils/request";
 
-	const adjustList = ref([]);
+	const adjustList = ref<AdjustList>([]);
 
-	const courseRecordList = ref({});
+	const courseRecordList = ref<CourseRecordList>([]);
 
-	const showRightRef = ref(null);
+	const showRightRef = ref<any>(null);
 
 	const total = ref(0);
 
 	const loadStatus = ref("loading");
 
-	const selectedIds = ref([]);
+	const selectedIds = ref<number[]>([]);
 
-	const tempSelectIds = ref([]);
+	const tempSelectIds = ref<number[]>([]);
 
 	const queryForm = ref({
 		courseStatus: 1,
@@ -169,7 +176,7 @@
 
 		selectedIds.value = [...tempSelectIds.value]; // 复制临时选择的课程ID到选中的课程ID列表
 
-		let temp = null;
+		let temp: CourseRecord | null = null;
 
 		if (adjustList.value[0].courseStatus === 2) {
 			temp = adjustList.value[0];
@@ -215,7 +222,7 @@
 			loadStatus.value = "loading";
 		}
 
-		post("/course_record/get", queryForm.value)
+		post<GetRespDataCourseRecord>("/course_record/get", queryForm.value)
 			.then((res) => {
 				console.log("获取课程记录:", res);
 				total.value = res.data.total;
@@ -261,7 +268,8 @@
 					title: err.msg || "获取课程记录失败",
 					icon: "none",
 				});
-			}).finally(() => {
+			})
+			.finally(() => {
 				uni.hideLoading();
 			});
 	};
@@ -285,7 +293,7 @@
 		},
 	]);
 
-	const record = ref({
+	const record = ref<addRecordForm>({
 		courseRecordIdList: [],
 		recordTime: "",
 		recordType: 1,
@@ -294,14 +302,16 @@
 	});
 
 	onLoad((options) => {
-		// 3. 先解码（对应发送端的 encodeURIComponent），再解析
-		const decodedData = decodeURIComponent(options.data);
-		adjustList.value.push(JSON.parse(decodedData));
+		if (options) {
+			// 3. 先解码（对应发送端的 encodeURIComponent），再解析
+			const decodedData = decodeURIComponent(options.data);
+			adjustList.value.push(JSON.parse(decodedData));
 
-		record.value.recordTime = getToday();
-		selectedIds.value = [];
-		selectedIds.value.push(adjustList.value[0].id);
-		console.log("adjustList.value[0]", adjustList.value[0]);
+			record.value.recordTime = getToday();
+			selectedIds.value = [];
+			selectedIds.value.push(adjustList.value[0].id);
+			console.log("adjustList.value[0]", adjustList.value[0]);
+		}
 	});
 
 	const getToday = () => {
@@ -314,10 +324,7 @@
 	};
 
 	const submit = () => {
-		if (
-			record.value.recordChange === null ||
-			record.value.recordChange === ""
-		) {
+		if (record.value.recordChange === null) {
 			uni.showToast({
 				title: "请输入课时调整",
 				icon: "none",
@@ -326,7 +333,10 @@
 		}
 
 		// 校验是否为正整数
-		if (isNaN(Number(record.value.recordChange)) || Number(record.value.recordChange) <= 0) {
+		if (
+			isNaN(Number(record.value.recordChange)) ||
+			Number(record.value.recordChange) <= 0
+		) {
 			uni.showToast({
 				title: "课时调整必须为正整数",
 				icon: "none",
@@ -337,27 +347,29 @@
 		record.value.courseRecordIdList = selectedIds.value;
 		record.value.recordTime += " 00:00:00"; // 00:00:00 补全具体时间，后端采用LocalDateTime接受
 
-		post("/record/add_all", record.value).then((res) => {
-			console.log("提交后:", res);
-			if (res.code === 200) {
-				uni.showToast({
-					title: "调整成功",
-					icon: "success",
-				});
-				uni.navigateBack({
-					delta: 1,
-				});
-			} else {
-				uni.showToast({
-					title: res.msg,
-					icon: "none",
-				});
-			}
-		}).finally(() => {
-			uni.hideLoading();
-		});
+		post("/record/add_all", record.value)
+			.then((res) => {
+				console.log("提交后:", res);
+				if (res.code === 200) {
+					uni.showToast({
+						title: "调整成功",
+						icon: "success",
+					});
+					uni.navigateBack({
+						delta: 1,
+					});
+				} else {
+					uni.showToast({
+						title: res.message,
+						icon: "none",
+					});
+				}
+			})
+			.finally(() => {
+				uni.hideLoading();
+			});
 		console.log("提交前:", record.value);
 	};
 </script>
 
-<style lang="scss" scoped src="./adjust.scss"></style>
+<style lang="scss" scoped src="./index.scss"></style>

@@ -44,10 +44,9 @@
 	</view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 	import { EDIT_DATA_DETAIL_MAP } from "@/config/common";
 	import { onLoad } from "@dcloudio/uni-app";
-	import { jump } from "@/utils/common";
 	import { ref } from "vue";
 	import { post } from "@/utils/request";
 
@@ -58,25 +57,27 @@
 		// 1. 打印原始 options 看看结构
 		console.log("收到原始 options:", options);
 
-		// 2. 这里的 options.data 才是你 jump 函数里传过来的那个 JSON 字符串
-		if (options.data) {
-			try {
-				// 3. 先解码（对应发送端的 encodeURIComponent），再解析
-				const decodedData = decodeURIComponent(options.data);
-				const navItem = JSON.parse(decodedData);
+		if (options) {
+			// 2. 这里的 options.data 才是你 jump 函数里传过来的那个 JSON 字符串
+			if (options.data) {
+				try {
+					// 3. 先解码（对应发送端的 encodeURIComponent），再解析
+					const decodedData = decodeURIComponent(options.data);
+					const navItem = JSON.parse(decodedData);
 
-				console.log("navItem:", navItem);
+					console.log("navItem:", navItem);
 
-				// 4. 赋值给响应式变量
-				selectData.value = navItem;
-				tempData.value = { ...navItem }; // 深拷贝，避免直接修改原始数据
+					// 4. 赋值给响应式变量
+					selectData.value = navItem;
+					tempData.value = { ...navItem }; // 深拷贝，避免直接修改原始数据
 
-				console.log("解析后的 data:", selectData.value);
-			} catch (e) {
-				console.error("解析失败，数据格式可能不对:", e);
+					console.log("解析后的 data:", selectData.value);
+				} catch (e) {
+					console.error("解析失败，数据格式可能不对:", e);
+				}
+			} else {
+				console.warn("未接收到名为 data 的跳转参数");
 			}
-		} else {
-			console.warn("未接收到名为 data 的跳转参数");
 		}
 	});
 
@@ -96,7 +97,7 @@
 					uni.navigateBack();
 				} else {
 					uni.showToast({
-						title: res.msg || "更新失败",
+						title: res.message || "更新失败",
 						icon: "none",
 					});
 				}
@@ -113,4 +114,4 @@
 	};
 </script>
 
-<style lang="scss" scoped src="./edit.scss"></style>
+<style lang="scss" scoped src="./index.scss"></style>

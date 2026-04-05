@@ -164,8 +164,8 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 };
 
 // 封装GET请求
-export const get = <T>(url: string, data = {}, options = {}): Promise<T> => {
-	return request<T>({
+export const get = <T>(url: string, data = {}, options = {}): Promise<ApiResponse<T>> => {
+	return request<ApiResponse<T>>({
 		url,
 		method: "GET",
 		data,
@@ -174,8 +174,8 @@ export const get = <T>(url: string, data = {}, options = {}): Promise<T> => {
 };
 
 // 封装POST请求
-export const post = <T>(url: string, data = {}, options = {}): Promise<T> => {
-	return request<T>({
+export const post = <T>(url: string, data = {}, options = {}): Promise<ApiResponse<T>> => {
+	return request<ApiResponse<T>>({
 		url,
 		method: "POST",
 		data,
@@ -184,8 +184,8 @@ export const post = <T>(url: string, data = {}, options = {}): Promise<T> => {
 };
 
 // 封装PUT请求（按需扩展）
-export const put = <T>(url: string, data = {}, options = {}): Promise<T> => {
-	return request<T>({
+export const put = <T>(url: string, data = {}, options = {}): Promise<ApiResponse<T>> => {
+	return request<ApiResponse<T>>({
 		url,
 		method: "PUT",
 		data,
@@ -194,8 +194,8 @@ export const put = <T>(url: string, data = {}, options = {}): Promise<T> => {
 };
 
 // 封装DELETE请求（按需扩展）
-export const del = <T>(url: string, data = {}, options = {}) => {
-	return request<T>({
+export const del = <T>(url: string, data = {}, options = {}): Promise<ApiResponse<T>> => {
+	return request<ApiResponse<T>>({
 		url,
 		method: "DELETE",
 		data,

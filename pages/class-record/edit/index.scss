@@ -1,4 +1,4 @@
-@import "../../../static/scss/index.scss";
+@import "../../../static/scss/_index.scss";
 
 .content {
 	display: flex;
@@ -83,7 +83,7 @@
 			background-color: $theme-color; // 使用你的主题色
 			color: #fff;
 		}
-
+		
 		// 第一个按钮加个右边框区分
 		&:first-child {
 			border-right: 1px solid #ddd;

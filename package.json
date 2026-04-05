@@ -48,8 +48,11 @@
   "description": "",
   "devDependencies": {
     "@dcloudio/types": "^3.4.30",
-    "@dcloudio/uni-app": "^2.0.2-5000520260324002",
+    "@dcloudio/uni-app": "^3.0.0-5000520260324002",
+    "@dcloudio/vite-plugin-uni": "^3.0.0-alpha-3000020210521001",
     "@types/node": "^25.5.0",
-    "vue": "^2.6.14"
+    "@types/wechat-miniprogram": "^3.4.10",
+    "miniprogram-api-typings": "^5.1.2",
+    "vue": "^3.5.31"
   }
 }
