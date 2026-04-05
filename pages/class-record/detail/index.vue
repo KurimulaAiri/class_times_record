@@ -121,7 +121,7 @@
 	import { DATA_DETAIL_MAP } from "@/config/common";
 	import { onLoad, onShow, onShareAppMessage } from "@dcloudio/uni-app";
 	import { ref } from "vue";
-	import { jump, login } from "@/utils/common";
+	import { jump, login, parseData } from "@/utils/common";
 	import { post } from "@/utils/request";
 
 	const selectData = ref<SelectData>({} as SelectData);
@@ -191,11 +191,10 @@
 				if (options.data) {
 					try {
 						// 3. 先解码（对应发送端的 encodeURIComponent），再解析
-						const decodedData = decodeURIComponent(options.data);
-						const navItem = JSON.parse(decodedData);
+						const navItem = parseData(options.data);
 
 						// 4. 赋值给响应式变量
-						selectData.value = navItem.data;
+						selectData.value = navItem;
 
 						console.log("解析后的 data:", selectData.value);
 

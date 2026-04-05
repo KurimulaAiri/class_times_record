@@ -49,6 +49,7 @@
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { post } from "@/utils/request";
+	import { parseData } from "@/utils/common";
 
 	const selectData = ref({});
 	const tempData = ref({});
@@ -62,8 +63,7 @@
 			if (options.data) {
 				try {
 					// 3. 先解码（对应发送端的 encodeURIComponent），再解析
-					const decodedData = decodeURIComponent(options.data);
-					const navItem = JSON.parse(decodedData);
+					const navItem = parseData(options.data);
 
 					console.log("navItem:", navItem);
 

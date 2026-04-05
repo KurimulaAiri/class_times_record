@@ -1,5 +1,9 @@
 import { post } from "@/utils/request";
-
+/**
+ * 跳转页面
+ * @param path 目标页面路径
+ * @param data 要传递的参数
+ */
 const jump = (path: string, data?: any) => {
 	// 关键点：使用 encodeURIComponent 包装 JSON 字符串
 	const dataStr = encodeURIComponent(JSON.stringify(data));
@@ -7,6 +11,15 @@ const jump = (path: string, data?: any) => {
 	uni.navigateTo({
 		url: `${path}?data=${dataStr}`,
 	});
+};
+
+/**
+ * 解析 URL 查询参数中的 JSON 字符串
+ * @param dataStr 要解析的 JSON 字符串
+ * @returns 解析后的对象
+ */
+const parseData = (dataStr: string) => {
+	return JSON.parse(decodeURIComponent(dataStr));
 };
 
 const login = () => {
@@ -50,6 +63,6 @@ type FormModel<T, K extends keyof T> = Overwrite<
 	}
 >;
 
-export { jump, login };
+export { jump, login, parseData };
 
 export type { Overwrite, FormModel };

@@ -1,17 +1,24 @@
 {
-    "cSpell.words": [
-        "autofocus",
-        "dcloudio",
-        "fontawesome",
-        "miniprogram",
-        "nvue",
-        "plusempty",
-        "quickapp",
-        "scrolltolower",
-        "splashscreen",
-        "toutiao",
-        "wechat",
-        "weixin",
-        "wx8b6acdafc6f87e0c"
-    ]
+	"cSpell.words": [
+		"autofocus",
+		"dcloudio",
+		"fontawesome",
+		"miniprogram",
+		"nvue",
+		"plusempty",
+		"quickapp",
+		"scrolltolower",
+		"splashscreen",
+		"toutiao",
+		"wechat",
+		"weixin",
+		"wx8b6acdafc6f87e0c"
+	],
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.expand": false,
+	"explorer.fileNesting.patterns": {
+		"package.json": "package-lock.json, pnpm-lock.yaml, yarn.lock, .eslint*",
+		"vite.config.*": "tsconfig.node.json, vitest.config.*",
+		"tsconfig.json": "tsconfig.app.json, tsconfig.node.json"
+	}
 }

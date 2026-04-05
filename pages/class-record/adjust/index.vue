@@ -129,6 +129,7 @@
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { post } from "@/utils/request";
+	import { parseData } from "@/utils/common";
 
 	const adjustList = ref<AdjustList>([]);
 
@@ -304,8 +305,8 @@
 	onLoad((options) => {
 		if (options) {
 			// 3. 先解码（对应发送端的 encodeURIComponent），再解析
-			const decodedData = decodeURIComponent(options.data);
-			adjustList.value.push(JSON.parse(decodedData));
+			const decodedData = parseData(options.data);
+			adjustList.value.push(decodedData);
 
 			record.value.recordTime = getToday();
 			selectedIds.value = [];

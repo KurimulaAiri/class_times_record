@@ -1,0 +1,103 @@
+@import "../../static/scss/index.scss";
+
+.content {
+	height: 100vh;
+	width: 100%;
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: $theme-color;
+}
+
+.login-form {
+	height: 50vh;
+	width: 70%;
+	display: flex;
+	align-content: center;
+	flex-wrap: nowrap;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 200rpx;
+	border-radius: 20rpx;
+	padding: 20rpx;
+	background-color: #fff;
+	&-title {
+		font-size: 24px;
+		font-weight: bold;
+		color: $theme-color;
+		margin-bottom: 20rpx;
+		margin-bottom: 20px;
+	}
+	&-content {
+		font-size: 20px;
+		color: #666;
+		display: flex;
+		gap: 20rpx;
+		align-content: center;
+		flex-wrap: nowrap;
+		flex-direction: column;
+		margin-bottom: 20rpx;
+
+		// 选中所有子 item，但排除掉 btn-wrapper
+		& > .login-form-item:not(.btn-wrapper) {
+			justify-content: space-between;
+		}
+	}
+	&-item {
+		height: 50rpx;
+		width: 100%;
+		display: flex;
+		gap: 20rpx;
+		align-content: center;
+		flex-wrap: nowrap;
+		flex-direction: row;
+
+		// 关键代码：除了最后一个 item，其他的都加下边框
+		&:not(:last-child) {
+			padding: 20rpx 0;
+			border-bottom: 1rpx solid #bcbcbc;
+			margin-bottom: 20rpx; // 增加间距
+		}
+
+		&-label {
+			font-size: 20px;
+			display: flex;
+			float: left;
+			flex-direction: row;
+			align-items: center;
+			color: #666;
+		}
+		&-input {
+			font-size: 20px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #666;
+		}
+	}
+}
+
+.login-btn {
+	height: 80rpx;
+	width: 70%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	justify-content: center;
+	align-content: center;
+	background-color: $theme-color;
+	color: #fff;
+	border-radius: 50px;
+	margin-top: 20rpx;
+    margin-bottom: 20rpx;
+	&:active {
+		background-color: $theme-color-active;
+	}
+}
+
+.btn-wrapper {
+	justify-content: center;
+}
