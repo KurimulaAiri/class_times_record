@@ -109,7 +109,8 @@
 		onShow,
 	} from "@dcloudio/uni-app";
 	import { ref } from "vue";
-	import { jump, login } from "@/utils/common";
+	import { jump } from "@/utils/common";
+	import { loginNoPwd } from "@/api/auth";
 	import { post } from "@/utils/request";
 	import { DATA_INDEX_MAP } from "@/config/common";
 
@@ -220,7 +221,7 @@
 	onShow(() => {
 		dataList.value = [];
 		// 在 login.vue 或 App.vue 中
-		login();
+		loginNoPwd();
 		// 刷新数据
 		getData();
 	});

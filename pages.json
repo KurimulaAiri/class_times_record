@@ -14,6 +14,12 @@
 			}
 		},
 		{
+			"path": "pages/main/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
 			"path": "pages/class-record/index/index",
 			"style": {
 				"navigationBarTitleText": "课时管理",
@@ -45,6 +51,7 @@
 				"navigationBarTitleText": "添加课程"
 			}
 		}
+
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

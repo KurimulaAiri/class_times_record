@@ -1,12 +1,19 @@
-import { post } from "@/utils/request";
 /**
  * 跳转页面
  * @param path 目标页面路径
  * @param data 要传递的参数
+ * @param redirect 是否重定向，默认 false
  */
-const jump = (path: string, data?: any) => {
+const jump = (path: string, data?: any, redirect?: boolean) => {
 	// 关键点：使用 encodeURIComponent 包装 JSON 字符串
 	const dataStr = encodeURIComponent(JSON.stringify(data));
+
+	if (redirect) {
+		uni.redirectTo({
+			url: `${path}?data=${dataStr}`,
+		});
+		return;
+	} 
 
 	uni.navigateTo({
 		url: `${path}?data=${dataStr}`,
@@ -20,26 +27,6 @@ const jump = (path: string, data?: any) => {
  */
 const parseData = (dataStr: string) => {
 	return JSON.parse(decodeURIComponent(dataStr));
-};
-
-const login = () => {
-	uni.login({
-		provider: "weixin",
-		success: (res) => {
-			if (res.code) {
-				// 将 code 发送到你的后端服务器
-				post<LoginResponse>("/auth/login", {
-					code: res.code,
-				}).then((res) => {
-					console.log("登录响应:", res);
-					// 缓存 token
-					// res 现在就是你后端 data 里的内容
-					uni.setStorageSync("token", res.data.token);
-					console.log("Token 已缓存");
-				});
-			}
-		},
-	});
 };
 
 /**
@@ -63,6 +50,6 @@ type FormModel<T, K extends keyof T> = Overwrite<
 	}
 >;
 
-export { jump, login, parseData };
+export { jump, parseData };
 
 export type { Overwrite, FormModel };

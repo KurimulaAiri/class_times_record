@@ -121,7 +121,8 @@
 	import { DATA_DETAIL_MAP } from "@/config/common";
 	import { onLoad, onShow, onShareAppMessage } from "@dcloudio/uni-app";
 	import { ref } from "vue";
-	import { jump, login, parseData } from "@/utils/common";
+	import { jump, parseData } from "@/utils/common";
+	import { loginNoPwd } from "@/api/auth";
 	import { post } from "@/utils/request";
 
 	const selectData = ref<SelectData>({} as SelectData);
@@ -161,7 +162,7 @@
 				const shareId = options.courseRecordId;
 
 				// 2. 先登录，确保有用户信息
-				login();
+				loginNoPwd();
 
 				bindForm.value.courseRecordId = shareId;
 				bindForm.value.permissionType = options.shareType;
