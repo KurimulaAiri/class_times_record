@@ -1,5 +1,5 @@
 // 基础域名（根据环境切换，如开发/生产环境）
-let baseUrl;
+let baseUrl: string;
 console.log("process.env.NODE_ENV:", process.env.NODE_ENV);
 switch (process.env.NODE_ENV) {
 	case "development":
@@ -155,7 +155,7 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 			},
 			// 无论成功失败，最终执行（隐藏加载中）
 			complete: () => {
-				if (loading) {
+				if (!loading) {
 					uni.hideLoading();
 				}
 			},

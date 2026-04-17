@@ -6,10 +6,10 @@
                     请选择身份
                 </view>
 				<view class="entry-select-btn-group">
-					<view class="entry-select-btn" @click="jump('/pages/login/index', { role: 'parent' })">
+					<view class="entry-select-btn" @click="jump('/pages/login/index', { role: 3 })">
 						家长端
 					</view>
-					<view class="entry-select-btn" @click="jump('/pages/login/index', { role: 'teacher' })">
+					<view class="entry-select-btn" @click="jump('/pages/login/index', { role: 4 })">
 						老师师端
 					</view>
 				</view>
