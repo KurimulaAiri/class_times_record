@@ -18,7 +18,7 @@
 				<view class="icon-wrapper" :style="{ backgroundColor: item.bgColor }">
 					<uni-icons :type="item.icon" size="30" color="#fff"></uni-icons>
 				</view>
-				<text class="grid-label">{{ item.name }}</text>
+				<text class="grid-label">{{ item.menuName }}</text>
 			</view>
 		</view>
 
@@ -47,22 +47,21 @@
 </template>
 
 <script setup lang="ts">
+	import { onLoad } from "@dcloudio/uni-app";
+	import { getMenuList } from "@/api/menu";
 	import { ref } from "vue";
 
+	onLoad(() => {
+		getMenuList({
+			currentPage: 1,
+			pageSize: 100,
+		}).then((res) => {
+			console.log("获取菜单列表",res);
+			menuList.value = res.data.menus;
+		});
+	});
 
-
-	const menuList = ref([
-		{ name: "课后作业", icon: "compose", bgColor: "#76d6bc" },
-		{ name: "我的课程", icon: "book", bgColor: "#ffb352" },
-		{ name: "上课记录", icon: "list", bgColor: "#ff8e58" },
-		{ name: "打卡作业", icon: "calendar", bgColor: "#ff9c73" },
-		{ name: "评价老师", icon: "staff", bgColor: "#88e2bb" },
-		{ name: "在线约课", icon: "calendar-filled", bgColor: "#6fa5ff" },
-		{ name: "请假", icon: "minus-filled", bgColor: "#8bd16b" },
-		{ name: "课后点评", icon: "chatboxes", bgColor: "#80d4ff" },
-		{ name: "机构活动", icon: " notification", bgColor: "#7daaff" },
-		{ name: "微官网", icon: "world", bgColor: "#f65c92" },
-	]);
+	const menuList = ref<Menu[]>([]);
 </script>
 
 <style scoped lang="scss" src="./index.scss"></style>

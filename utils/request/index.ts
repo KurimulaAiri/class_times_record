@@ -38,7 +38,6 @@ type RequestOptions = {
 	loading?: boolean;
 };
 
-
 const request = <T>(options: RequestOptions): Promise<T> => {
 	// 解构参数，设置默认值
 	const {
@@ -90,7 +89,7 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 				}
 
 				const statusCode = res.statusCode;
-				const  data = res.data as ApiResponse<any>;
+				const data = res.data as ApiResponse<any>;
 
 				switch (statusCode) {
 					case 200:
@@ -140,9 +139,15 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 						reject(res as T);
 						break;
 				}
+				if (loading) {
+					uni.hideLoading();
+				}
 			},
 			// 请求失败回调（网络错误、超时等）
 			fail: (err) => {
+				if (loading) {
+					uni.hideLoading();
+				}
 				let errMsg = "网络异常，请检查网络";
 				if (err.errMsg.includes("timeout")) {
 					errMsg = "请求超时，请稍后重试";
@@ -155,7 +160,7 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 			},
 			// 无论成功失败，最终执行（隐藏加载中）
 			complete: () => {
-				if (!loading) {
+				if (loading) {
 					uni.hideLoading();
 				}
 			},
@@ -164,7 +169,11 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 };
 
 // 封装GET请求
-export const get = <T>(url: string, data = {}, options = {}): Promise<ApiResponse<T>> => {
+export const get = <T>(
+	url: string,
+	data = {},
+	options = {},
+): Promise<ApiResponse<T>> => {
 	return request<ApiResponse<T>>({
 		url,
 		method: "GET",
@@ -174,7 +183,11 @@ export const get = <T>(url: string, data = {}, options = {}): Promise<ApiRespons
 };
 
 // 封装POST请求
-export const post = <T>(url: string, data = {}, options = {}): Promise<ApiResponse<T>> => {
+export const post = <T>(
+	url: string,
+	data = {},
+	options = {},
+): Promise<ApiResponse<T>> => {
 	return request<ApiResponse<T>>({
 		url,
 		method: "POST",
@@ -184,7 +197,11 @@ export const post = <T>(url: string, data = {}, options = {}): Promise<ApiRespon
 };
 
 // 封装PUT请求（按需扩展）
-export const put = <T>(url: string, data = {}, options = {}): Promise<ApiResponse<T>> => {
+export const put = <T>(
+	url: string,
+	data = {},
+	options = {},
+): Promise<ApiResponse<T>> => {
 	return request<ApiResponse<T>>({
 		url,
 		method: "PUT",
@@ -194,7 +211,11 @@ export const put = <T>(url: string, data = {}, options = {}): Promise<ApiRespons
 };
 
 // 封装DELETE请求（按需扩展）
-export const del = <T>(url: string, data = {}, options = {}): Promise<ApiResponse<T>> => {
+export const del = <T>(
+	url: string,
+	data = {},
+	options = {},
+): Promise<ApiResponse<T>> => {
 	return request<ApiResponse<T>>({
 		url,
 		method: "DELETE",
