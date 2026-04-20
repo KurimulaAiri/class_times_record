@@ -9,12 +9,14 @@ const jump = (path: string, data?: any, redirect?: boolean) => {
 	const dataStr = encodeURIComponent(JSON.stringify(data));
 
 	if (redirect) {
+		console.log("重定向到", path,"参数", dataStr);
 		uni.redirectTo({
 			url: `${path}?data=${dataStr}`,
 		});
 		return;
 	} 
 
+	console.log("跳转到", path,"参数", dataStr);
 	uni.navigateTo({
 		url: `${path}?data=${dataStr}`,
 	});

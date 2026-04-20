@@ -3,7 +3,7 @@
 		<view class="content">
 			<view class="login-form">
 				<view class="login-form-title">
-					{{ role === "teacher" ? "教师" : "家长" }}登录
+					{{ role === 4 ? "教师" : "家长" }}登录
 				</view>
 				<view class="login-form-content">
 					<view class="login-form-item">
@@ -39,7 +39,7 @@
 	import { loginByPwd, getOpenId } from "@/api/auth";
 	import { encryptPassword } from "@/utils/crypto";
 
-	const role = ref("");
+	const role = ref(0);
 
 	const account = ref("");
 	const password = ref("");
@@ -48,7 +48,7 @@
 		if (options) {
 			const data = parseData(options.data);
 			console.log(data.role);
-			role.value = data.role;
+			role.value = Number(data.role);
 		}
 	});
 

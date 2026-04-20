@@ -1,67 +1,59 @@
 <template>
-	<view class="container">
-		<view class="banner-box">
-			<view class="banner-content">
-				<view class="title">在线请假 在线约课</view>
-				<view class="sub-title">上课记录、课表安排随时查询</view>
-				<view class="tag">及时收到推送通知和重要消息</view>
-			</view>
-			<image
-				class="banner-img"
-				src="/static/icon/books.svg"
-				mode="aspectFit"
-			></image>
-		</view>
+  <view class="main-container">
+    <view class="status-bar"></view>
 
-		<view class="grid-container">
-			<view class="grid-item" v-for="(item, index) in menuList" :key="index">
-				<view class="icon-wrapper" :style="{ backgroundColor: item.bgColor }">
-					<uni-icons :type="item.icon" size="30" color="#fff"></uni-icons>
-				</view>
-				<text class="grid-label">{{ item.menuName }}</text>
-			</view>
-		</view>
+    <scroll-view scroll-y class="content-body">
+      <home v-show="activeTab === 0" />
+      <user v-show="activeTab === 1" />
+    </scroll-view>
 
-		<view class="wechat-notice">
-			<view class="left-info">
-				<image class="wechat-icon" src="/static/icon/wechat.svg"></image>
-				<view class="text-group">
-					<view class="main-text">微信公众号</view>
-					<view class="sub-text">接收学员动态推送通知</view>
-				</view>
-			</view>
-			<button class="follow-btn">去关注</button>
-		</view>
-
-		<view class="tab-bar">
-			<view class="tab-item active">
-				<uni-icons type="home-filled" size="24" color="#2979ff"></uni-icons>
-				<text>首页</text>
-			</view>
-			<view class="tab-item">
-				<uni-icons type="person" size="24" color="#666"></uni-icons>
-				<text>我的</text>
-			</view>
-		</view>
-	</view>
+    <view class="custom-tabbar">
+      <view 
+        v-for="(item, index) in tabs" 
+        :key="index"
+        class="tab-item"
+        :class="{ active: activeTab === index }"
+        @tap="switchTab(index)"
+      >
+        <view class="icon-box">
+          <uni-icons 
+            :type="activeTab === index ? item.iconActive : item.icon" 
+            :color="activeTab === index ? '#2979ff' : '#909399'" 
+            size="24"
+          />
+        </view>
+        <text class="tab-label">{{ item.text }}</text>
+      </view>
+    </view>
+  </view>
 </template>
 
 <script setup lang="ts">
-	import { onLoad } from "@dcloudio/uni-app";
-	import { getMenuList } from "@/api/menu";
-	import { ref } from "vue";
+	import { ref, shallowRef } from "vue";
+	import home from "../component/home/index.vue";
+	import user from "../component/user/index.vue";
 
-	onLoad(() => {
-		getMenuList({
-			currentPage: 1,
-			pageSize: 100,
-		}).then((res) => {
-			console.log("获取菜单列表",res);
-			menuList.value = res.data.menus;
-		});
-	});
+	// 使用 shallowRef 优化组件引用的性能
+	const activeTab = ref(0);
 
-	const menuList = ref<Menu[]>([]);
+	const tabs = [
+		{
+			text: "首页",
+			icon: "home",
+			iconActive: "home-filled",
+		},
+		{
+			text: "我的",
+			icon: "person",
+			iconActive: "person-filled",
+		},
+	];
+
+	const switchTab = (index: number) => {
+		activeTab.value = index;
+		// 进阶点：切换时可以触发震动反馈
+		uni.vibrateShort({});
+	};
 </script>
 
-<style scoped lang="scss" src="./index.scss"></style>
+<style lang="scss" scoped src="./index.scss"></style>

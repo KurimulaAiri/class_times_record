@@ -50,12 +50,17 @@
 			"style": {
 				"navigationBarTitleText": "添加课程"
 			}
+		},
+		{
+			"path": "pages/main/my-course/index",
+			"style": {
+				"navigationBarTitleText": "我的课程"
+			}
 		}
-
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
-		"navigationBarTitleText": "课时管理",
+		"navigationBarTitleText": "课时管理KA",
 		"navigationBarBackgroundColor": "#70a9a2",
 		"backgroundColor": "#70a9a2"
 	},

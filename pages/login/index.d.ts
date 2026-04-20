@@ -1,5 +1,5 @@
 interface LoginRequest {
-    role: string;
+    role: number;
     account: string;
     password: string;
 }
