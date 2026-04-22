@@ -71,7 +71,7 @@
 				uni.setStorageSync("token", res.data.token);
 				console.log("Token 已缓存");
 				if (res.code === 200) {
-					jump("/pages/main/index/index", null, true);
+					jump("/pages/main/index/index", role.value, true);
 				}
 			})
 			.catch((err) => {

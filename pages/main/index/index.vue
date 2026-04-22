@@ -2,9 +2,14 @@
   <view class="main-container">
     <view class="status-bar"></view>
 
-    <scroll-view scroll-y class="content-body">
-      <home v-show="activeTab === 0" />
-      <user v-show="activeTab === 1" />
+    <scroll-view scroll-y class="content-body" v-if="role === 3">
+      <parent-home v-show="activeTab === 0" />
+      <parent-user v-show="activeTab === 1" />
+    </scroll-view>
+
+    <scroll-view scroll-y class="content-body" v-if="role === 4">
+      <teacher-home v-show="activeTab === 0" />
+      <teacher-user v-show="activeTab === 1" />
     </scroll-view>
 
     <view class="custom-tabbar">
@@ -30,10 +35,26 @@
 
 <script setup lang="ts">
 	import { ref, shallowRef } from "vue";
-	import home from "../component/home/index.vue";
-	import user from "../component/user/index.vue";
+	import { onLoad } from "@dcloudio/uni-app";
+	import { parseData } from "@/utils/common";
 
-	// 使用 shallowRef 优化组件引用的性能
+	import ParentHome from "../component/parent/home/index.vue";
+	import ParentUser from "../component/parent/user/index.vue";
+
+  import TeacherHome from "../component/teacher/home/index.vue";
+  import TeacherUser from "../component/teacher/user/index.vue";
+
+  const role = ref(0);
+
+  onLoad((options) => {
+    if (options) {
+      const data = parseData(options.data);
+      console.log(data);
+      role.value = Number(data);
+    }
+  });
+
+ 	// 使用 shallowRef 优化组件引用的性能
 	const activeTab = ref(0);
 
 	const tabs = [
@@ -54,6 +75,8 @@
 		// 进阶点：切换时可以触发震动反馈
 		uni.vibrateShort({});
 	};
+
+
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

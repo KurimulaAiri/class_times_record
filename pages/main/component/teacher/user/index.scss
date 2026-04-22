@@ -1,0 +1,157 @@
+@import "../../../../../static/scss/index";
+
+.mine-container {
+	min-height: 100vh;
+	background-color: #f8faf9; // 统一背景色
+	padding: 30rpx; // 页面整体内边距
+	padding-bottom: 60rpx;
+    z-index: 1;
+}
+
+.header {
+    margin: -30rpx;
+	top: 0;
+	left: 0;
+	right: 0;
+	background-color: $theme-color;
+	height: 120rpx;
+	padding: 60rpx 40rpx 0;
+	border-radius: 0 0 50rpx 50rpx;
+    z-index: 5;
+}
+
+// 通用间距改为透明，通过卡片 margin 实现
+.margin-gap {
+	height: 24rpx;
+}
+
+// 用户头部卡片重构
+.user-section {
+    margin-top: -100rpx;
+	display: flex;
+	align-items: center;
+	padding: 50rpx 40rpx;
+	background: linear-gradient(135deg, #66cdaa 0%, #48b08f 100%); // 对应首页渐变
+	border-radius: 30rpx;
+	box-shadow: 0 10rpx 30rpx rgba(102, 205, 170, 0.2);
+
+    z-index: 10;
+
+	.avatar {
+		width: 120rpx;
+		height: 120rpx;
+		border-radius: 60rpx;
+		background-color: #f0f0f0;
+		border: 4rpx solid rgba(255, 255, 255, 0.4); // 增加精致边框
+	}
+
+	.info {
+		flex: 1;
+		margin-left: 30rpx;
+		display: flex;
+		flex-direction: column;
+
+		.name {
+			font-size: 38rpx;
+			font-weight: bold;
+			color: #fff; // 改为白色以适配渐变背景
+			margin-bottom: 8rpx;
+		}
+		.phone {
+			font-size: 26rpx;
+			color: rgba(255, 255, 255, 0.8); // 半透明白
+		}
+	}
+}
+
+// 统一的卡片基础样式
+.list-item,
+.menu-group,
+.footer-actions {
+	background-color: #fff;
+	border-radius: 24rpx; // 大圆角
+	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.02);
+	overflow: hidden;
+}
+
+.list-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 35rpx 30rpx;
+
+	.left-content {
+		display: flex;
+		align-items: center;
+		.label {
+			font-size: 28rpx;
+			margin-left: 24rpx;
+			color: #333;
+			font-weight: 500;
+		}
+	}
+
+	.right-content {
+		display: flex;
+		align-items: center;
+		.value {
+			font-size: 26rpx;
+			color: #888;
+			margin-right: 10rpx;
+		}
+	}
+}
+
+// 功能组内的列表项调整
+.menu-group {
+	.list-item {
+		border-radius: 0; // 容器内取消单项圆角
+		background-color: transparent;
+
+		&.border-bottom {
+			border-bottom: 1rpx solid #f8f8f8;
+		}
+	}
+}
+
+// APP 图标容器
+.app-icon {
+	width: 44rpx;
+	height: 44rpx;
+	background-color: #66cdaa;
+	border-radius: 12rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 4rpx 10rpx rgba(102, 205, 170, 0.3);
+}
+
+// 底部退出/切换卡片
+.action-btn {
+	background-color: #fff;
+	border-radius: 24rpx;
+	padding: 30rpx 0;
+	text-align: center;
+	font-size: 30rpx;
+	color: #444;
+	margin-bottom: 20rpx; // 两个按钮之间留空
+
+	&.border-bottom {
+		margin-bottom: 0;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+		border-bottom: 1rpx solid #f8f8f8;
+	}
+
+	&:last-of-type {
+		margin-top: -20rpx; // 让切换和退出两个按钮连在一起
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+		color: #ff5e5e; // 退出登录标红
+	}
+}
+
+.item-hover {
+	background-color: #f9f9f9 !important;
+	opacity: 0.8;
+}

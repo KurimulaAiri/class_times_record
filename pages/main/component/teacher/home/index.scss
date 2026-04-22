@@ -1,0 +1,60 @@
+@import '../../../../../static/scss/index';
+
+.container {
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+
+.header {
+  background-color: $theme-color;
+  height: 240rpx;
+  padding: 60rpx 40rpx 0;
+  border-radius: 0 0 50rpx 50rpx;
+}
+
+.greeting {
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+.menu-card {
+  margin: -80rpx 30rpx 0;
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  padding: 40rpx 10rpx;
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.04);
+}
+
+.grid-layout {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.grid-item {
+  width: 33.33%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30rpx 0;
+  transition: transform 0.1s;
+}
+
+.item-active {
+  background-color: #f0f0f0;
+  border-radius: 12rpx;
+  transform: scale(0.95);
+}
+
+.icon-wrapper {
+  margin-bottom: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-name {
+  font-size: 26rpx;
+  color: #666;
+}
