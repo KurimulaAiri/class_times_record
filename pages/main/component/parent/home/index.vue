@@ -38,17 +38,6 @@
         </view>
       </template>
     </view>
-
-    <view class="wechat-notice">
-      <view class="left-info">
-        <image class="wechat-icon" src="/static/icon/wechat.svg"></image>
-        <view class="text-group">
-          <view class="main-text">服务通知</view>
-          <view class="sub-text">接收课程变动与续费提醒</view>
-        </view>
-      </view>
-      <button class="follow-btn">去开启</button>
-    </view>
   </view>
 </template>
 

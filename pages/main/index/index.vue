@@ -23,7 +23,7 @@
         <view class="icon-box">
           <uni-icons 
             :type="activeTab === index ? item.iconActive : item.icon" 
-            :color="activeTab === index ? '#2979ff' : '#909399'" 
+            :color="activeTab === index ? '#70a9a2' : '#909399'" 
             size="24"
           />
         </view>
