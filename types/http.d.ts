@@ -7,4 +7,5 @@ type ApiResponse<T> = {
 type LoginResponse = {
 	token: string
 	openId: string
+	user: User
 }

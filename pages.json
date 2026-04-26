@@ -16,7 +16,9 @@
 		{
 			"path": "pages/main/index/index",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "首页",
+				"navigationBarBackgroundColor": "#f5f7fa",
+				"navigationBarTextStyle": "black"
 			}
 		},
 		{
@@ -56,6 +58,12 @@
 			"style": {
 				"navigationBarTitleText": "我的课程"
 			}
+		},
+		{
+			"path": "pages/main/manage-student/index",
+			"style": {
+				"navigationBarTitleText": "学员管理"
+			}
 		}
 	],
 	"globalStyle": {
@@ -64,5 +72,10 @@
 		"navigationBarBackgroundColor": "#70a9a2",
 		"backgroundColor": "#70a9a2"
 	},
-	"uniIdRouter": {}
+	"uniIdRouter": {
+		"loginPage": "pages/login/index",
+		"needLogin": [
+			"pages/main/index/index"
+		]
+	}
 }

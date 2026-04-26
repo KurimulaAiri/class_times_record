@@ -77,6 +77,7 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
+	import { logOut } from "@/utils/common";
 
 	// 按照你的 Menu 接口格式定义的子菜单
 	const subMenuList = ref([
@@ -110,9 +111,19 @@
 		if (path) uni.navigateTo({ url: path });
 	};
 
-	const handleAction = (type) => {
+	const handleAction = (type: string) => {
 		console.log("点击了操作:", type);
 		// 实现具体的切换账号或退出逻辑
+		switch (type) {
+			case "switch":
+				// 切换账号逻辑
+				break;
+			case "logout":
+				logOut();
+				break;
+			default:
+				break;
+		}
 	};
 </script>
 

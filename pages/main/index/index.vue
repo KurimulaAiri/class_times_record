@@ -47,6 +47,7 @@
   const role = ref(0);
 
   onLoad((options) => {
+    uni.hideHomeButton();
     if (options) {
       const data = parseData(options.data);
       console.log(data);

@@ -36,7 +36,8 @@
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { jump, parseData } from "@/utils/common";
-	import { loginByPwd, getOpenId } from "@/api/auth";
+	import { loginByPwd } from "@/api/auth";
+	import { useUserStore } from "@/stores/user";
 	import { encryptPassword } from "@/utils/crypto";
 
 	const role = ref(0);
@@ -70,8 +71,11 @@
 				// res 现在就是你后端 data 里的内容
 				uni.setStorageSync("token", res.data.token);
 				console.log("Token 已缓存");
+				// 缓存用户信息
+				const userStore = useUserStore();
+				userStore.setUserInfo(res.data.user);
 				if (res.code === 200) {
-					jump("/pages/main/index/index", role.value, true);
+					jump("/pages/main/index/index", role.value, "relaunch");
 				}
 			})
 			.catch((err) => {

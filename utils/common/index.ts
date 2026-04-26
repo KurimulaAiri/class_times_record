@@ -1,26 +1,45 @@
+import { useUserStore } from "@/stores/user";
+
 /**
  * 跳转页面
  * @param path 目标页面路径
  * @param data 要传递的参数
- * @param redirect 是否重定向，默认 false
+ * @param type 跳转类型，默认 navigate，可选 redirect 或 relaunch
  */
-const jump = (path: string, data?: any, redirect?: boolean) => {
+const jump = (path: string, data?: any, type: "redirect" | "navigate" | "relaunch" = "navigate") => {
 	// 关键点：使用 encodeURIComponent 包装 JSON 字符串
 	const dataStr = encodeURIComponent(JSON.stringify(data));
 
-	if (redirect) {
-		console.log("重定向到", path,"参数", dataStr);
-		uni.redirectTo({
-			url: `${path}?data=${dataStr}`,
-		});
-		return;
-	} 
-
-	console.log("跳转到", path,"参数", dataStr);
-	uni.navigateTo({
-		url: `${path}?data=${dataStr}`,
-	});
+	switch (type) {
+		case "redirect":
+			console.log("重定向到", path, "参数", dataStr);
+			uni.redirectTo({
+				url: `${path}?data=${dataStr}`,
+			});
+			return;
+		case "navigate":
+			console.log("跳转到", path, "参数", dataStr);
+			uni.navigateTo({
+				url: `${path}?data=${dataStr}`,
+			});
+			return;
+		case "relaunch":
+			console.log("重新启动应用，跳转到", path, "参数", dataStr);
+			uni.reLaunch({
+				url: `${path}?data=${dataStr}`,
+					});
+			return;
+	}
 };
+
+const logOut = () => {
+	uni.removeStorageSync("token");
+	// 清除用户信息
+	const userStore = useUserStore();
+	userStore.clearUserInfo();
+	// 跳转到登录页
+	jump("/pages/index/index", null, "relaunch");
+}
 
 /**
  * 解析 URL 查询参数中的 JSON 字符串
@@ -52,6 +71,6 @@ type FormModel<T, K extends keyof T> = Overwrite<
 	}
 >;
 
-export { jump, parseData };
+export { jump, parseData, logOut };
 
 export type { Overwrite, FormModel };

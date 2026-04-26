@@ -1,109 +1,189 @@
+/* index.scss */
+
 .user-container {
-  min-height: 100vh;
-  background-color: #fcfdfe; // 极浅的蓝灰色背景
-  padding: 0 30rpx;
+	background-color: #f5f7fa; // 极浅的蓝灰色背景，更贴合原图
+	padding: 0 30rpx;
+	padding-bottom: 50rpx;
 }
 
-/* 顶部背景 */
-.header-bg {
-  padding-top: 100rpx;
-  height: 280rpx;
-  position: relative;
+/* 1. 顶部用户信息区 - 重构布局 */
+.header-section {
+	padding-top: 100rpx;
+	height: 160rpx;
+	display: flex;
+	justify-content: space-between; // 核心：左右两端对齐
+	align-items: center;
+	margin-bottom: 30rpx;
 
-  .user-info-row {
-    display: flex;
-    align-items: center;
-    
-    .avatar {
-      width: 130rpx;
-      height: 130rpx;
-      border-radius: 50%;
-      background-color: #e8f4ff;
-    }
+	.header-left {
+		display: flex;
+		align-items: center;
 
-    .location-tag {
-      margin-left: 20rpx;
-      padding: 4rpx 10rpx;
-    }
+		.avatar {
+			width: 120rpx;
+			height: 120rpx;
+			border-radius: 50%;
+			background-color: #f0f0f0; // 浅灰底色
+			margin-right: 25rpx;
+		}
 
-    .manage-btn {
-      margin-left: auto;
-      margin-right: 0;
-      background-color: #4f78ff;
-      color: #fff;
-      font-size: 26rpx;
-      border-radius: 40rpx;
-      padding: 0 35rpx;
-      height: 70rpx;
-      line-height: 70rpx;
-    }
-  }
+		.user-text-info {
+			display: flex;
+			flex-direction: column;
+
+			.user-name {
+				font-size: 36rpx;
+				font-weight: bold;
+				color: #333;
+				margin-bottom: 10rpx;
+			}
+
+			.location-row {
+				display: flex;
+				align-items: center;
+
+				.location-text {
+					font-size: 24rpx;
+					color: #999;
+					margin-left: 8rpx;
+				}
+			}
+		}
+	}
+
+	.manage-btn {
+		margin: 0;
+		background-color: #4f78ff;
+		color: #fff;
+		font-size: 26rpx;
+		font-weight: bold;
+		border-radius: 40rpx;
+		padding: 0 35rpx;
+		height: 70rpx;
+		line-height: 70rpx;
+		transition: all 0.1s; // 添加平滑过渡，让反馈更自然
+
+		// 核心：点击后的样式
+		&-hover {
+			background-color: #3d60d1 !important; // 颜色变深
+			opacity: 0.9; // 增加一点透明度
+			transform: scale(0.96); // 轻微缩小的弹簧感
+		}
+
+		// 如果不使用 hover-class，也可以直接用 CSS 的 active 伪类作为兜底
+		&:active {
+			transform: scale(0.95); // 按下时稍微缩小，增加肉感
+		}
+	}
 }
 
-/* 金刚区布局 */
+/* 2. 金刚区 - 微调图标间距和阴影 */
 .grid-menu {
-  display: flex;
-  justify-content: space-around;
-  padding: 40rpx 0;
-  margin-bottom: 20rpx;
+	display: flex;
+	justify-content: space-around;
+	padding: 30rpx 0;
+	margin-bottom: 30rpx;
+	background-color: #fff; // 图片中金刚区也是白色背景
+	border-radius: 20rpx;
+	box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.03);
 
-  .grid-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	.grid-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		flex: 1; // 均分空间
 
-    .grid-icon-box {
-      width: 90rpx;
-      height: 90rpx;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 15rpx;
-      box-shadow: 0 6rpx 15rpx rgba(0,0,0,0.05);
-    }
+		.grid-icon-box {
+			width: 100rpx;
+			height: 100rpx;
+			border-radius: 50%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin-bottom: 15rpx;
+			box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.08); // 增加阴影深度
+		}
 
-    .grid-label {
-      font-size: 26rpx;
-      color: #333;
-    }
-  }
+		.grid-label {
+			font-size: 26rpx;
+			color: #444;
+		}
+	}
 }
 
-/* 列表样式 */
-.list-section {
-  .list-item {
-    background-color: #fff;
-    margin-bottom: 20rpx;
-    padding: 35rpx 30rpx;
-    border-radius: 20rpx; // 图片中较大的圆角
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.02);
+/* 3. 列表区域 - 修改为通栏白色大底 */
+.list-card-bg {
+	background-color: #fff; // 列表区域整体为白色背景
+	border-radius: 24rpx;
+	padding: 10rpx 0; // 上下留白
+	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.02);
 
-    .item-left {
-      display: flex;
-      align-items: center;
+	.list-item {
+		margin-bottom: 0rpx; // 移除单个 item 的 margin
+		padding: 35rpx 30rpx;
+		border-bottom: 1rpx solid #f2f2f2; // 增加分割线
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 
-      .icon-wrap {
-        width: 56rpx;
-        height: 56rpx;
-        border-radius: 14rpx;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-right: 25rpx;
-      }
+		&:last-child {
+			border-bottom: none; // 最后一个移除分割线
+		}
 
-      .item-text {
-        font-size: 30rpx;
-        color: #444;
-      }
-    }
-  }
+		.item-left {
+			display: flex;
+			align-items: center;
+
+			.icon-wrap {
+				width: 60rpx;
+				height: 60rpx;
+				border-radius: 16rpx; // 调整为更接近图片的方圆
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin-right: 25rpx;
+			}
+
+			.item-text {
+				font-size: 30rpx;
+				color: #333;
+				font-weight: 500;
+			}
+		}
+	}
 }
 
 .item-hover {
-  background-color: #f5f5f5 !important;
+	background-color: #fafafa !important;
+}
+
+.footer-actions {
+	margin-top: 30rpx;
+	background-color: #fff;
+	border-radius: 24rpx; // 大圆角
+	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.02);
+	overflow: hidden;
+}
+
+// 底部退出/切换卡片
+.action-btn {
+	background-color: #fff;
+	border-radius: 24rpx;
+	padding: 30rpx 0;
+	text-align: center;
+	font-size: 30rpx;
+	color: #444;
+
+	&.border-bottom {
+		margin-bottom: 0;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+		border-bottom: 1rpx solid #f8f8f8;
+	}
+
+	&:last-of-type {
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+		color: #ff5e5e; // 退出登录标红
+	}
 }
