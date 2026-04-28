@@ -1,47 +1,54 @@
 import { post } from "@/utils/request";
+import { useUserStore } from "@/stores/user";
+import { jump } from "@/utils/common";
 
 const getOpenId = (): Promise<ApiResponse<LoginResponse>> => {
-    console.log("获取 OpenID");
-    return new Promise((resolve, reject) => {
-        uni.login({
-            provider: "weixin",
-            success: async (res) => {
-                if (res.code) {
-                    try {
-                        // 这里的 post 必须被 resolve 出去
-                        const response = await post<LoginResponse>("/auth/get_open_id", {
-                            code: res.code,
-                        });
-                        resolve(response);
-                    } catch (err) {
-                        reject(err);
-                    }
-                } else {
-                    reject(res);
-                }
-            },
-            fail: (err) => reject(err)
-        });
-    });
+	console.log("获取 OpenID");
+	return new Promise((resolve, reject) => {
+		uni.login({
+			provider: "weixin",
+			success: async (res) => {
+				if (res.code) {
+					try {
+						// 这里的 post 必须被 resolve 出去
+						const response = await post<LoginResponse>("/auth/get_open_id", {
+							code: res.code,
+						});
+						console.log("OpenID 获取成功:", response);
+						// 缓存 OpenID
+						uni.setStorageSync("openId", response.data.openId);
+						resolve(response);
+					} catch (err) {
+						reject(err);
+					}
+				} else {
+					reject(res);
+				}
+			},
+			fail: (err) => reject(err),
+		});
+	});
 };
 
-const loginByPwd = async (data: LoginRequest): Promise<ApiResponse<LoginResponse>> => {
-    try {
-        // 1. 等待获取 OpenID
-        const res = await getOpenId();
-        const openId = res.data.openId;
-        
-        console.log("OpenID 获取成功:", openId);
+const loginByPwd = async (
+	data: LoginRequest,
+): Promise<ApiResponse<LoginResponse>> => {
+	try {
+		// 1. 等待获取 OpenID
+		const res = await getOpenId();
+		const openId = res.data.openId;
 
-        // 2. 发起最终登录请求并返回结果
-        return await post<LoginResponse>("/auth/login_by_pwd", { 
-            ...data, 
-            openId 
-        });
-    } catch (error) {
-        console.error("登录链路失败:", error);
-        return Promise.reject(error);
-    }
+		console.log("OpenID 获取成功:", openId);
+
+		// 2. 发起最终登录请求并返回结果
+		return await post<LoginResponse>("/auth/login_by_pwd", {
+			...data,
+			openId,
+		});
+	} catch (error) {
+		console.error("登录链路失败:", error);
+		return Promise.reject(error);
+	}
 };
 
 const loginNoPwd = () => {
@@ -64,4 +71,48 @@ const loginNoPwd = () => {
 	});
 };
 
-export { loginNoPwd, loginByPwd, getOpenId };
+const loginByToken = async (
+	token: string,
+): Promise<ApiResponse<LoginResponse>> => {
+	try {
+		// 1. 等待获取 OpenID
+		const res = await getOpenId();
+		const openId = res.data.openId;
+
+		console.log("OpenID 获取成功:", openId);
+
+		// 2. 发起最终登录请求并返回结果
+		return await post<LoginResponse>("/auth/login_by_token", {
+			token,
+			openId,
+		});
+	} catch (error) {
+		console.error("登录链路失败:", error);
+		return Promise.reject(error);
+	}
+};
+
+const logOut = () => {
+    const token = uni.getStorageSync("token");
+	post("/auth/logout", {
+        token,
+    }).then((res) => {
+		if (res.code === 200) {
+			uni.showToast({
+				title: "退出登录成功",
+				icon: "success",
+			});
+		}
+		console.log("退出登录成功:", res);
+        uni.hideToast();
+	});
+    uni.removeStorageSync("token");
+	uni.removeStorageSync("openId");
+	// 清除用户信息
+	const userStore = useUserStore();
+	userStore.clearUserInfo();
+	// 跳转到登录页
+	jump("/pages/index/index", null, "relaunch");
+};
+
+export { loginNoPwd, loginByPwd, getOpenId, loginByToken, logOut };

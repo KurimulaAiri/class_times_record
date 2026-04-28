@@ -1,5 +1,6 @@
 interface User {
     userId: number;
+    roleId: number;
     identityInfo: identityInfo;
     createTimeStr: string;
     updateTimeStr: string;

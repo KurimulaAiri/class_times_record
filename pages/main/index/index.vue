@@ -50,7 +50,7 @@
     uni.hideHomeButton();
     if (options) {
       const data = parseData(options.data);
-      console.log(data);
+      console.log("roleId:", data);
       role.value = Number(data);
     }
   });

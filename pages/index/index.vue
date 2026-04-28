@@ -20,6 +20,26 @@
 
 <script setup lang="ts">
 	import { jump } from "@/utils/common/index";
+	import { onLoad } from "@dcloudio/uni-app";
+	import { useUserStore } from "@/stores/user";
+	import { loginByToken } from "@/api/auth";
+
+	onLoad(() => {
+		console.log("onLoad 执行");
+		const token = uni.getStorageSync('token');
+		if (token) {
+			loginByToken(token).then((res) => {
+				if (res.code === 200) {
+					console.log("登录成功:", res);
+					// 登录成功后，根据角色跳转不同的页面跳转
+					const userStore = useUserStore();
+					userStore.setUserInfo(res.data.user);
+					jump('/pages/main/index/index', res.data.user.roleId, "relaunch");
+				}
+			});
+		}
+	})
+
 </script>
 
 <style scoped lang="scss" src="./index.scss"></style>

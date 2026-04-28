@@ -5,6 +5,7 @@ export const useUserStore = defineStore('user',() => {
     // 1. 定义对象状态，初始化为空或默认值
     const userInfo = ref<User>({
         userId: 0,
+        roleId: 0,
         identityInfo: {
             userId: 0,
             isAvailable: false,
@@ -22,6 +23,7 @@ export const useUserStore = defineStore('user',() => {
     const clearUserInfo = () => {
         userInfo.value = {
             userId: 0,
+            roleId: 0,
             identityInfo: {
                 userId: 0,
                 isAvailable: false,

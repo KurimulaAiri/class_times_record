@@ -4,13 +4,17 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "首页",
+				"navigationBarBackgroundColor": "#70a9a2",
+				"navigationBarTextStyle": "white"
 			}
 		},
 		{
 			"path": "pages/login/index",
 			"style": {
-				"navigationBarTitleText": "登录"
+				"navigationBarTitleText": "登录",
+				"navigationBarBackgroundColor": "#70a9a2",
+				"navigationBarTextStyle": "white"
 			}
 		},
 		{
@@ -62,20 +66,26 @@
 		{
 			"path": "pages/main/manage-student/index",
 			"style": {
-				"navigationBarTitleText": "学员管理"
+				"navigationBarTitleText": "学员管理",
+				"navigationBarBackgroundColor": "#f5f7fa",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/main/edit-student-info/index",
+			"style": {
+				"navigationBarTitleText": "编辑学员信息"
 			}
 		}
 	],
 	"globalStyle": {
-		"navigationBarTextStyle": "white",
+		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "课时管理KA",
-		"navigationBarBackgroundColor": "#70a9a2",
-		"backgroundColor": "#70a9a2"
+		"navigationBarBackgroundColor": "#f5f7fa",
+		"backgroundColor": "#f5f7fa"
 	},
 	"uniIdRouter": {
 		"loginPage": "pages/login/index",
-		"needLogin": [
-			"pages/main/index/index"
-		]
+		"needLogin": ["pages/main/index/index"]
 	}
 }

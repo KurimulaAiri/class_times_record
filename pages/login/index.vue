@@ -48,7 +48,7 @@
 	onLoad((options) => {
 		if (options) {
 			const data = parseData(options.data);
-			console.log(data.role);
+			console.log("roleId:", data.role);
 			role.value = Number(data.role);
 		}
 	});

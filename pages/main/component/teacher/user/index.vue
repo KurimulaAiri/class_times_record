@@ -77,7 +77,7 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
-	import { logOut } from "@/utils/common";
+	import { logOut } from "@/api/auth";
 
 	// 按照你的 Menu 接口格式定义的子菜单
 	const subMenuList = ref([

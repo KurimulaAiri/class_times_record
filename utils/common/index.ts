@@ -1,5 +1,3 @@
-import { useUserStore } from "@/stores/user";
-
 /**
  * 跳转页面
  * @param path 目标页面路径
@@ -32,15 +30,6 @@ const jump = (path: string, data?: any, type: "redirect" | "navigate" | "relaunc
 	}
 };
 
-const logOut = () => {
-	uni.removeStorageSync("token");
-	// 清除用户信息
-	const userStore = useUserStore();
-	userStore.clearUserInfo();
-	// 跳转到登录页
-	jump("/pages/index/index", null, "relaunch");
-}
-
 /**
  * 解析 URL 查询参数中的 JSON 字符串
  * @param dataStr 要解析的 JSON 字符串
@@ -71,6 +60,6 @@ type FormModel<T, K extends keyof T> = Overwrite<
 	}
 >;
 
-export { jump, parseData, logOut };
+export { jump, parseData };
 
 export type { Overwrite, FormModel };
