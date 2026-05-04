@@ -1,5 +1,6 @@
 import { post } from "@/utils/request";
 import { useUserStore } from "@/stores/user";
+import { ROUTES } from "@/config/routes";
 import { jump } from "@/utils/common";
 
 const getOpenId = (): Promise<ApiResponse<LoginResponse>> => {
@@ -52,23 +53,27 @@ const loginByPwd = async (
 };
 
 const loginNoPwd = () => {
-	uni.login({
-		provider: "weixin",
-		success: (res) => {
-			if (res.code) {
-				// 将 code 发送到你的后端服务器
-				post<LoginResponse>("/auth/login_no_pwd", {
-					code: res.code,
-				}).then((res) => {
-					console.log("登录响应:", res);
-					// 缓存 token
-					// res 现在就是你后端 data 里的内容
-					uni.setStorageSync("token", res.data.token);
-					console.log("Token 已缓存");
-				});
-			}
-		},
-	});
+	const userInfo = useUserStore().userInfo;
+	if (userInfo !== null && userInfo !== undefined) {
+		uni.login({
+			provider: "weixin",
+			success: (res) => {
+				if (res.code) {
+					// 将 code 发送到你的后端服务器
+					post<LoginResponse>("/auth/login_no_pwd", {
+						code: res.code,
+						role: userInfo.roleId,
+					}).then((res) => {
+						console.log("登录响应:", res);
+						// 缓存 token
+						// res 现在就是你后端 data 里的内容
+						uni.setStorageSync("token", res.data.token);
+						console.log("Token 已缓存");
+					});
+				}
+			},
+		});
+	}
 };
 
 const loginByToken = async (
@@ -93,10 +98,10 @@ const loginByToken = async (
 };
 
 const logOut = () => {
-    const token = uni.getStorageSync("token");
+	const token = uni.getStorageSync("token");
 	post("/auth/logout", {
-        token,
-    }).then((res) => {
+		token,
+	}).then((res) => {
 		if (res.code === 200) {
 			uni.showToast({
 				title: "退出登录成功",
@@ -104,15 +109,15 @@ const logOut = () => {
 			});
 		}
 		console.log("退出登录成功:", res);
-        uni.hideToast();
+		uni.hideToast();
 	});
-    uni.removeStorageSync("token");
+	uni.removeStorageSync("token");
 	uni.removeStorageSync("openId");
 	// 清除用户信息
 	const userStore = useUserStore();
 	userStore.clearUserInfo();
 	// 跳转到登录页
-	jump("/pages/index/index", null, "relaunch");
+	jump(ROUTES.INDEX, null, "relaunch");
 };
 
 export { loginNoPwd, loginByPwd, getOpenId, loginByToken, logOut };

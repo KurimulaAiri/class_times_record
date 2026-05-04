@@ -1,6 +1,5 @@
 <template>
 	<view class="mine-container">
-        <view class="header"></view>
 		<view class="user-section" @tap="handleAction('profile')">
 			<image
 				class="avatar"
@@ -8,8 +7,8 @@
 				mode="aspectFill"
 			></image>
 			<view class="info">
-				<text class="name">蔡福全</text>
-				<text class="phone">手机号：15260111193</text>
+				<text class="name">{{ userInfo?.identityInfo.username }}</text>
+				<text class="phone">{{ 1233 }}</text>
 			</view>
 			<uni-icons type="right" size="18" color="#ccc"></uni-icons>
 		</view>
@@ -78,6 +77,12 @@
 <script setup lang="ts">
 	import { ref } from "vue";
 	import { logOut } from "@/api/auth";
+	import { useUserStore } from "@/stores/user";
+
+	const userInfo = useUserStore().userInfo;
+
+	if (userInfo?.roleId === 4) {
+	}
 
 	// 按照你的 Menu 接口格式定义的子菜单
 	const subMenuList = ref([
@@ -95,7 +100,7 @@
 			icon: "person",
 			iconType: 1,
 			path: "/pages/book/index",
-			isVisible: true,
+			isVisible: false,
 		},
 		{
 			id: 103,
@@ -103,7 +108,7 @@
 			icon: "scan",
 			iconType: 1,
 			path: "/pages/qrcode/index",
-			isVisible: true,
+			isVisible: false,
 		},
 	]);
 

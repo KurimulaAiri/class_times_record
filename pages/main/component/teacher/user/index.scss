@@ -8,18 +8,6 @@
     z-index: 1;
 }
 
-.header {
-    margin: -30rpx;
-	top: 0;
-	left: 0;
-	right: 0;
-	background-color: $theme-color;
-	height: 120rpx;
-	padding: 60rpx 40rpx 0;
-	border-radius: 0 0 50rpx 50rpx;
-    z-index: 5;
-}
-
 // 通用间距改为透明，通过卡片 margin 实现
 .margin-gap {
 	height: 24rpx;
@@ -27,7 +15,6 @@
 
 // 用户头部卡片重构
 .user-section {
-    margin-top: -100rpx;
 	display: flex;
 	align-items: center;
 	padding: 50rpx 40rpx;
@@ -134,7 +121,6 @@
 	text-align: center;
 	font-size: 30rpx;
 	color: #444;
-	margin-bottom: 20rpx; // 两个按钮之间留空
 
 	&.border-bottom {
 		margin-bottom: 0;

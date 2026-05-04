@@ -110,7 +110,7 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 						// Token 过期或无效
 						uni.removeStorageSync("token");
 						uni.showToast({
-							title: "重新登录",
+							title: "登录过期，请重新登录",
 							icon: "none",
 						});
 						// 延迟跳转

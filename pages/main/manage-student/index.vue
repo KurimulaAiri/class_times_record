@@ -1,7 +1,13 @@
 <template>
 	<view class="container">
-		<scroll-view scroll-y="true" class="list-container">
-			<view v-for="(item, index) in userList" :key="index" class="card">
+		<scroll-view
+			scroll-y="true"
+			class="list-container"
+			:refresher-enabled="true"
+			:refresher-triggered="isRefreshing"
+			@refresherrefresh="onRefresherRefresh"
+		>
+			<view v-for="(item, index) in studentList" :key="index" class="card">
 				<view class="header">
 					<view class="user-info">
 						<image class="avatar" :src="item.avatar" mode="aspectFill"></image>
@@ -12,25 +18,25 @@
 
 				<view class="content">
 					<view class="info-row">
-						<text class="label">联系电话：</text>
-						<text class="value">{{ item.phone }} ({{ item.relation }})</text>
+						<text class="label">关系：</text>
+						<text class="value">{{ item.relation }}</text>
 					</view>
 					<view class="info-row">
 						<text class="label">生日：</text>
-						<text class="value">{{ item.birthday || "未设置" }}</text>
+						<text class="value">{{ item.birthStr || "未设置" }}</text>
 					</view>
-					<view class="info-row">
+					<!-- <view class="info-row">
 						<text class="label">可用积分：</text>
 						<text class="value highlight">{{ item.points }}</text>
-					</view>
+					</view> -->
 					<view class="info-row">
 						<text class="label">就读学校：</text>
 						<text class="value">{{ item.school || "未设置" }}</text>
 					</view>
-					<view class="info-row">
+					<!-- <view class="info-row">
 						<text class="label">备用号码：</text>
 						<text class="value">{{ item.backupPhone || "未设置" }}</text>
-					</view>
+					</view> -->
 					<view class="info-row">
 						<text class="label">家庭地址：</text>
 						<text class="value">{{ item.address || "未设置" }}</text>
@@ -40,7 +46,14 @@
 				<view class="footer">
 					<view class="org-info">
 						<text class="label">培训机构：</text>
-						<text class="org-name">{{ item.organization }}</text>
+						<!-- <text class="org-name">{{ item.organization }}</text> -->
+						<text class="org-name">
+							{{
+								item.institutions
+									.map((inst) => inst.institutionName)
+									.join("、") || "未绑定任何课程"
+							}}
+						</text>
 					</view>
 					<view class="unbind-btn" @tap="handleUnbind(item)">解绑</view>
 				</view>
@@ -52,44 +65,21 @@
 <script lang="ts" setup>
 	import { jump } from "@/utils/common";
 	import { ref } from "vue";
-	import { parseData } from "@/utils/common";
+	import { ROUTES } from "@/config/routes";
 	import { onLoad } from "@dcloudio/uni-app";
 	import { Student } from "@/types/student";
+	import { useUserStore } from "@/stores/user";
+	import { useStudentStore } from "@/stores/student";
+	import { getStudentListByParentId } from "@/api/student";
 
 	// 模拟数据列表
-	const userList = ref<Student[]>([
-		{
-			studentName: "范思思",
-			avatar: "https://via.placeholder.com/100", // 替换为真实头像地址
-			phone: "13003966216",
-			relation: "母亲",
-			birthday: "",
-			points: 0,
-			school: "",
-			backupPhone: "",
-			address: "",
-			organization: "甲古书院龙文校区",
-		},
-		{
-			studentName: "张小明",
-			avatar: "https://via.placeholder.com/100",
-			phone: "13888888888",
-			relation: "父亲",
-			birthday: "2015-05-20",
-			points: 150,
-			school: "实验小学",
-			backupPhone: "13999999999",
-			address: "XX市XX区XX路",
-			organization: "甲古书院龙文校区",
-		},
-	]);
+	const studentList = ref<Student[]>([]);
+	const isRefreshing = ref(false); // 控制下拉刷新状态
+	const userStore = useUserStore();
+	const studentStore = useStudentStore();
 
-	onLoad((options) => {
-		if (options) {
-			const data: Student[] = parseData(options.data);
-			console.log("studentList:", data);
-			userList.value = data;
-		}
+	onLoad(() => {
+		studentList.value = studentStore.studentList;
 	});
 
 	const handleUnbind = (item: any) => {
@@ -106,7 +96,41 @@
 
 	const handleEdit = (item: any) => {
 		console.log("编辑资料:", item);
-		jump("/pages/main/edit-student-info/index", item);
+		jump(ROUTES.EDIT_STUDENT_INFO, item);
+	};
+
+	// 模拟获取数据的函数
+	const fetchStudentList = async () => {
+		try {
+			if (userStore.userInfo?.roleId === 3) {
+				console.log("正在刷新数据...");
+				studentList.value = await getStudentListByParentId({
+					parentId: userStore.userInfo?.identityInfo.parentId,
+					currentPage: 1,
+					pageSize: 10,
+				});
+			}
+		} catch (e) {
+			console.error("刷新失败", e);
+		}
+	};
+
+	// 下拉刷新触发的处理函数
+	const onRefresherRefresh = async () => {
+		if (isRefreshing.value) return; // 防止重复触发
+
+		isRefreshing.value = true; // 开启刷新动画
+
+		await fetchStudentList(); // 等待数据加载完成
+
+		// 延迟一会关闭动画，体验更好
+		setTimeout(() => {
+			isRefreshing.value = false;
+			uni.showToast({
+				title: "刷新成功",
+				icon: "success",
+			});
+		}, 500);
 	};
 </script>
 

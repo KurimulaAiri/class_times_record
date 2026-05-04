@@ -4,7 +4,7 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "首页",
+				"navigationBarTitleText": "课时管理KA",
 				"navigationBarBackgroundColor": "#70a9a2",
 				"navigationBarTextStyle": "white"
 			}
@@ -29,6 +29,8 @@
 			"path": "pages/class-record/index/index",
 			"style": {
 				"navigationBarTitleText": "课时管理",
+				"navigationBarBackgroundColor": "#70a9a2",
+				"navigationBarTextStyle": "white",
 				"enablePullDownRefresh": true,
 				"onReachBottomDistance": 120
 			}
@@ -60,7 +62,10 @@
 		{
 			"path": "pages/main/my-course/index",
 			"style": {
-				"navigationBarTitleText": "我的课程"
+				"navigationBarTitleText": "我的课程",
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 100,
+				"backgroundTextStyle": "dark"
 			}
 		},
 		{

@@ -2,18 +2,18 @@
 
 .container {
   min-height: 100vh;
-  background-color: #f8f8f8;
+  background-color: #f5f7fa;
 }
 
 .header {
-  background-color: $theme-color;
+  background-color: #f5f7fa;
   height: 240rpx;
   padding: 60rpx 40rpx 0;
   border-radius: 0 0 50rpx 50rpx;
 }
 
 .greeting {
-  color: #ffffff;
+  color: black;
   font-size: 32rpx;
   font-weight: 500;
 }

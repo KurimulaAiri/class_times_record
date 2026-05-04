@@ -1,7 +1,11 @@
 .container {
-	background-color: #f8f8f8;
-	min-height: 100vh;
+	background-color: #f5f7fa;
 	padding: 20rpx;
+}
+
+.list-container {
+    height: 100vh; /* 确保占满屏幕高度 */
+    background-color: #f5f7fa;
 }
 
 .card {

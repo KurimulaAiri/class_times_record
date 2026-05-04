@@ -6,10 +6,10 @@
                     请选择身份
                 </view>
 				<view class="entry-select-btn-group">
-					<view class="entry-select-btn" @click="jump('/pages/login/index', { role: 3 })">
+					<view class="entry-select-btn" @click="jump(ROUTES.LOGIN, { role: 3 })">
 						家长端
 					</view>
-					<view class="entry-select-btn" @click="jump('/pages/login/index', { role: 4 })">
+					<view class="entry-select-btn" @click="jump(ROUTES.LOGIN, { role: 4 })">
 						老师师端
 					</view>
 				</view>
@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
 	import { jump } from "@/utils/common/index";
+	import { ROUTES } from "@/config/routes";
 	import { onLoad } from "@dcloudio/uni-app";
 	import { useUserStore } from "@/stores/user";
 	import { loginByToken } from "@/api/auth";
@@ -34,7 +35,7 @@
 					// 登录成功后，根据角色跳转不同的页面跳转
 					const userStore = useUserStore();
 					userStore.setUserInfo(res.data.user);
-					jump('/pages/main/index/index', res.data.user.roleId, "relaunch");
+					jump(ROUTES.MAIN_INDEX, res.data.user.roleId, "relaunch");
 				}
 			});
 		}

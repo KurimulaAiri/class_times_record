@@ -69,7 +69,7 @@
 						</div>
 						<button
 							class="button admin-btn"
-							@click="jump('/pages/classRecord/adjust/index', item)"
+							@click="jump(ROUTES.CLASS_RECORD_ADJUST, item)"
 							v-if="item.permissionType === 1"
 						>
 							<uni-icons
@@ -90,7 +90,7 @@
 				</view>
 			</view>
 		</scroll-view>
-		<view class="fab" @click="jump('/pages/classRecord/addCourse/index')">
+		<view class="fab" @click="jump(ROUTES.CLASS_RECORD_ADD_COURSE)">
 			<uni-icons type="plusempty" size="30" color="#fff"></uni-icons>
 		</view>
 	</view>
@@ -112,6 +112,7 @@
 	import { jump } from "@/utils/common";
 	import { loginNoPwd } from "@/api/auth";
 	import { post } from "@/utils/request";
+	import { ROUTES } from "@/config/routes";
 	import { DATA_INDEX_MAP } from "@/config/common";
 
 	// 响应式数据（替代原 data 中的内容）
@@ -262,7 +263,7 @@
 				switch (res.tapIndex) {
 					case 0:
 						console.log("编辑");
-						jump("/pages/classRecord/edit/edit", item);
+						jump(ROUTES.CLASS_RECORD_EDIT, item);
 						break;
 					case 1:
 						console.log("删除");
@@ -299,7 +300,7 @@
 		const navItem = {
 			data: item,
 		};
-		jump("/pages/classRecord/detail/detail", navItem);
+		jump(ROUTES.CLASS_RECORD_DETAIL, navItem);
 	};
 
 	// 如果模板中需要使用这些方法，需暴露出去（setup 语法自动暴露，无需 return，仅需确保函数定义在 setup 内）

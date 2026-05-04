@@ -90,14 +90,14 @@
 			<view class="button-group">
 				<view
 					class="action-btn primary"
-					@click="toJump('/pages/classRecord/adjust/adjust', selectData)"
+					@click="toJump(ROUTES.CLASS_RECORD_ADJUST, selectData)"
 				>
 					<uni-icons type="compose" size="18" color="#fff"></uni-icons>
 					<text>调课时</text>
 				</view>
 				<view
 					class="action-btn secondary"
-					@click="toJump('/pages/classRecord/edit/edit', selectData)"
+					@click="toJump(ROUTES.CLASS_RECORD_EDIT, selectData)"
 				>
 					<uni-icons type="edit" size="18" color="#5c5c5c"></uni-icons>
 					<text>编辑</text>
@@ -122,6 +122,7 @@
 	import { onLoad, onShow, onShareAppMessage } from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { jump, parseData } from "@/utils/common";
+	import { ROUTES } from "@/config/routes";
 	import { loginNoPwd } from "@/api/auth";
 	import { post } from "@/utils/request";
 

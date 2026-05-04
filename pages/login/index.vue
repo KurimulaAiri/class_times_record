@@ -36,6 +36,7 @@
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { jump, parseData } from "@/utils/common";
+	import { ROUTES } from "@/config/routes";
 	import { loginByPwd } from "@/api/auth";
 	import { useUserStore } from "@/stores/user";
 	import { encryptPassword } from "@/utils/crypto";
@@ -75,7 +76,7 @@
 				const userStore = useUserStore();
 				userStore.setUserInfo(res.data.user);
 				if (res.code === 200) {
-					jump("/pages/main/index/index", role.value, "relaunch");
+					jump(ROUTES.MAIN_INDEX, role.value, "relaunch");
 				}
 			})
 			.catch((err) => {

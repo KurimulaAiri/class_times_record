@@ -1,0 +1,103 @@
+.container {
+	background-color: #f5f7fa;
+	min-height: 100vh;
+	padding-bottom: 30rpx;
+}
+
+/* 顶部搜索固定 */
+.search-sticky {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	background-color: #f5f7fa;
+	padding: 20rpx 30rpx;
+	box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+}
+
+.search-bar {
+	display: flex;
+	align-items: center;
+	background-color: #fff;
+	padding: 15rpx 25rpx;
+	border-radius: 40rpx;
+	
+	.search-input {
+		flex: 1;
+		margin-left: 15rpx;
+		font-size: 28rpx;
+	}
+}
+
+/* 卡片样式 */
+.card-list {
+	padding: 20rpx 30rpx;
+}
+
+.card {
+	background-color: #fff;
+	border-radius: 16rpx;
+	padding: 30rpx;
+	margin-bottom: 25rpx;
+	box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.03);
+	
+	.card-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		margin-bottom: 20rpx;
+		
+		.course-name {
+			font-size: 34rpx;
+			font-weight: bold;
+			color: #333;
+			flex: 1;
+			margin-right: 20rpx;
+		}
+		
+		.status-tag {
+			font-size: 22rpx;
+			padding: 4rpx 16rpx;
+			background-color: #e8f4ff;
+			color: #007aff;
+			border-radius: 8rpx;
+			white-space: nowrap;
+			
+			&.warning {
+				background-color: #fff1f0;
+				color: #ff4d4f;
+			}
+		}
+	}
+	
+	.card-body {
+		.info-row {
+			display: flex;
+			margin-bottom: 12rpx;
+			font-size: 26rpx;
+			
+			.label {
+				color: #999;
+				width: 140rpx;
+			}
+			
+			.value {
+				color: #666;
+				flex: 1;
+			}
+			
+			&.remark {
+				margin-top: 15rpx;
+				padding-top: 15rpx;
+				border-top: 1rpx solid #f0f0f0;
+				font-style: italic;
+			}
+		}
+	}
+}
+
+.load-more {
+	text-align: center;
+	padding: 20rpx;
+	color: #999;
+	font-size: 24rpx;
+}
