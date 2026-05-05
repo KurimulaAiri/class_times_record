@@ -97,11 +97,6 @@
 </template>
 
 <script setup lang="ts">
-	import type {
-		CourseRecordList,
-		GetCourseRecordResponse,
-		GetCourseRecordForm,
-	} from ".";
 	import {
 		onLoad,
 		onReachBottom,
@@ -144,6 +139,7 @@
 	]);
 	const dataList = ref<CourseRecordList>([]);
 	const queryDataForm = ref<GetCourseRecordForm>({
+		studentId: 0,
 		stuName: "",
 		courseName: "",
 		courseRemark: "",

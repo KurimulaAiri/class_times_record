@@ -57,6 +57,8 @@
 <script setup>
 	import { ref, onMounted } from "vue";
 	import { onPullDownRefresh, onReachBottom } from "@dcloudio/uni-app"; // 如果是 vue3 写法
+	import { getCourseRecordList } from "@/api/course-record";
+	import { useStudentStore } from "@/stores/student";
 
 	const searchKeyword = ref("");
 	const dataList = ref([]);
@@ -64,23 +66,39 @@
 	const loading = ref(false);
 	const noMore = ref(false);
 
+	const studentStore = useStudentStore();
+
 	// 模拟 API 请求
 	const fetchList = async (pageNum) => {
 		if (loading.value) return;
 		loading.value = true;
 
-		return new Promise((resolve) => {
-			setTimeout(() => {
-				const mockData = Array.from({ length: 10 }).map((_, i) => ({
-					courseName: `进阶少儿编程课 - ${pageNum}-${i}`,
-					courseTotalTime: 48,
-					courseRestTime: Math.floor(Math.random() * 20),
-					courseLastTimeStr: "2023-10-25 14:30",
-					courseRemark: "孩子表现很好，逻辑思维能力有提升。",
-				}));
-				resolve(mockData);
-			}, 800);
+		const res = await getCourseRecordList({
+			studentId: studentStore.studentInfo.id,
+			stuName: searchKeyword.value,
+			courseName: searchKeyword.value,
+			courseRemark: "",
+			courseStatus: null,
+			currentPage: pageNum,
+			pageSize: 7,
 		});
+
+		console.log("获取课程记录列表", res);
+
+		return res;
+
+		// return new Promise((resolve) => {
+		// 	setTimeout(() => {
+		// 		const mockData = Array.from({ length: 10 }).map((_, i) => ({
+		// 			courseName: `进阶少儿编程课 - ${pageNum}-${i}`,
+		// 			courseTotalTime: 48,
+		// 			courseRestTime: Math.floor(Math.random() * 20),
+		// 			courseLastTimeStr: "2023-10-25 14:30",
+		// 			courseRemark: "孩子表现很好，逻辑思维能力有提升。",
+		// 		}));
+		// 		resolve(mockData);
+		// 	}, 800);
+		// });
 	};
 
 	const loadData = async (refresh = false) => {
@@ -104,6 +122,7 @@
 
 	// 监听下拉刷新
 	onPullDownRefresh(() => {
+		console.log("下拉刷新");
 		loadData(true);
 	});
 

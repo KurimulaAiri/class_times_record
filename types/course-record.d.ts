@@ -19,4 +19,14 @@ type GetCourseRecordResponse = {
     total: number;
 }
 
-export { CourseRecord, GetCourseRecordResponse };
+type CourseRecordList = CourseRecord[];
+
+type GetCourseRecordForm = {
+	studentId: number;
+	stuName: string;
+	courseName: string;
+	courseRemark: string;
+	courseStatus: number | null;
+	currentPage: number;
+	pageSize: number;
+};

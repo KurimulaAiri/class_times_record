@@ -21,7 +21,7 @@
       "@dcloudio/types",
       "miniprogram-api-typings",
       "@types/wechat-miniprogram",
-      "@types/node"
+      "@types/node",
     ]
   },
   "include": [
