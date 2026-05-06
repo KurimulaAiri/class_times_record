@@ -27,24 +27,25 @@
 
 		<view class="margin-gap"></view>
 		<view class="menu-group">
-			<view
-				v-for="(item, index) in subMenuList"
-				:key="item.id"
-				class="list-item"
-				:class="{ 'border-bottom': index !== subMenuList.length - 1 }"
-				@tap="navigateTo(item.path)"
-				hover-class="item-hover"
-			>
-				<view class="left-content">
-					<uni-icons :type="item.icon" size="22" color="#444"></uni-icons>
-					<text class="label">{{ item.menuName }}</text>
+			<template v-for="(item, index) in subMenuList" :key="item.id">
+				<view
+					v-if="item.isVisible"
+					class="list-item"
+					:class="{ 'border-bottom': index !== subMenuList.length - 1 }"
+					@tap="navigateTo(item.path)"
+					hover-class="item-hover"
+				>
+					<view class="left-content">
+						<uni-icons :type="item.icon" size="22" color="#444"></uni-icons>
+						<text class="label">{{ item.menuName }}</text>
+					</view>
+					<uni-icons type="right" size="18" color="#ccc"></uni-icons>
 				</view>
-				<uni-icons type="right" size="18" color="#ccc"></uni-icons>
-			</view>
+			</template>
 		</view>
 
 		<view class="margin-gap"></view>
-		<view class="list-item" @tap="handleAction('app')">
+		<!-- <view class="list-item" @tap="handleAction('app')">
 			<view class="left-content">
 				<view class="app-icon">
 					<uni-icons type="phone" size="14" color="#fff"></uni-icons>
@@ -52,7 +53,7 @@
 				<text class="label">更多功能请使用APP</text>
 			</view>
 			<uni-icons type="right" size="18" color="#ccc"></uni-icons>
-		</view>
+		</view> -->
 
 		<view class="margin-gap"></view>
 		<view class="footer-actions">

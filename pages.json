@@ -81,6 +81,32 @@
 			"style": {
 				"navigationBarTitleText": "编辑学员信息"
 			}
+		},
+		{
+			"path": "pages/main/official-student/index",
+			"style": {
+				"navigationBarTitleText": "正式学员",
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 100
+			}
+		},
+		{
+			"path": "pages/main/deduct-fee/index",
+			"style": {
+				"navigationBarTitleText": "上课扣费"
+			}
+		},
+		{
+			"path": "pages/main/fast-deduct/index",
+			"style": {
+				"navigationBarTitleText": "快速扣课"
+			}
+		},
+		{
+			"path": "pages/main/student-detail/index",
+			"style": {
+				"navigationBarTitleText": "学员详情"
+			}
 		}
 	],
 	"globalStyle": {

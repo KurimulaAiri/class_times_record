@@ -14,4 +14,3 @@ type GetRecordResponse = {
     total: number;
 }
 
-export { Record, GetRecordResponse };

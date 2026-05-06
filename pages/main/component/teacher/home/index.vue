@@ -13,7 +13,7 @@
 						v-if="item.isVisible"
 						class="grid-item"
 						hover-class="item-active"
-						@tap="navigateTo(item.path)"
+						@tap="jump(item.path)"
 					>
 						<view class="icon-wrapper">
 							<uni-icons
@@ -40,6 +40,7 @@
 
 <script setup lang="ts">
 	import { getMenuList } from "@/api/menu";
+	import { jump } from "@/utils/common";
 	import { ref, onMounted } from "vue";
 
 	// 严格按照你的 Interface 结构组织数据
@@ -56,7 +57,7 @@
 				pageSize: 100,
 			});
 
-            console.log("菜单加载成功",res);
+			console.log("菜单加载成功", res);
 
 			// 过滤并排序
 			menuList.value = res.data.menus
@@ -65,11 +66,6 @@
 		} catch (e) {
 			console.error("菜单加载失败", e);
 		}
-	};
-
-	const navigateTo = (path: string) => {
-		if (!path) return;
-		uni.navigateTo({ url: path });
 	};
 </script>
 

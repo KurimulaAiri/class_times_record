@@ -11,6 +11,10 @@ export const ROUTES = {
     MY_COURSE: "/pages/main/my-course/index",
     MANAGE_STUDENT: "/pages/main/manage-student/index",
     EDIT_STUDENT_INFO: "/pages/main/edit-student-info/index",
+    OFFICIAL_STUDENT: "/pages/main/official-student/index",
+    DEDUCT_FEE: "/pages/main/deduct-fee/index",
+    FAST_DEDUCT: "/pages/main/fast-deduct/index",
+    STUDENT_DETAIL: "/pages/main/student-detail/index",
 } as const;
 
 export type PagePath = typeof ROUTES[keyof typeof ROUTES];

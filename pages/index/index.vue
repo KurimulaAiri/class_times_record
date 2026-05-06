@@ -10,7 +10,7 @@
 						家长端
 					</view>
 					<view class="entry-select-btn" @click="jump(ROUTES.LOGIN, { role: 4 })">
-						老师师端
+						老师端
 					</view>
 				</view>
 			</view>

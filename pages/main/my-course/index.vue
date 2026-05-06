@@ -54,14 +54,14 @@
 	</view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 	import { ref, onMounted } from "vue";
 	import { onPullDownRefresh, onReachBottom } from "@dcloudio/uni-app"; // 如果是 vue3 写法
 	import { getCourseRecordList } from "@/api/course-record";
 	import { useStudentStore } from "@/stores/student";
 
 	const searchKeyword = ref("");
-	const dataList = ref([]);
+	const dataList = ref<CourseRecord[]>([]);
 	const page = ref(1);
 	const loading = ref(false);
 	const noMore = ref(false);
@@ -69,10 +69,12 @@
 	const studentStore = useStudentStore();
 
 	// 模拟 API 请求
-	const fetchList = async (pageNum) => {
+	const fetchList = async (pageNum: number) => {
 		if (loading.value) return;
 		loading.value = true;
 
+		if (!studentStore.studentInfo) return [];
+		
 		const res = await getCourseRecordList({
 			studentId: studentStore.studentInfo.id,
 			stuName: searchKeyword.value,
@@ -109,6 +111,8 @@
 
 		const res = await fetchList(page.value);
 		loading.value = false;
+
+		if (!res) return;
 
 		if (refresh) {
 			dataList.value = res;

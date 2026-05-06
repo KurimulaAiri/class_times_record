@@ -38,7 +38,11 @@
 							size="28"
 							color="#fff"
 						></uni-icons>
-						<image v-else :src="item.icon" class="custom-icon"></image>
+						<image
+							v-if="item.iconType === 1"
+							:src="item.icon"
+							class="custom-icon"
+						></image>
 					</view>
 					<text class="grid-label">{{ item.menuName }}</text>
 				</view>
