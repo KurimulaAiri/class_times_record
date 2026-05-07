@@ -1,3 +1,5 @@
+import { generateSign } from "@/utils/crypto";
+
 // 基础域名（根据环境切换，如开发/生产环境）
 let baseUrl: string;
 console.log("process.env.NODE_ENV:", process.env.NODE_ENV);
@@ -56,6 +58,9 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 		});
 	}
 
+	// 生成签名信息
+    const { sign, timestamp, nonce } = generateSign(data);
+
 	// 拼接完整接口地址
 	// 2. 检查 url 字符串逻辑
 	// 确保 url 是以 / 开头的，防止拼接出 localhost:9999course_record/get
@@ -73,8 +78,11 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 			header: {
 				// 默认请求头（可根据后端要求调整，如JSON格式、token）
 				"Content-Type": "application/json",
-				token: uni.getStorageSync("token") || "", // 从本地缓存取token
+				'token': uni.getStorageSync("token") || "", // 从本地缓存取token
 				...header, // 合并自定义请求头（优先级更高）
+				'x-sign': sign,
+                'x-timestamp': timestamp,
+                'x-nonce': nonce
 			},
 			timeout,
 			// 请求成功回调

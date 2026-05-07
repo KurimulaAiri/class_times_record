@@ -8,6 +8,7 @@ export const useUserStore = defineStore('user',() => {
     // 2. 设置用户信息
     const setUserInfo = (user: User) => {
         userInfo.value = user;
+        console.log("用户信息已更新，当前为:", userInfo.value);
     };
 
     // 3. 清除用户信息

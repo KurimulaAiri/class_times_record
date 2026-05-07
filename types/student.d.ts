@@ -11,6 +11,7 @@ interface Student {
 	address: string;
 	institutions: Institution[];
 	primaryParent: Parent;
+	secondaryParent: Parent;
 	createTimeStr: string;
 	updateTimeStr: string;
 }

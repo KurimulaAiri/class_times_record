@@ -12,6 +12,8 @@ interface ParentIdentity extends BaseIdentity {
 
 interface TeacherIdentity extends BaseIdentity {
     teacherId: number;
+    username: string,
+    institution: Institution
 }
 
 // 3. 核心：通过 User 的 roleId 决定 identityInfo 的类型

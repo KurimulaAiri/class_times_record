@@ -107,6 +107,12 @@
 			"style": {
 				"navigationBarTitleText": "学员详情"
 			}
+		},
+		{
+			"path": "pages/main/add-student/index",
+			"style": {
+				"navigationBarTitleText": "添加正式学员"
+			}
 		}
 	],
 	"globalStyle": {

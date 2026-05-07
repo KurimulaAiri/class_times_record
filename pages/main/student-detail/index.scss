@@ -1,0 +1,198 @@
+@import "../../../static/scss/index";
+
+$bg-color: $default-background-color;
+$text-main: #2c3e50;
+$text-grey: #95a5a6;
+
+.container {
+	min-height: 100vh;
+	background-color: $bg-color;
+	padding-bottom: 60rpx;
+}
+
+.header-bg {
+	height: 280rpx;
+	position: absolute;
+	width: 100%;
+	z-index: 0;
+}
+
+.main-card {
+	position: relative;
+	z-index: 1;
+	margin: 0 30rpx 40rpx 30rpx;
+	background: #ffffff;
+	border-radius: 32rpx;
+	padding: 60rpx 40rpx 40rpx;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.05);
+
+	.avatar-big {
+		width: 160rpx;
+		height: 160rpx;
+		border-radius: 80rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 48rpx;
+		color: #fff;
+		border: 6rpx solid #fff;
+		box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.1);
+
+		&.male {
+			background: linear-gradient(135deg, #a8dadc, $theme-color);
+		}
+		&.female {
+			background: linear-gradient(135deg, #ffb7b2, #e5989b);
+		}
+	}
+
+	.name-section {
+		margin-top: 30rpx;
+		display: flex;
+		align-items: center;
+		gap: 16rpx;
+
+		.name {
+			font-size: 44rpx;
+			font-weight: bold;
+			color: $text-main;
+		}
+
+		.gender-tag {
+			padding: 4rpx 16rpx;
+			border-radius: 8rpx;
+			font-size: 22rpx;
+			&.male-tag {
+				background: #e1f5fe;
+				color: #0288d1;
+			}
+			&.female-tag {
+				background: #fff0f0;
+				color: #ff5252;
+			}
+		}
+	}
+
+	.id-badge {
+		margin-top: 16rpx;
+		font-size: 26rpx;
+		color: $text-grey;
+		background: #f1f3f5;
+		padding: 6rpx 20rpx;
+		border-radius: 100rpx;
+	}
+}
+
+.info-group {
+	background: #fff;
+	margin: 0 30rpx 30rpx;
+	border-radius: 24rpx;
+	padding: 30rpx;
+
+	.group-title {
+		font-size: 28rpx;
+		font-weight: bold;
+		color: $theme-color;
+		margin-bottom: 30rpx;
+		padding-left: 16rpx;
+		border-left: 8rpx solid $theme-color;
+	}
+
+	.info-item {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		padding: 24rpx 0;
+		border-bottom: 1rpx solid #f1f3f5;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		.label {
+			font-size: 28rpx;
+			color: $text-grey;
+			flex-shrink: 0;
+		}
+
+		.value {
+			font-size: 28rpx;
+			color: $text-main;
+			text-align: right;
+			max-width: 450rpx;
+
+			&.contact {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-end; // 右对齐
+
+				.relation-box {
+					margin-bottom: 8rpx;
+					.relation {
+						font-size: 26rpx;
+						color: #666;
+						background: #f0f4f3;
+						padding: 2rpx 12rpx;
+						border-radius: 6rpx;
+					}
+				}
+
+				.phone-wrapper {
+					display: flex;
+					align-items: center; // 垂直居中对齐文字和图标
+					padding: 10rpx 20rpx;
+					background-color: rgba(
+						$theme-color,
+						0.08
+					); // 淡淡的主题色背景，引导点击
+					border-radius: 40rpx;
+					transition: all 0.2s ease;
+
+					&:active {
+						transform: scale(0.95);
+						background-color: rgba($theme-color, 0.15);
+					}
+
+					.phone {
+						color: $theme-color;
+						font-size: 30rpx;
+						font-weight: 500;
+						margin-right: 12rpx; // 文字和图片之间的间距
+					}
+
+					.phone-icon {
+						width: 36rpx;
+						height: 36rpx;
+						// 如果你的图标颜色不是主题色，可以通过下面这个滤镜强制转为主题色(可选)
+						// filter: drop-shadow(0 0 0 $theme-color);
+					}
+				}
+			}
+		}
+
+		&.small .value {
+			font-size: 24rpx;
+			color: #bdc3c7;
+		}
+	}
+}
+
+.footer-btns {
+	padding: 40rpx 30rpx;
+	.edit-btn {
+		height: 90rpx;
+		line-height: 90rpx;
+		text-align: center;
+		background: $theme-color;
+		color: #fff;
+		border-radius: 45rpx;
+		font-size: 32rpx;
+		box-shadow: 0 10rpx 20rpx rgba($theme-color, 0.2);
+		&:active {
+			opacity: 0.8;
+		}
+	}
+}

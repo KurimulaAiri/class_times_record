@@ -15,6 +15,7 @@ export const ROUTES = {
     DEDUCT_FEE: "/pages/main/deduct-fee/index",
     FAST_DEDUCT: "/pages/main/fast-deduct/index",
     STUDENT_DETAIL: "/pages/main/student-detail/index",
+    ADD_STUDENT: "/pages/main/add-student/index",
 } as const;
 
 export type PagePath = typeof ROUTES[keyof typeof ROUTES];

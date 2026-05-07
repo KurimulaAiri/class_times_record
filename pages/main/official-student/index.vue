@@ -63,6 +63,10 @@
 				<text class="empty-tips">可以尝试换个姓名或学号搜索</text>
 			</view>
 		</view>
+		<!-- 新增：右下角悬浮按钮 -->
+		<view class="fab-btn" hover-class="fab-btn-active" @tap="goToAddStudent">
+			<text class="plus-icon">+</text>
+		</view>
 	</view>
 </template>
 
@@ -154,6 +158,14 @@
 	onReachBottom(() => {
 		loadData();
 	});
+
+	// 1. 在 config/routes 中确保有 ADD_STUDENT
+	// 2. 增加跳转方法
+	const goToAddStudent = () => {
+		// 假设你的路由配置文件里定义了 ADD_STUDENT
+		jump(ROUTES.ADD_STUDENT);
+		// 或者直接使用 uni.navigateTo({ url: '/pages/student/add' })
+	};
 
 	// --- 搜索逻辑 ---
 	const handleSearch = () => {
