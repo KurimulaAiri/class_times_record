@@ -7,7 +7,9 @@
 				mode="aspectFill"
 			></image>
 			<view class="info">
-				<text class="name">{{ userInfo?.identityInfo.username }}</text>
+				<text class="name">{{
+					userStore.userInfo?.identityInfo.username
+				}}</text>
 				<text class="phone">{{ 1233 }}</text>
 			</view>
 			<uni-icons type="right" size="18" color="#ccc"></uni-icons>
@@ -20,7 +22,12 @@
 				<text class="label">当前校区</text>
 			</view>
 			<view class="right-content">
-				<text class="value">甲古书院龙文校区</text>
+				<text class="value">{{
+					userStore.userInfo?.roleId === 4
+						? userStore.userInfo?.identityInfo.institution?.institutionName ||
+							"未填写"
+						: "身份错误"
+				}}</text>
 				<uni-icons type="right" size="18" color="#ccc"></uni-icons>
 			</view>
 		</view>
@@ -80,10 +87,7 @@
 	import { logOut } from "@/api/auth";
 	import { useUserStore } from "@/stores/user";
 
-	const userInfo = useUserStore().userInfo;
-
-	if (userInfo?.roleId === 4) {
-	}
+	const userStore = useUserStore();
 
 	// 按照你的 Menu 接口格式定义的子菜单
 	const subMenuList = ref([

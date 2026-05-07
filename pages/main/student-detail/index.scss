@@ -92,6 +92,37 @@ $text-grey: #95a5a6;
 	border-radius: 24rpx;
 	padding: 30rpx;
 
+	.class-list {
+		display: flex;
+		flex-direction: column;
+
+		.class-card {
+			padding: 10rpx 0;
+			position: relative;
+
+			// 在班级卡片之间添加分割线，最后一个除外
+			&:not(:last-child) {
+				margin-bottom: 20rpx;
+				padding-bottom: 20rpx;
+				border-bottom: 2rpx dashed #eee; // 使用虚线区分不同班级
+			}
+
+			// 内部的 info-item 沿用你原本的样式
+			.info-item {
+				border-bottom: none; // 卡片内部的项建议取消实线，靠虚线区分大块
+				padding: 12rpx 0;
+
+				// 确保对齐
+				.label {
+					flex-shrink: 0;
+				}
+				.value {
+					text-align: right;
+				}
+			}
+		}
+	}
+
 	.group-title {
 		font-size: 28rpx;
 		font-weight: bold;
@@ -104,78 +135,68 @@ $text-grey: #95a5a6;
 	.info-item {
 		display: flex;
 		justify-content: space-between;
-		align-items: flex-start;
+		align-items: center; // 确保左边的 label 和右边的内容中心对齐
 		padding: 24rpx 0;
-		border-bottom: 1rpx solid #f1f3f5;
 
-		&:last-child {
-			border-bottom: none;
-		}
+		.contact-horizontal {
+			display: flex;
+			flex-direction: row; // 横向排列
+			align-items: center; // 垂直方向同高居中
+			justify-content: flex-end; // 整体靠右对齐
 
-		.label {
-			font-size: 28rpx;
-			color: $text-grey;
-			flex-shrink: 0;
-		}
-
-		.value {
-			font-size: 28rpx;
-			color: $text-main;
-			text-align: right;
-			max-width: 450rpx;
-
-			&.contact {
+			.relation-tag {
+				font-size: 24rpx;
+				color: #666;
+				background: #f0f4f3;
+				padding: 4rpx 12rpx;
+				border-radius: 8rpx;
+				margin-right: 16rpx; // 标签与手机号的间距
+				// 确保高度与手机号容器接近
 				display: flex;
-				flex-direction: column;
-				align-items: flex-end; // 右对齐
+				align-items: center;
+				height: 44rpx;
+			}
 
-				.relation-box {
-					margin-bottom: 8rpx;
-					.relation {
-						font-size: 26rpx;
-						color: #666;
-						background: #f0f4f3;
-						padding: 2rpx 12rpx;
-						border-radius: 6rpx;
-					}
+			.phone-wrapper-mini {
+				display: flex;
+				align-items: center;
+				padding: 6rpx 16rpx;
+				background-color: rgba($theme-color, 0.08);
+				border-radius: 40rpx;
+				height: 44rpx; // 强制与标签同高
+
+				&:active {
+					transform: scale(0.95);
+					background-color: rgba($theme-color, 0.15);
 				}
 
-				.phone-wrapper {
-					display: flex;
-					align-items: center; // 垂直居中对齐文字和图标
-					padding: 10rpx 20rpx;
-					background-color: rgba(
-						$theme-color,
-						0.08
-					); // 淡淡的主题色背景，引导点击
-					border-radius: 40rpx;
-					transition: all 0.2s ease;
+				.phone {
+					color: $theme-color;
+					font-size: 28rpx;
+					font-weight: 500;
+					margin-right: 8rpx;
+				}
 
-					&:active {
-						transform: scale(0.95);
-						background-color: rgba($theme-color, 0.15);
-					}
-
-					.phone {
-						color: $theme-color;
-						font-size: 30rpx;
-						font-weight: 500;
-						margin-right: 12rpx; // 文字和图片之间的间距
-					}
-
-					.phone-icon {
-						width: 36rpx;
-						height: 36rpx;
-						// 如果你的图标颜色不是主题色，可以通过下面这个滤镜强制转为主题色(可选)
-						// filter: drop-shadow(0 0 0 $theme-color);
-					}
+				.phone-icon {
+					width: 28rpx;
+					height: 28rpx;
 				}
 			}
 		}
+	}
 
-		&.small .value {
-			font-size: 24rpx;
-			color: #bdc3c7;
+	.empty-state {
+		padding: 80rpx 0;
+		display: flex;
+		flex-direction: column; // 图标和文字垂直排列
+		justify-content: center;
+		align-items: center;
+
+		.empty-text {
+			margin-top: 16rpx; // 图标和文字的间距
+			font-size: 26rpx;
+			color: #999;
+			letter-spacing: 2rpx;
 		}
 	}
 }

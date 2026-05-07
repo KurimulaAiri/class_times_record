@@ -16,6 +16,8 @@ export const ROUTES = {
     FAST_DEDUCT: "/pages/main/fast-deduct/index",
     STUDENT_DETAIL: "/pages/main/student-detail/index",
     ADD_STUDENT: "/pages/main/add-student/index",
+    CLASS_MANAGE: "/pages/main/class-manage/index",
+    CLASS_DETAIL: "/pages/main/class-detail/index",
 } as const;
 
 export type PagePath = typeof ROUTES[keyof typeof ROUTES];

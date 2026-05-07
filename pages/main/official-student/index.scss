@@ -71,7 +71,26 @@ $gray-light: #fdfdfd;
 		align-items: center;
 		box-shadow: $card-shadow;
 		overflow: hidden; // 确保装饰条不超出
-		transition: all 0.2s ease;
+		transition: all 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28); // 增加回弹感动画
+
+		// 新增点击/长按时的视觉反馈
+		&.card-hover-effect {
+			background-color: #f8f9fa !important; // 强制变色覆盖偶数行颜色
+			transform: scale(0.97); // 稍微深一点的缩放感
+			box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+
+			// 如果有装饰条，点击时也可以微调透明度
+			&::before {
+				opacity: 0.8;
+			}
+		}
+
+		// 确保内部元素不干扰点击效果
+		.avatar,
+		.content,
+		.arrow-icon {
+			pointer-events: none;
+		}
 
 		// 方案 1: 相邻卡片区分 - 偶数行背景微调
 		&:nth-child(even) {

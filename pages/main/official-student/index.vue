@@ -16,6 +16,8 @@
 				v-for="item in students"
 				:key="item.id"
 				:class="['student-card', item.sex === 1 ? 'card-male' : 'card-female']"
+				hover-class="card-hover-effect"
+				hover-stay-time="150"
 				@tap="handleClick(item)"
 				@longpress="handleLongPress(item)"
 			>
@@ -186,11 +188,59 @@
 		jump(ROUTES.STUDENT_DETAIL);
 	};
 
-	// --- 长按逻辑 ---
+	// 处理长按反馈
 	const handleLongPress = (item: Student) => {
-		// 长按跳转快速扣课页
-		// jump(ROUTES.FAST_DEDUCT, { studentId: item.id });
-		console.log("长按跳转快速扣课页", item);
+		// 震动反馈
+		uni.vibrateShort();
+
+		uni.showActionSheet({
+			itemList: ["编辑学生信息", "呼叫主要联系人", "删除学生"],
+			itemColor: "#333",
+			success: (res) => {
+				if (res.tapIndex === 0) {
+					// 编辑
+					uni.navigateTo({ url: `/pages/student/edit?id=${item.id}` });
+				} else if (res.tapIndex === 1) {
+					// 拨号
+					if (item.primaryParent?.phone) {
+						uni.makePhoneCall({
+							phoneNumber: item.primaryParent.phone,
+							success: () => {
+								console.log("拨号成功");
+							},
+							fail: (err) => {
+								// 重点：判断是否是用户主动取消
+								if (err.errMsg.indexOf("cancel") !== -1) {
+									console.log("用户取消了拨打");
+									// 这里不需要抛出异常，也不需要给用户弹窗提示
+								} else {
+									// 如果是其他错误（比如号码格式不对），再进行提示
+									uni.showToast({ title: "拨号失败", icon: "none" });
+								}
+							},
+						});
+					} else {
+						uni.showToast({ title: "暂无联系电话", icon: "none" });
+					}
+				} else if (res.tapIndex === 2) {
+					// 删除
+					confirmDelete(item);
+				}
+			},
+		});
+	};
+
+	const confirmDelete = (item: Student) => {
+		uni.showModal({
+			title: "提示",
+			content: `确定要移除学生 ${item.studentName} 吗？`,
+			confirmColor: "#ff4d94", // 对应女生的主色调或警告色
+			success: (res) => {
+				if (res.confirm) {
+					// 调用删除接口逻辑
+				}
+			},
+		});
 	};
 
 	const formatAvatarText = (name: string) => {

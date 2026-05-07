@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, shallowRef } from "vue";
+	import { ref } from "vue";
 	import { onLoad } from "@dcloudio/uni-app";
 	import { parseData } from "@/utils/common";
 

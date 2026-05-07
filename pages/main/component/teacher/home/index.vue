@@ -3,10 +3,11 @@
 		<view class="header">
 			<view class="user-info">
 				<text class="greeting"
-					>你好 ~
+					>欢迎 ~
 					{{
 						userStore.userInfo?.roleId === 4
-							? userStore.userInfo.identityInfo.institution?.institutionName || ""
+							? userStore.userInfo.identityInfo.institution?.institutionName ||
+								""
 							: ""
 					}}
 					{{ userStore.userInfo?.identityInfo.username }}

@@ -113,6 +113,18 @@
 			"style": {
 				"navigationBarTitleText": "添加正式学员"
 			}
+		},
+		{
+			"path": "pages/main/class-manage/index",
+			"style": {
+				"navigationBarTitleText": "班级管理"
+			}
+		},
+		{
+			"path": "pages/main/class-detail/index",
+			"style": {
+				"navigationBarTitleText": "班级详情"
+			}
 		}
 	],
 	"globalStyle": {

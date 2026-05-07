@@ -43,19 +43,18 @@
 
 		<view class="info-group">
 			<view class="group-title">联系人信息</view>
-			<!-- 主要联系人 -->
+
 			<view class="info-item" v-if="student?.primaryParent">
 				<text class="label">主要联系人</text>
-				<view class="value contact">
-					<view class="relation-box">
-						<text class="relation">{{ student.primaryParent.relation }}</text>
-					</view>
+
+				<view class="value contact-horizontal">
+					<view class="relation-tag">{{ student.primaryParent.relation }}</view>
+
 					<view
-						class="phone-wrapper"
+						class="phone-wrapper-mini"
 						@tap="makePhoneCall(student.primaryParent.phone)"
 					>
 						<text class="phone">{{ student.primaryParent.phone }}</text>
-						<!-- 替换图标为图片 -->
 						<image
 							class="phone-icon"
 							src="/static/icon/phone.svg"
@@ -64,12 +63,68 @@
 					</view>
 				</view>
 			</view>
-			<!-- 次要联系人 -->
-			<view class="info-item">
+
+			<view class="info-item" v-if="student?.secondaryParent">
 				<text class="label">备用联系人</text>
-				<text class="value">{{
-					student?.secondaryParent || "暂无备用联系人"
-				}}</text>
+				<view class="value contact-horizontal">
+					<view class="relation-tag">{{
+						student.secondaryParent.relation
+					}}</view>
+
+					<view
+						class="phone-wrapper-mini"
+						@tap="makePhoneCall(student.secondaryParent.phone)"
+					>
+						<text class="phone">{{ student.secondaryParent.phone }}</text>
+						<image
+							class="phone-icon"
+							src="/static/icon/phone.svg"
+							mode="aspectFit"
+						></image>
+					</view>
+				</view>
+			</view>
+
+			<view
+				class="empty-state"
+				v-if="!student?.primaryParent && !student?.secondaryParent"
+			>
+				<uni-icons type="info" size="30" color="#999"></uni-icons>
+				<text class="empty-text">暂无联系人</text>
+			</view>
+		</view>
+
+		<view class="info-group">
+			<view class="group-title">报读班级</view>
+
+			<view class="class-list" v-if="classList && classList.length > 0">
+				<view
+					class="class-card"
+					v-for="(item, index) in classList"
+					:key="index"
+				>
+					<view class="info-item">
+						<text class="label">班级名称</text>
+						<text class="value">{{ item.className }}</text>
+					</view>
+					<view class="info-item">
+						<text class="label">课程名称</text>
+						<text class="value">{{ item.courseName }}</text>
+					</view>
+					<view class="info-item">
+						<text class="label">班级ID</text>
+						<text class="value">{{ item.id }}</text>
+					</view>
+					<view class="info-item small">
+						<text class="label">学生人数</text>
+						<text class="value">{{ item.studentCount }}人</text>
+					</view>
+				</view>
+			</view>
+
+			<view class="empty-state" v-else>
+				<uni-icons type="info" size="30" color="#999"></uni-icons>
+				<text class="empty-text">暂无报读班级</text>
 			</view>
 		</view>
 
@@ -96,6 +151,8 @@
 	import { ref } from "vue";
 	import { useStudentStore } from "@/stores/student";
 	import { Student } from "@/types/student";
+	import { getClassListByStudentId } from "@/api/class";
+	import { onLoad } from "@dcloudio/uni-app";
 
 	const studentStore = useStudentStore();
 	// 模拟接收到的数据
@@ -104,6 +161,14 @@
 	if (studentStore.studentInfo) {
 		student.value = studentStore.studentInfo;
 	}
+
+	const classList = ref<Class[]>([]);
+
+	onLoad(async () => {
+		const classListIn = await getClassListByStudentId(student?.value?.id || 0);
+		console.log("接收到报读班级:", classListIn.classList);
+		classList.value = classListIn.classList;
+	});
 
 	// 头像文字处理：取名字最后两个字
 	const formatAvatarText = (name: string) => {
@@ -115,6 +180,19 @@
 	const makePhoneCall = (phoneNumber: string) => {
 		uni.makePhoneCall({
 			phoneNumber: phoneNumber,
+			success: () => {
+				console.log("拨号成功");
+			},
+			fail: (err) => {
+				// 重点：判断是否是用户主动取消
+				if (err.errMsg.indexOf("cancel") !== -1) {
+					console.log("用户取消了拨打");
+					// 这里不需要抛出异常，也不需要给用户弹窗提示
+				} else {
+					// 如果是其他错误（比如号码格式不对），再进行提示
+					uni.showToast({ title: "拨号失败", icon: "none" });
+				}
+			},
 		});
 	};
 
