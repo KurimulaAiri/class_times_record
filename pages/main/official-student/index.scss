@@ -1,3 +1,5 @@
+@import "../../../static/scss/index.scss";
+
 // 变量增强
 $male-color: #007aff;
 $male-bg: #eef6ff;
@@ -39,7 +41,11 @@ $gray-light: #fdfdfd;
 	.search-btn {
 		width: 140rpx;
 		height: 76rpx;
-		background: linear-gradient(135deg, #2979ff, #1565c0); // 渐变按钮
+		background: linear-gradient(
+			135deg,
+			lighten($theme-color, 8%),
+			$theme-color
+		); // 渐变按钮
 		color: white;
 		font-size: 28rpx;
 		border-radius: 0 38rpx 38rpx 0;

@@ -1,30 +1,42 @@
 <template>
-	<view>
-		<view class="content">
-			<view class="login-form">
-				<view class="login-form-title">
-					{{ role === 4 ? "教师" : "家长" }}登录
+	<view class="content">
+		<view class="login-form">
+			<view class="login-form-title">
+				{{ role === 4 ? "教师" : "家长" }}登录
+			</view>
+
+			<view class="login-form-content">
+				<!-- 账号项 -->
+				<view class="login-form-item">
+					<view class="login-form-item-label">账号</view>
+					<view class="login-form-item-input">
+						<input
+							type="text"
+							placeholder="请输入手机号/账号"
+							placeholder-class="input-placeholder"
+							v-model="account"
+						/>
+					</view>
 				</view>
-				<view class="login-form-content">
-					<view class="login-form-item">
-						<view class="login-form-item-label"> 账号 </view>
-						<view class="login-form-item-input">
-							<input type="text" placeholder="请输入账号" v-model="account" />
-						</view>
+
+				<!-- 密码项 -->
+				<view class="login-form-item">
+					<view class="login-form-item-label">密码</view>
+					<view class="login-form-item-input">
+						<input
+							password
+							type="password"
+							placeholder="请输入密码"
+							placeholder-class="input-placeholder"
+							v-model="password"
+						/>
 					</view>
-					<view class="login-form-item">
-						<view class="login-form-item-label"> 密码 </view>
-						<view class="login-form-item-input">
-							<input
-								password
-								type="password"
-								placeholder="请输入密码"
-								v-model="password"
-							/>
-						</view>
-					</view>
-					<view class="login-form-item btn-wrapper">
-						<view class="login-btn" @click="login"> 登录 </view>
+				</view>
+
+				<!-- 登录按钮 -->
+				<view class="btn-wrapper">
+					<view class="login-btn" hover-class="none" @click="login">
+						立即登录
 					</view>
 				</view>
 			</view>

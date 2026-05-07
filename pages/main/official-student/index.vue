@@ -6,7 +6,7 @@
 				type="text"
 				v-model="tempKeyword"
 				@confirm="handleSearch"
-				placeholder="搜索姓名、学号..."
+				placeholder="搜索姓名、学号或手机号"
 			/>
 			<button class="search-btn" @tap="handleSearch">搜索</button>
 		</view>

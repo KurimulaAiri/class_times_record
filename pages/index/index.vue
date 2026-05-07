@@ -1,21 +1,28 @@
 <template>
-	<div>
-		<view class="content">
-			<view class="entry-select-form">
-                <view class="entry-select-form-title">
-                    请选择身份
+    <view class="content">
+        <view class="entry-select-form">
+            <view class="entry-select-form-title">
+                请选择身份
+            </view>
+            <view class="entry-select-btn-group">
+                <!-- 添加了 hover-class 提升交互感 -->
+                <view 
+                    class="entry-select-btn" 
+                    hover-class="btn-hover-opacity"
+                    @click="jump(ROUTES.LOGIN, { role: 3 })"
+                >
+                    家长端
                 </view>
-				<view class="entry-select-btn-group">
-					<view class="entry-select-btn" @click="jump(ROUTES.LOGIN, { role: 3 })">
-						家长端
-					</view>
-					<view class="entry-select-btn" @click="jump(ROUTES.LOGIN, { role: 4 })">
-						老师端
-					</view>
-				</view>
-			</view>
-		</view>
-	</div>
+                <view 
+                    class="entry-select-btn" 
+                    hover-class="btn-hover-opacity"
+                    @click="jump(ROUTES.LOGIN, { role: 4 })"
+                >
+                    教师端
+                </view>
+            </view>
+        </view>
+    </view>
 </template>
 
 <script setup lang="ts">
