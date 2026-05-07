@@ -60,7 +60,7 @@
 			}
 		},
 		{
-			"path": "pages/main/my-course/index",
+			"path": "pages/main/parent/my-course/index",
 			"style": {
 				"navigationBarTitleText": "我的课程",
 				"enablePullDownRefresh": true,
@@ -69,7 +69,7 @@
 			}
 		},
 		{
-			"path": "pages/main/manage-student/index",
+			"path": "pages/main/teacher/manage-student/index",
 			"style": {
 				"navigationBarTitleText": "学员管理",
 				"navigationBarBackgroundColor": "#f5f7fa",
@@ -77,13 +77,13 @@
 			}
 		},
 		{
-			"path": "pages/main/edit-student-info/index",
+			"path": "pages/main/parent/edit-student-info/index",
 			"style": {
 				"navigationBarTitleText": "编辑学员信息"
 			}
 		},
 		{
-			"path": "pages/main/official-student/index",
+			"path": "pages/main/teacher/official-student/index",
 			"style": {
 				"navigationBarTitleText": "正式学员",
 				"enablePullDownRefresh": true,
@@ -91,37 +91,37 @@
 			}
 		},
 		{
-			"path": "pages/main/deduct-fee/index",
+			"path": "pages/main/teacher/deduct-fee/index",
 			"style": {
 				"navigationBarTitleText": "上课扣费"
 			}
 		},
 		{
-			"path": "pages/main/fast-deduct/index",
+			"path": "pages/main/teacher/fast-deduct/index",
 			"style": {
 				"navigationBarTitleText": "快速扣课"
 			}
 		},
 		{
-			"path": "pages/main/student-detail/index",
+			"path": "pages/main/teacher/student-detail/index",
 			"style": {
 				"navigationBarTitleText": "学员详情"
 			}
 		},
 		{
-			"path": "pages/main/add-student/index",
+			"path": "pages/main/teacher/add-student/index",
 			"style": {
 				"navigationBarTitleText": "添加正式学员"
 			}
 		},
 		{
-			"path": "pages/main/class-manage/index",
+			"path": "pages/main/teacher/class-manage/index",
 			"style": {
 				"navigationBarTitleText": "班级管理"
 			}
 		},
 		{
-			"path": "pages/main/class-detail/index",
+			"path": "pages/main/teacher/class-detail/index",
 			"style": {
 				"navigationBarTitleText": "班级详情"
 			}
