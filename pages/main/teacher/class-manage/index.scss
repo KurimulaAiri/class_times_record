@@ -131,3 +131,32 @@
 		margin-top: 20rpx;
 	}
 }
+
+.fab-btn {
+	position: fixed;
+	right: 40rpx;
+	bottom: calc(60rpx + var(--window-bottom)); // 考虑底部 tabbar 的高度
+	width: 110rpx;
+	height: 110rpx;
+	background: linear-gradient(135deg, lighten($theme-color, 5%), $theme-color);
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-shadow: 0 10rpx 30rpx rgba($theme-color, 0.4);
+	z-index: 99;
+	transition: all 0.1s ease;
+
+	.plus-icon {
+		color: #ffffff;
+		font-size: 60rpx;
+		font-weight: 300;
+		margin-top: -4rpx; // 微调加号垂直居中
+	}
+}
+
+// 点击时的反馈效果
+.fab-btn-active {
+	transform: scale(0.9); // 点击时缩小
+	filter: brightness(0.9);
+}

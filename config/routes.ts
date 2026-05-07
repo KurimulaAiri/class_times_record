@@ -1,23 +1,27 @@
 // routes.ts
 export const ROUTES = {
-    INDEX: "/pages/index/index",
-    LOGIN: "/pages/login/index",
-    MAIN_INDEX: "/pages/main/index/index",
-    CLASS_RECORD_INDEX: "/pages/class-record/index/index",
-    CLASS_RECORD_DETAIL: "/pages/class-record/detail/index",
-    CLASS_RECORD_EDIT: "/pages/class-record/edit/index",
-    CLASS_RECORD_ADJUST: "/pages/class-record/adjust/index",
-    CLASS_RECORD_ADD_COURSE: "/pages/class-record/add-course/index",
-    MY_COURSE: "/pages/main/parent/my-course/index",
-    MANAGE_STUDENT: "/pages/main/teacher/manage-student/index",
-    EDIT_STUDENT_INFO: "/pages/main/parent/edit-student-info/index",
-    OFFICIAL_STUDENT: "/pages/main/teacher/official-student/index",
-    DEDUCT_FEE: "/pages/main/teacher/deduct-fee/index",
-    FAST_DEDUCT: "/pages/main/teacher/fast-deduct/index",
-    STUDENT_DETAIL: "/pages/main/teacher/student-detail/index",
-    ADD_STUDENT: "/pages/main/teacher/add-student/index",
-    CLASS_MANAGE: "/pages/main/teacher/class-manage/index",
-    CLASS_DETAIL: "/pages/main/teacher/class-detail/index",
+    INDEX: "/pages/index/index", // 首页
+    LOGIN: "/pages/login/index", // 登录页
+    MAIN_INDEX: "/pages/main/index/index", // 主页
+    CLASS_RECORD_INDEX: "/pages/class-record/index/index", // 课时记录首页
+    CLASS_RECORD_DETAIL: "/pages/class-record/detail/index", // 课时记录详情页
+    CLASS_RECORD_EDIT: "/pages/class-record/edit/index", // 课时记录编辑页
+    CLASS_RECORD_ADJUST: "/pages/class-record/adjust/index", // 课时记录调整页
+    CLASS_RECORD_ADD_COURSE: "/pages/class-record/add-course/index", // 课时记录添加课程页
+    MY_COURSE: "/pages/main/parent/my-course/index", // 家长端我的课程
+    MANAGE_STUDENT: "/pages/main/teacher/manage-student/index", // 教师端管理学生
+    EDIT_STUDENT_INFO: "/pages/main/parent/edit-student-info/index", // 家长端编辑学生信息
+    OFFICIAL_STUDENT: "/pages/main/teacher/official-student/index", // 教师端正式学生
+    DEDUCT_FEE: "/pages/main/teacher/deduct-fee/index", // 教师端扣费
+    FAST_DEDUCT: "/pages/main/teacher/fast-deduct/index", // 教师端快速扣费
+    STUDENT_DETAIL: "/pages/main/teacher/student-detail/index", // 教师端学生详情
+    ADD_STUDENT: "/pages/main/teacher/add-student/index", // 教师端添加学生
+    CLASS_MANAGE: "/pages/main/teacher/class-manage/index", // 教师端班级管理
+    CLASS_DETAIL: "/pages/main/teacher/class-detail/index", // 教师端班级详情
+    ADD_CLASS: "/pages/main/teacher/add-class/index", // 教师端添加班级
+    SCHOOL_SCHEDULE: "/pages/main/teacher/school-schedule/index", // 教师端学校课表
+    SELECT_COURSE: "/pages/main/teacher/select-course/index", // 教师端选择课程
+    SELECT_TEACHER: "/pages/main/teacher/select-teacher/index", // 教师端选择老师
 } as const;
 
 export type PagePath = typeof ROUTES[keyof typeof ROUTES];

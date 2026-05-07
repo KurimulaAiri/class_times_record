@@ -12,6 +12,8 @@ interface Student {
 	institutions: Institution[];
 	primaryParent: Parent;
 	secondaryParent: Parent;
+	courseTotalTime: number;
+	courseRestTime: number;
 	createTimeStr: string;
 	updateTimeStr: string;
 }
@@ -41,4 +43,8 @@ type SubmitEditStudentInfoForm = Omit<EditStudentInfoForm, "birthStr"> & {
 interface StudentListResponse {
 	list: Student[];
 	total: number;
+}
+
+interface StudentListByClassIdQueryForm {
+	classId: number;
 }

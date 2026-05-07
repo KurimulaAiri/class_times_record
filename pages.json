@@ -123,7 +123,33 @@
 		{
 			"path": "pages/main/teacher/class-detail/index",
 			"style": {
-				"navigationBarTitleText": "班级详情"
+				"navigationBarTitleText": "班级详情",
+				"navigationBarBackgroundColor": "#70a9a2",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/main/teacher/add-class/index",
+			"style": {
+				"navigationBarTitleText": "添加班级"
+			}
+		},
+		{
+			"path": "pages/main/teacher/school-schedule/index",
+			"style": {
+				"navigationBarTitleText": "学校课表"
+			}
+		},
+		{
+			"path": "pages/main/teacher/select-course/index",
+			"style": {
+				"navigationBarTitleText": "选择课程"
+			}
+		},
+		{
+			"path": "pages/main/teacher/select-teacher/index",
+			"style": {
+				"navigationBarTitleText": "选择老师"
 			}
 		}
 	],

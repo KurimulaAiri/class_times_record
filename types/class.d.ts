@@ -7,6 +7,7 @@ interface Class {
     id:number
     className: string;
     studentCount: number;
+    studentMaxCount: number;
     courseName: string;
     username: string;
     courseType: number;
