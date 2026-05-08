@@ -63,11 +63,12 @@
 						<view class="stu-detail">
 							<text class="stu-name">{{ item.studentName }}</text>
 							<text class="stu-no"
-								>学号：{{ item.id }} 剩余课时：{{ item.courseRestTime }}</text
+								>学号：{{ item.id }}； 剩余课时：{{ item.courseRestTime }}</text
 							>
 						</view>
 					</view>
 					<view
+						v-if="item.primaryParent"
 						class="stu-action"
 						@tap.stop="makePhoneCall(item.primaryParent?.phone)"
 					>

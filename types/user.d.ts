@@ -11,6 +11,7 @@ interface ParentIdentity extends BaseIdentity {
 }
 
 interface TeacherIdentity extends BaseIdentity {
+    institutionId: number;
     teacherId: number;
     username: string,
     institution: Institution

@@ -129,8 +129,10 @@
 			align-items: center;
 			font-size: 26rpx;
 			color: $theme-color;
-			
-			text { margin-left: 6rpx; }
+
+			text {
+				margin-left: 6rpx;
+			}
 		}
 	}
 
@@ -147,8 +149,12 @@
 			border-bottom: 1rpx solid #f8f9fa;
 			transition: background 0.2s;
 
-			&.item-hover { background: #fcfcfc; }
-			&:last-child { border-bottom: none; }
+			&.item-hover {
+				background: #fcfcfc;
+			}
+			&:last-child {
+				border-bottom: none;
+			}
 
 			.stu-info {
 				display: flex;
@@ -165,8 +171,12 @@
 					font-weight: bold;
 					margin-right: 24rpx;
 
-					&.male { background: #4dabf7; }
-					&.female { background: #ff92ad; }
+					&.male {
+						background: #4dabf7;
+					}
+					&.female {
+						background: #ff92ad;
+					}
 				}
 
 				.stu-detail {
@@ -200,35 +210,56 @@
 
 // 底部操作
 .bottom-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #fff;
-    padding: 20rpx 30rpx calc(20rpx + var(--window-bottom));
-    display: flex;
-    gap: 20rpx;
-    box-shadow: 0 -10rpx 20rpx rgba(0,0,0,0.03);
-    
-    .btn {
-        flex: 1;
-        height: 90rpx;
-        line-height: 90rpx;
-        font-size: 30rpx;
-        border-radius: 45rpx;
-        font-weight: bold;
-        
-        &::after { border: none; }
-        
-        &-outline {
-            background: #fff;
-            color: $theme-color;
-            border: 2rpx solid $theme-color;
-        }
-        
-        &-main {
-            background: $theme-color;
-            color: #fff;
-        }
-    }
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: #fff;
+	padding: 20rpx 30rpx calc(20rpx + var(--window-bottom));
+	display: flex;
+	gap: 20rpx;
+	box-shadow: 0 -10rpx 20rpx rgba(0, 0, 0, 0.03);
+
+	.btn {
+		flex: 1;
+		height: 90rpx;
+		line-height: 90rpx;
+		font-size: 30rpx;
+		border-radius: 45rpx;
+		font-weight: bold;
+
+		&::after {
+			border: none;
+		}
+
+		&-outline {
+			background: #fff;
+			color: $theme-color;
+			border: 2rpx solid $theme-color;
+		}
+
+		&-main {
+			background: $theme-color;
+			color: #fff;
+		}
+	}
+}
+
+.empty-box {
+	display: flex;
+	flex-direction: column; // 垂直排列
+	align-items: center; // 水平居中
+	justify-content: center; // 垂直居中
+	padding-top: 200rpx; // 距离顶部高度，根据页面布局调整
+
+	.empty-img {
+		width: 320rpx; // 缺省图宽度
+		height: 320rpx; // 缺省图高度
+		margin-bottom: 20rpx; // 图片和文字的间距
+	}
+
+	text {
+		font-size: 28rpx; // 文字大小
+		color: #999999; // 弱化文字颜色
+	}
 }

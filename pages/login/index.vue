@@ -33,6 +33,25 @@
 					</view>
 				</view>
 
+				<!-- 隐私条款 -->
+				<view class="privacy-wrapper">
+					<checkbox-group @change="handleCheckboxChange">
+						<label class="privacy-label">
+							<checkbox
+								:checked="isAgree"
+								color="#007AFF"
+								style="transform: scale(0.7)"
+							/>
+							<text class="privacy-text">我已阅读并同意</text>
+						</label>
+					</checkbox-group>
+					<text class="privacy-link" @click="openAgreement"
+						>《用户服务协议》</text
+					>
+					<text class="privacy-text">及</text>
+					<text class="privacy-link" @click="openPrivacy">《隐私政策》</text>
+				</view>
+
 				<!-- 登录按钮 -->
 				<view class="btn-wrapper">
 					<view class="login-btn" hover-class="none" @click="login">
@@ -58,6 +77,25 @@
 	const account = ref("");
 	const password = ref("");
 
+	// 新增：隐私条款勾选状态
+	const isAgree = ref(false);
+
+	// 新增：打开隐私条款页面
+	const openPrivacy = () => {
+		// 假设你的路由配置里有这个页面，或者直接用 jump
+		jump(ROUTES.PRIVACY);
+	};
+
+	// 新增：打开用户服务协议页面
+	const openAgreement = () => {
+		jump(ROUTES.USER_AGREEMENT); // 确保在 ROUTES 中配置了此常量
+	};
+
+	// 新增：处理勾选变化
+	const handleCheckboxChange = (e: any) => {
+		isAgree.value = e.detail.value.length > 0;
+	};
+
 	onLoad((options) => {
 		if (options) {
 			const data = parseData(options.data);
@@ -67,6 +105,15 @@
 	});
 
 	const login = () => {
+		// 新增：登录前校验是否同意条款
+		if (!isAgree.value) {
+			uni.showToast({
+				title: "请先阅读并同意隐私条款",
+				icon: "none",
+			});
+			return;
+		}
+
 		console.log(
 			"账号:",
 			account.value,

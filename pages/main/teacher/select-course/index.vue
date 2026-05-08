@@ -2,20 +2,20 @@
 	<view class="selector-page">
 		<view class="search-bar">
 			<icon type="search" size="14" color="#999" />
-			<input v-model="keyword" placeholder="搜索课程名称" />
+			<input v-model="keyword" placeholder="搜索课程名称" clearable="true" />
 		</view>
 
 		<scroll-view scroll-y class="list-container">
 			<view
 				class="course-item"
-				v-for="item in filteredList"
+				v-for="item in list"
 				:key="item.id"
 				@tap="select(item)"
 			>
 				<view class="course-icon">📚</view>
 				<view class="course-info">
-					<text class="name">{{ item.name }}</text>
-					<text class="desc">{{ item.type }}</text>
+					<text class="name">{{ item.courseName }}</text>
+					<text class="desc">{{ item.courseType }}</text>
 				</view>
 				<uni-icons type="right" size="14" color="#eee"></uni-icons>
 			</view>
@@ -24,20 +24,24 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, computed } from "vue";
+	import { ref } from "vue";
+	import { getCourseByInstitutionId } from "@/api/course";
+	import { onLoad } from "@dcloudio/uni-app";
 
 	const keyword = ref("");
-	const list = ref([
-		{ id: 1, name: "素描基础理论", type: "美术类" },
-		{ id: 2, name: "少儿创意水彩", type: "美术类" },
-		{ id: 3, name: "钢琴考级特训", type: "乐器类" },
-	]);
 
-	const filteredList = computed(() =>
-		list.value.filter((i) => i.name.includes(keyword.value)),
-	);
+	const list = ref<CourseResponse[]>([]);
 
-	const select = (item) => {
+	onLoad(async () => {
+		const res = await getCourseByInstitutionId({
+			institutionId: 1,
+			currentPage: 1,
+			pageSize: 100,
+		});
+		list.value = res.courses;
+	});
+
+	const select = (item: CourseResponse) => {
 		uni.$emit("updateCourse", item);
 		uni.navigateBack();
 	};

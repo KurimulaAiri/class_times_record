@@ -2,7 +2,7 @@
 
 .mine-container {
 	min-height: 100vh;
-	background-color: #f8faf9; // 统一背景色
+	background-color: $default-background-color; // 统一背景色
 	padding: 30rpx; // 页面整体内边距
 	padding-bottom: 60rpx;
     z-index: 1;

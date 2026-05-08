@@ -12,4 +12,13 @@ const getTeacherById = async (id: number): Promise<TeacherResponse> => {
 	return res.data.teachers[0];
 };
 
-export { getTeacherById };
+const getTeachersByInstitutionId = async (form: GetTeachersByInstitutionIdForm): Promise<TeachersResponse> => {
+	const res = await post<TeachersResponse>(`/teacher/get_teacher_by_institution_id`, {
+		institutionId: form.institutionId,
+		currentPage: form.currentPage,
+		pageSize: form.pageSize,
+	});
+	return res.data;
+};
+
+export { getTeacherById, getTeachersByInstitutionId };

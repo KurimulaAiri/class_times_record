@@ -151,6 +151,18 @@
 			"style": {
 				"navigationBarTitleText": "选择老师"
 			}
+		},
+		{
+			"path": "pages/privacy/index",
+			"style": {
+				"navigationBarTitleText": "隐私政策"
+			}
+		},
+		{
+			"path": "pages/user-agreement/index",
+			"style": {
+				"navigationBarTitleText": "用户服务协议"
+			}
 		}
 	],
 	"globalStyle": {

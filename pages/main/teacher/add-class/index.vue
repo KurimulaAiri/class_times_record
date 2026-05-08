@@ -42,8 +42,8 @@
 					</view>
 				</view>
 				<view class="teacher-tags" v-if="selectedTeachers.length > 0">
-					<view class="tag" v-for="(t, i) in selectedTeachers" :key="t.id">
-						<text>{{ t.name }}</text>
+					<view class="tag" v-for="(t, i) in selectedTeachers" :key="t.teacherId">
+						<text>{{ t.username }}</text>
 						<text class="tag-close" @tap="removeTeacher(i)">×</text>
 					</view>
 				</view>
@@ -63,21 +63,24 @@
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
 
-	const themeColor = "#2979ff";
+	const themeColor = "#70a9a2";
 	const form = reactive({
 		className: "",
-		courseId: "",
+		courseId: 0,
 		courseName: "",
 		maxSize: 30,
 	});
-	const selectedTeachers = ref([]);
+	const selectedTeachers = ref<TeacherResponse[]>([]);
 
 	onLoad(() => {
-		uni.$on("updateCourse", (res) => {
+		uni.$on("updateCourse", (res: CourseResponse) => {
+			console.log("选择的课程", res);
 			form.courseId = res.id;
-			form.courseName = res.name;
+			form.courseName = res.courseName;
 		});
-		uni.$on("updateTeachers", (res) => {
+
+		uni.$on("updateTeachers", (res: TeacherResponse[]) => {
+			console.log("选择的老师", res);
 			selectedTeachers.value = res;
 		});
 	});
@@ -87,9 +90,11 @@
 	});
 
 	const toSelectCourse = () => jump(ROUTES.SELECT_COURSE);
+
 	const toSelectTeacher = () => {
-		const ids = selectedTeachers.value.map((t) => t.id).join(",");
-		jump(ROUTES.SELECT_TEACHER, { ids });
+		const ids = selectedTeachers.value.map((t) => t.teacherId.toString()).join(",");
+		console.log("即将传输的ids", ids);
+		jump(ROUTES.SELECT_TEACHER,  ids );
 	};
 
 	const removeTeacher = (index) => selectedTeachers.value.splice(index, 1);

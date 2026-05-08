@@ -2,7 +2,7 @@
 
 .container {
 	min-height: 100vh;
-	background: #f8f9fa;
+	background: $default-background-color;
 	padding: 30rpx 0;
 }
 .form-card {
@@ -25,6 +25,13 @@
 		}
 	}
 }
+
+.input {
+	margin-top: 20rpx;
+	font-size: 28rpx;
+	color: #333;
+}
+
 .label-row {
 	display: flex;
 	justify-content: space-between;

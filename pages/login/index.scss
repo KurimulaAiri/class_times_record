@@ -5,105 +5,130 @@ $text-color: #333;
 $placeholder-color: #b0b0b0;
 
 .content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: $bg-color;
-    padding: 0 40rpx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	background-color: $bg-color;
+	padding: 0 40rpx;
 }
 
 .login-form {
-    width: 100%;
-    background: #ffffff;
-    border-radius: 40rpx;
-    padding: 80rpx 50rpx;
+	width: 100%;
+	background: #ffffff;
+	border-radius: 40rpx;
+	padding: 80rpx 50rpx;
 	margin-bottom: 150rpx;
-    box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.05);
+	box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.05);
 
-    &-title {
-        font-size: 48rpx;
-        font-weight: 600;
-        color: $text-color;
-        text-align: center;
-        margin-bottom: 80rpx;
-        position: relative;
-        
-        // 标题下方的装饰点缀
-        &::after {
-            content: '';
-            position: absolute;
-            bottom: -24rpx;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 48rpx;
-            height: 8rpx;
-            background-color: $theme-color;
-            border-radius: 4rpx;
-        }
-    }
+	&-title {
+		font-size: 48rpx;
+		font-weight: 600;
+		color: $text-color;
+		text-align: center;
+		margin-bottom: 80rpx;
+		position: relative;
 
-    &-content {
-        .login-form-item {
-            margin-bottom: 45rpx;
+		// 标题下方的装饰点缀
+		&::after {
+			content: "";
+			position: absolute;
+			bottom: -24rpx;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 48rpx;
+			height: 8rpx;
+			background-color: $theme-color;
+			border-radius: 4rpx;
+		}
+	}
 
-            &-label {
-                font-size: 28rpx;
-                color: #666;
-                margin-bottom: 16rpx;
-                margin-left: 10rpx;
-                display: block;
-            }
+	&-content {
+		.login-form-item {
+			margin-bottom: 45rpx;
 
-            &-input {
-                background-color: #f9fbfb;
-                border: 2rpx solid transparent;
-                border-radius: 24rpx;
-                padding: 24rpx 32rpx;
-                transition: all 0.3s ease;
+			&-label {
+				font-size: 28rpx;
+				color: #666;
+				margin-bottom: 16rpx;
+				margin-left: 10rpx;
+				display: block;
+			}
 
-                // 获得焦点时的样式建议配合 JS 动态绑定，或者用 :focus-within
-                &:focus-within {
-                    border-color: rgba($theme-color, 0.4);
-                    background-color: #fff;
-                    box-shadow: 0 0 15rpx rgba($theme-color, 0.1);
-                }
+			&-input {
+				background-color: #f9fbfb;
+				border: 2rpx solid transparent;
+				border-radius: 24rpx;
+				padding: 24rpx 32rpx;
+				transition: all 0.3s ease;
 
-                input {
-                    font-size: 30rpx;
-                    color: $text-color;
-                    height: 48rpx;
-                }
-            }
-        }
-    }
+				// 获得焦点时的样式建议配合 JS 动态绑定，或者用 :focus-within
+				&:focus-within {
+					border-color: rgba($theme-color, 0.4);
+					background-color: #fff;
+					box-shadow: 0 0 15rpx rgba($theme-color, 0.1);
+				}
+
+				input {
+					font-size: 30rpx;
+					color: $text-color;
+					height: 48rpx;
+				}
+			}
+		}
+	}
+}
+
+.privacy-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 20rpx;
+	font-size: 24rpx;
+	color: #666;
+
+	.privacy-label {
+		display: flex;
+		align-items: center;
+	}
+
+	.privacy-link {
+		color: #007aff; // 链接颜色
+		margin-left: -10rpx; // 稍微靠拢
+	}
+}
+
+// 如果你使用的是 uniapp 默认 checkbox，可能需要微调缩放
+checkbox .wx-checkbox-input,
+checkbox .uni-checkbox-input {
+	margin: 0;
 }
 
 .btn-wrapper {
-    margin-top: 80rpx;
+	margin-top: 80rpx;
 }
 
 .login-btn {
-    width: 100%;
-    height: 100rpx;
-    line-height: 100rpx;
-    text-align: center;
-    background: linear-gradient(135deg, lighten($theme-color, 5%), $theme-color);
-    color: #fff;
-    font-size: 34rpx;
-    font-weight: 500;
-    border-radius: 50rpx;
-    box-shadow: 0 12rpx 24rpx rgba($theme-color, 0.3);
-    transition: transform 0.2s active;
+	width: 100%;
+	height: 100rpx;
+	line-height: 100rpx;
+	text-align: center;
+	background: linear-gradient(135deg, lighten($theme-color, 5%), $theme-color);
+	color: #fff;
+	font-size: 34rpx;
+	font-weight: 500;
+	border-radius: 50rpx;
+	box-shadow: 0 12rpx 24rpx rgba($theme-color, 0.3);
+	transition: transform 0.2s active;
 
-    &:active {
-        transform: scale(0.98);
-        filter: brightness(0.95);
-    }
+	&:active {
+		transform: scale(0.98);
+		filter: brightness(0.95);
+	}
 }
 
 // 占位符样式
 ::v-deep .input-placeholder {
-    color: $placeholder-color;
-    font-size: 28rpx;
+	color: $placeholder-color;
+	font-size: 28rpx;
 }
