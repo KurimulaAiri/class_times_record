@@ -5,57 +5,132 @@ $male-color: #007aff;
 $male-bg: #eef6ff;
 $female-color: #ff4d94;
 $female-bg: #fff0f6;
-$card-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+$card-shadow: 0 4rpx 16rpx rgba(94, 52, 52, 0.06);
 $gray-light: #fdfdfd;
 
 .container {
 	background-color: #f4f7f9; // 稍微冷一点的底色，衬托纯白卡片
 	min-height: 100vh;
-	padding-top: 120rpx;
 }
 
-.header-search {
-	/* ... 保持之前的搜索栏样式，可微调高度 ... */
+.fixed-header {
+	position: sticky;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	background-color: $default-background-color;
+	box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+
+	// 搜索框样式保持你原有的，确保高度固定
+	.header-search {
+		display: flex;
+		padding: 20rpx 30rpx;
+		gap: 20rpx;
+		.search-input {
+			flex: 1;
+			height: 72rpx;
+			background: #fff;
+			border-radius: 36rpx;
+			padding: 0 30rpx;
+			font-size: 28rpx;
+		}
+		.search-btn {
+			width: 120rpx;
+			height: 72rpx;
+			line-height: 72rpx;
+			background: $theme-color;
+			color: #fff;
+			font-size: 26rpx;
+			border-radius: 36rpx;
+		}
+	}
+
+	// 筛选栏
+	.filter-bar {
+		display: flex;
+		height: 88rpx;
+		border-top: 1rpx solid #f0f0f0;
+
+		.tab-item {
+			flex: 1;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 26rpx;
+			color: #666;
+
+			&.active {
+				color: $theme-color;
+				font-weight: bold;
+			}
+
+			.arrow {
+				font-size: 16rpx;
+				margin-left: 8rpx;
+				transition: transform 0.3s;
+				&.rotate {
+					transform: rotate(180deg);
+				}
+			}
+		}
+	}
+
+	// 下拉面板
+	.dropdown-content {
+		position: absolute;
+		top: 100%; // 紧贴在 fixed-header 底部
+		left: 0;
+		width: 100%;
+		background: #fff;
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 0.3s ease;
+		border-radius: 0 0 20rpx 20rpx;
+
+		&.show {
+			max-height: 600rpx;
+			padding-bottom: 20rpx;
+		}
+
+		.option-item {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 30rpx 40rpx;
+			font-size: 28rpx;
+			border-bottom: 1rpx solid #f8f8f8;
+			&:active {
+				background-color: #f5f5f5;
+			}
+			&.selected {
+				color: $theme-color;
+			}
+		}
+	}
+}
+
+// 遮罩层
+.dropdown-mask {
 	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
-	height: 110rpx;
-	background-color: #f4f7f9;
-	backdrop-filter: blur(10px); // 毛玻璃效果
-	display: flex;
-	align-items: center;
-	padding: 0 30rpx;
-	z-index: 100;
-	box-shadow: 0 1rpx 0rpx rgba(0, 0, 0, 0.05);
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.4);
+	z-index: 90; // 低于 fixed-header 但高于列表
+}
 
-	.search-input {
-		flex: 1;
-		height: 76rpx;
-		background-color: #fff;
-		border-radius: 38rpx 0 0 38rpx;
-		padding: 0 30rpx;
-		font-size: 28rpx;
-	}
+// 列表区域
+.student-list {
+	// 这里的 padding-top 可以不加，因为 sticky 不脱离文档流
+	// 但为了美观可以加一点 padding
+	padding: 20rpx 0;
+}
 
-	.search-btn {
-		width: 140rpx;
-		height: 76rpx;
-		background: linear-gradient(
-			135deg,
-			lighten($theme-color, 8%),
-			$theme-color
-		); // 渐变按钮
-		color: white;
-		font-size: 28rpx;
-		border-radius: 0 38rpx 38rpx 0;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		&::after {
-			border: none;
-		}
-	}
+// 适配你之前的 card 列表，给列表加点间距
+.student-list {
+	padding-top: 10rpx;
 }
 
 .student-list {

@@ -18,7 +18,7 @@
 	display: flex;
 	align-items: center;
 	padding: 50rpx 40rpx;
-	background: linear-gradient(135deg, #66cdaa 0%, #48b08f 100%); // 对应首页渐变
+	background: linear-gradient(135deg, $theme-color-light 0%, $theme-color 100%); // 对应首页渐变
 	border-radius: 30rpx;
 	box-shadow: 0 10rpx 30rpx rgba(102, 205, 170, 0.2);
 
@@ -105,7 +105,7 @@
 .app-icon {
 	width: 44rpx;
 	height: 44rpx;
-	background-color: #66cdaa;
+	background-color: $theme-color;
 	border-radius: 12rpx;
 	display: flex;
 	align-items: center;

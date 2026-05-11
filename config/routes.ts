@@ -24,6 +24,8 @@ export const ROUTES = {
     SELECT_TEACHER: "/pages/main/teacher/select-teacher/index", // 教师端选择老师
     PRIVACY: "/pages/privacy/index", // 隐私政策页
     USER_AGREEMENT: "/pages/user-agreement/index", // 用户服务协议页
+    COURSE_MANAGE: "/pages/main/teacher/course-manage/index", // 教师端课程管理
+    EDIT_STUDENT_INFO_TEACHER: "/pages/main/teacher/edit-student-info/index", // 教师端编辑学生信息
 } as const;
 
 export type PagePath = typeof ROUTES[keyof typeof ROUTES];

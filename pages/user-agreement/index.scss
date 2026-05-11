@@ -1,6 +1,8 @@
-.agreement-container {
+@import "../../static/scss/index";
+
+	.agreement-container {
 	padding: 40rpx 30rpx;
-	background-color: #ffffff;
+	background-color: $default-background-color;
 	min-height: 100vh;
 	color: #333;
 	line-height: 1.6;
@@ -28,7 +30,7 @@
 		font-size: 30rpx;
 		font-weight: bold;
 		margin-bottom: 15rpx;
-		border-left: 8rpx solid #007AFF;
+		border-left: 8rpx solid $theme-color;
 		padding-left: 20rpx;
 		height: 36rpx;
 		line-height: 36rpx;

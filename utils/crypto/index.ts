@@ -45,9 +45,18 @@ export function generateSign(params: any) {
 		)
 		.sort();
 
-	// 3. 拼接字符串：key1=value1&key2=value2...
-	const stringA = sortedKeys.map((key) => `${key}=${signObj[key]}`).join("&");
-
+	// 2. 拼接字符串：关键点是对 object 类型执行 JSON.stringify
+	const stringA = sortedKeys
+		.map((key) => {
+			let value = signObj[key];
+			// 如果是对象（且非空），必须转为 JSON 字符串，与后端保持一致
+			if (typeof value === "object" && value !== null) {
+				value = JSON.stringify(value);
+			}
+			return `${key}=${value}`;
+		})
+		.join("&");
+		
 	console.log("stringA:", stringA);
 
 	// 4. 对应后端逻辑：digestWithSalt(srcData, salt) -> srcData + salt

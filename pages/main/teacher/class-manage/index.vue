@@ -35,7 +35,7 @@
 						<text class="value">{{ item.username }}</text>
 					</view>
 					<view class="info-item">
-						<uni-icons type="book" size="16" color="#666"></uni-icons>
+						<image src="/static/icon/book-3.svg" mode="aspectFit"></image>
 						<text class="label">课程名称：</text>
 						<text class="value">{{ item.courseName }}</text>
 					</view>

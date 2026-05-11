@@ -39,7 +39,7 @@
 						<label class="privacy-label">
 							<checkbox
 								:checked="isAgree"
-								color="#007AFF"
+								color="#70a9a2"
 								style="transform: scale(0.7)"
 							/>
 							<text class="privacy-text">我已阅读并同意</text>

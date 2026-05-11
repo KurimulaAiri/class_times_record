@@ -99,6 +99,11 @@
 				align-items: center;
 				margin-bottom: 12rpx;
 
+				image {
+					width: 16px;
+					height: 16px;
+				}
+
 				&:last-child {
 					margin-bottom: 0;
 				}

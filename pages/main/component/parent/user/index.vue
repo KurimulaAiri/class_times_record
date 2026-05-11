@@ -100,7 +100,6 @@
 
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
-	import { Student } from "@/types/student";
 
 	const userStore = useUserStore();
 	const userInfo = userStore.userInfo;

@@ -93,7 +93,7 @@ $placeholder-color: #b0b0b0;
 	}
 
 	.privacy-link {
-		color: #007aff; // 链接颜色
+		color: $theme-color; // 链接颜色
 		margin-left: -10rpx; // 稍微靠拢
 	}
 }

@@ -163,6 +163,18 @@
 			"style": {
 				"navigationBarTitleText": "用户服务协议"
 			}
+		},
+		{
+			"path": "pages/main/teacher/course-manage/index",
+			"style": {
+				"navigationBarTitleText": "课程管理"
+			}
+		},
+		{
+			"path": "pages/main/teacher/edit-student-info/index",
+			"style": {
+				"navigationBarTitleText": "编辑学生信息"
+			}
 		}
 	],
 	"globalStyle": {

@@ -142,7 +142,7 @@
 
 		<!-- 底部操作按钮 -->
 		<view class="footer-btns">
-			<view class="edit-btn" @tap="handleEdit">编辑档案</view>
+			<view class="edit-btn" hover-class="btn-hover" hover-stay-time="50" @tap="handleEdit">编辑档案</view>
 		</view>
 	</view>
 </template>
@@ -150,9 +150,10 @@
 <script setup lang="ts">
 	import { ref } from "vue";
 	import { useStudentStore } from "@/stores/student";
-	import { Student } from "@/types/student";
 	import { getClassListByStudentId } from "@/api/class";
 	import { onLoad } from "@dcloudio/uni-app";
+	import { jump } from "@/utils/common";
+	import { ROUTES } from "@/config/routes";
 
 	const studentStore = useStudentStore();
 	// 模拟接收到的数据
@@ -198,6 +199,7 @@
 
 	const handleEdit = () => {
 		console.log("跳转编辑页");
+		jump(ROUTES.EDIT_STUDENT_INFO_TEACHER);
 	};
 </script>
 

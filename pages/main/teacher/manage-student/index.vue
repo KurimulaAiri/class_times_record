@@ -65,9 +65,8 @@
 <script lang="ts" setup>
 	import { jump } from "@/utils/common";
 	import { ref } from "vue";
-	import { ROUTES } from "@/config/routes";
 	import { onLoad } from "@dcloudio/uni-app";
-	import { Student } from "@/types/student";
+	import { ROUTES } from "@/config/routes";
 	import { useUserStore } from "@/stores/user";
 	import { useStudentStore } from "@/stores/student";
 	import { getStudentListByParentId } from "@/api/student";

@@ -69,7 +69,6 @@
 	import { PickerChangeEvent } from ".";
 	import { ref } from "vue";
 	import { onLoad } from "@dcloudio/uni-app";
-	import { Student, EditStudentInfoForm, SubmitEditStudentInfoForm } from "@/types/student";
 	import { updateStudentInfo } from "@/api/student";
 	import { parseData } from "@/utils/common";
 

@@ -212,8 +212,14 @@ $text-grey: #95a5a6;
 		border-radius: 45rpx;
 		font-size: 32rpx;
 		box-shadow: 0 10rpx 20rpx rgba($theme-color, 0.2);
-		&:active {
-			opacity: 0.8;
-		}
+		transition: all 0.1s ease;
 	}
+}
+
+// 定义一个专用的点击态类名
+.btn-hover {
+	opacity: 0.7;
+	background-color: darken($theme-color, 10%) !important; // 如果想变深颜色
+	transform: translateY(4rpx); // 向下移动一点点
+	box-shadow: 0 4rpx 10rpx rgba($theme-color, 0.3); // 阴影变小变深
 }

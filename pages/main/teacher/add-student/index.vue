@@ -30,8 +30,8 @@
 			<view class="form-item">
 				<text class="label">出生日期</text>
 				<picker mode="date" @change="onDateChange">
-					<view :class="['picker-value', !form.birthday && 'placeholder']">
-						{{ form.birthday || "请选择日期" }}
+					<view :class="['picker-value', !form.birth && 'placeholder']">
+						{{ form.birth || "请选择日期" }}
 					</view>
 				</picker>
 			</view>
@@ -63,7 +63,7 @@
 				<text class="label">家长姓名<text class="required">*</text></text>
 				<input
 					class="input"
-					v-model="form.primaryParent.name"
+					v-model="form.primaryParent.username"
 					placeholder="请输入家长姓名"
 				/>
 			</view>
@@ -93,7 +93,7 @@
 				<text class="label">家长姓名</text>
 				<input
 					class="input"
-					v-model="form.secondaryParent.name"
+					v-model="form.secondaryParent.username"
 					placeholder="请输入家长姓名"
 				/>
 			</view>
@@ -125,42 +125,84 @@
 
 <script setup lang="ts">
 	import { ref, reactive } from "vue";
+	import { insertStudent } from "@/api/student";
+	import { useUserStore } from "@/stores/user";
 
-	const themeColor = ref("#2979ff"); // 你的主题色
+	const userStore = useUserStore();
+
+	const themeColor = ref("#70a9a2"); // 你的主题色
+
+	const currentTeacher = userStore.userInfo?.roleId === 4 ? userStore.userInfo?.identityInfo : null;
 
 	const genders = [
 		{ name: "男", value: 1 },
-		{ name: "女", value: 2 },
+		{ name: "女", value: 0 },
 	];
 
-	const form = reactive({
+	const form = reactive<InsertStudentForm>({
 		studentName: "",
+		institutionId: currentTeacher?.institutionId || 0,
 		sex: 1,
-		birthday: "",
+		birth: "",
 		school: "",
 		address: "",
-		primaryParent: { name: "", relation: "", phone: "" },
-		secondaryParent: { name: "", relation: "", phone: "" },
+		primaryParent: { username: "", relation: "", phone: "" },
+		secondaryParent: { username: "", relation: "", phone: "" },
 	});
 
-	const onGenderChange = (e) => {
+	const onGenderChange = (e: any) => {
 		form.sex = Number(e.detail.value);
 	};
 
-	const onDateChange = (e) => {
-		form.birthday = e.detail.value;
+	const onDateChange = (e: any) => {
+		form.birth = e.detail.value;
 	};
 
-	const submitForm = () => {
-		// 简单校验
+	const submitForm = async () => {
+		// 1. 基础校验
 		if (!form.studentName)
 			return uni.showToast({ title: "姓名不能为空", icon: "none" });
-		if (!form.primaryParent.name || !form.primaryParent.phone) {
+		if (
+			!form.primaryParent.username ||
+			!form.primaryParent.phone ||
+			!form.primaryParent.relation
+		) {
 			return uni.showToast({ title: "请完善主要联系人信息", icon: "none" });
 		}
 
-		console.log("提交数据：", form);
-		// 调用接口逻辑...
+		// 2. 备用联系人逻辑判断
+		const sp = form.secondaryParent;
+		const hasAny = Boolean(sp.username || sp.phone || sp.relation);
+		const isComplete = Boolean(sp.username && sp.phone && sp.relation);
+
+		if (hasAny && !isComplete) {
+			return uni.showToast({ title: "请完善备用联系人信息", icon: "none" });
+		}
+
+		// 3. 构造提交对象 (解决 TS 类型问题)
+		// 使用展开运算符克隆数据，这样不会影响页面渲染
+		const submitData: any = { ...form };
+
+		// 如果完全没填，设为 null
+		if (!hasAny) {
+			submitData.secondaryParent = null;
+		}
+
+		submitData
+
+		console.log("最终提交数据：", submitData);
+
+		try {
+			const studentId = await insertStudent(submitData);
+			console.log("插入学生ID:", studentId);
+			if (studentId) {
+				uni.showToast({ title: "添加成功", icon: "success" });
+				// 成功后延迟返回
+				setTimeout(() => uni.navigateBack(), 1500);
+			}
+		} catch (error) {
+			// 这里的错误会被你的全局拦截器或异常处理器捕获
+		}
 	};
 </script>
 

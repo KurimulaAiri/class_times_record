@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { Student } from '@/types/student.d'
 
 export const useStudentStore = defineStore('student',() => {
 

@@ -1,5 +1,4 @@
-import { FormModel } from "@/utils/common";
-
+// student.d.ts
 interface Student {
 	id: number;
 	avatar: string;
@@ -26,12 +25,33 @@ interface StudentListByParentIdQueryForm {
 
 interface StudentListByTeacherIdQueryForm {
 	teacherId: number;
+	sex: number | null;
+	hasClass: boolean | null;
 	keyword: string | null;
 	currentPage: number;
 	pageSize: number;
 }
 
-type EditStudentInfoForm = FormModel<
+interface StudentListByInstitutionIdQueryForm {
+	institutionId: number;
+	sex: number | null;
+	hasClass: boolean | null;
+	keyword: string | null;
+	currentPage: number;
+	pageSize: number;
+}
+
+interface StudentListQueryForm {
+	scope: number; // 1 为查教师，2 为查机构
+	targetId: number;
+	sex: number | null;
+	hasClass: boolean | null;
+	keyword: string | null;
+	currentPage: number;
+	pageSize: number;
+}
+
+type EditStudentInfoForm = import("@/utils/common").FormModel<
 	Student,
 	"id" | "avatar" | "birthStr" | "school" | "address"
 >;
@@ -47,4 +67,19 @@ interface StudentListResponse {
 
 interface StudentListByClassIdQueryForm {
 	classId: number;
+}
+
+interface InsertStudentForm {
+	studentName: string;
+	institutionId: number;
+	sex: number;
+	birth: string;
+	school: string;
+	address: string;
+	primaryParent: Parent;
+	secondaryParent: Parent;
+}
+
+interface InsertStudentResponse {
+	studentId: number;
 }

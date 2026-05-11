@@ -4,7 +4,6 @@
 			<icon type="search" size="14" color="#999" />
 			<input v-model="keyword" placeholder="搜索课程名称" clearable="true" />
 		</view>
-
 		<scroll-view scroll-y class="list-container">
 			<view
 				class="course-item"
@@ -12,7 +11,9 @@
 				:key="item.id"
 				@tap="select(item)"
 			>
-				<view class="course-icon">📚</view>
+				<view class="course-icon">
+					<image src="/static/icon/bachelor-cap.svg" mode="aspectFit"></image>
+				</view>
 				<view class="course-info">
 					<text class="name">{{ item.courseName }}</text>
 					<text class="desc">{{ item.courseType }}</text>

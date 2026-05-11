@@ -99,12 +99,11 @@
 	import { onLoad } from "@dcloudio/uni-app";
 	import { parseData } from "@/utils/common";
 	import { getStudentListByClassId } from "@/api/student";
-	import { Student } from "@/types/student";
 	import { useStudentStore } from "@/stores/student";
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
 
-	const themeColor = ref("#2979ff"); // 对应你的 $theme-color
+	const themeColor = ref("#70a9a2"); // 对应你的 $theme-color
 	const classDetail = ref<Class>();
 
 	const students = ref<Student[]>([]);
