@@ -123,7 +123,7 @@
 	import { getStudent } from "@/api/student";
 	import { useUserStore } from "@/stores/user";
 	import { useStudentStore } from "@/stores/student";
-	import { onLoad, onReachBottom, onPullDownRefresh } from "@dcloudio/uni-app";
+	import { onLoad, onReachBottom, onPullDownRefresh, onShow } from "@dcloudio/uni-app";
 	import { jump } from "@/utils/common/index";
 	import { ROUTES } from "@/config/routes";
 
@@ -264,6 +264,9 @@
 	};
 
 	// --- 生命周期钩子 ---
+	onShow(() => {
+		loadData(true);
+	});
 
 	// 初始化加载
 	onLoad(() => {

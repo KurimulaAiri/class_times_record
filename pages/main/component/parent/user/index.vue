@@ -8,10 +8,14 @@
 					mode="aspectFill"
 				></image>
 				<view class="user-text-info">
-					<text class="user-name">{{
-						studentStore.studentInfo?.studentName || "未登录"
-					}}</text>
-					<view class="location-row">
+					<text class="user-name">
+						{{
+							userStore.userInfo?.roleId === 3
+								? userStore.userInfo?.identityInfo?.username || "权限错误"
+								: "未登录"
+						}}
+					</text>
+					<!-- <view class="location-row">
 						<uni-icons
 							type="location-filled"
 							size="14"
@@ -19,12 +23,16 @@
 						></uni-icons>
 						<text class="location-text">
 							{{
-								studentStore.studentInfo?.institutions
-									.map((inst) => inst.institutionName)
-									.join("、") || "未绑定任何课程"
+								studentStore.studentInfo === null
+									? "未绑定任何课程"
+									: studentStore.studentInfo.institutions === null
+										? "未绑定任何课程"
+										: studentStore.studentInfo.institutions
+												.map((inst) => inst.institutionName)
+												.join("、") || "未绑定任何课程"
 							}}
 						</text>
-					</view>
+					</view> -->
 				</view>
 			</view>
 			<button
@@ -34,6 +42,72 @@
 			>
 				管理学员
 			</button>
+		</view>
+
+		<!-- 当前学生卡片 -->
+		<view class="student-card" v-if="studentStore.studentInfo">
+			<view class="student-card-header">
+				<view class="student-basic">
+					<image
+						class="student-avatar"
+						src="@/static/icon/avatar.svg"
+						mode="aspectFill"
+					></image>
+
+					<view class="student-info">
+						<text class="student-name">
+							{{ studentStore.studentInfo.studentName || "未命名学员" }}
+						</text>
+
+						<text class="student-desc">
+							{{
+								studentStore.studentInfo.institutions
+									?.map((item) => item.institutionName)
+									.join("、") || "暂无机构"
+							}}
+						</text>
+					</view>
+				</view>
+
+				<view class="student-tag"> 当前学员 </view>
+			</view>
+
+			<view class="student-data">
+				<view class="data-item">
+					<text class="data-value">
+						{{
+							studentStore.studentInfo.sex !== null
+								? studentStore.studentInfo.sex === 1
+									? "男"
+									: "女"
+								: "-"
+						}}
+					</text>
+					<text class="data-label">性别</text>
+				</view>
+
+				<view class="data-item">
+					<text class="data-value">
+						{{
+							studentStore.studentInfo.birthStr !== null
+								? studentStore.studentInfo.birthStr
+								: "-"
+						}}
+					</text>
+					<text class="data-label">生日</text>
+				</view>
+
+				<view class="data-item">
+					<text class="data-value">
+						{{
+							studentStore.studentInfo.school !== null
+								? studentStore.studentInfo.school
+								: "-"
+						}}
+					</text>
+					<text class="data-label">学校</text>
+				</view>
+			</view>
 		</view>
 
 		<view class="grid-menu" v-if="hasVisibleItems">
@@ -53,21 +127,17 @@
 		</view>
 
 		<view class="list-card-bg">
-			<view
-				class="list-item"
-				v-for="(item, index) in subMenuList"
-				:key="index"
-				hover-class="item-hover"
-				@tap="jump(item.path)"
-			>
-				<view class="item-left">
-					<view class="icon-wrap" :style="{ backgroundColor: item.color }">
-						<uni-icons :type="item.icon" size="18" color="#fff"></uni-icons>
+			<template v-for="(item, index) in subMenuList" :key="index">
+				<view class="list-item" hover-class="item-hover" @tap="jump(item.path)" v-if="item.isVisible">
+					<view class="item-left">
+						<view class="icon-wrap" :style="{ backgroundColor: item.color }">
+							<uni-icons :type="item.icon" size="18" color="#fff"></uni-icons>
+						</view>
+						<text class="item-text">{{ item.menuName }}</text>
 					</view>
-					<text class="item-text">{{ item.menuName }}</text>
+					<uni-icons type="right" size="16" color="#bbb"></uni-icons>
 				</view>
-				<uni-icons type="right" size="16" color="#bbb"></uni-icons>
-			</view>
+			</template>
 		</view>
 
 		<view class="footer-actions">
@@ -139,48 +209,56 @@
 			icon: "gift",
 			color: "#86e1b6",
 			path: "/pages/main/gift/index/index",
+			isVisible: false,
 		},
 		{
 			menuName: "兑换记录",
 			icon: "star-filled",
 			color: "#7cb5ff",
 			path: "/pages/main/exchange/index/index",
+			isVisible: false,
 		},
 		{
 			menuName: "积分记录",
 			icon: "wallet",
 			color: "#ffb37c",
 			path: "/pages/main/points/index/index",
+			isVisible: false,
 		},
 		{
 			menuName: "成绩单",
 			icon: "paperplane-filled",
 			color: "#7adcf0",
 			path: "/pages/main/score/index/index",
+			isVisible: false,
 		},
 		{
 			menuName: "考勤记录",
 			icon: "checkbox-filled",
 			color: "#b999f7",
 			path: "/pages/main/attendance/index/index",
+			isVisible: false,
 		},
 		{
 			menuName: "机构通知",
 			icon: "notification-filled",
 			color: "#86e1b6",
 			path: "/pages/main/notice/index/index",
+			isVisible: false,
 		},
 		{
 			menuName: "分享小程序",
 			icon: "redo-filled",
 			color: "#ffb37c",
 			path: "/pages/main/share/index",
+			isVisible: false,
 		},
 		{
 			menuName: "去往旧版",
 			icon: "arrow-right",
 			color: "#7adcf0",
 			path: "/pages/class-record/index/index",
+			isVisible: true,
 		},
 	]);
 

@@ -1,4 +1,15 @@
 import { post } from "@/utils/request";
+import { useStudentStore } from "@/stores/student";
+
+const getStudentByStudentId = async (studentId: number): Promise<Student> => {
+	let student: Student = {} as Student;
+	await post<StudentListResponse>("/student/get_by_student_id", { studentId }).then(
+		(res) => {
+			student = res.data.list[0];
+		},
+	);
+	return student;
+};
 
 const getStudentListByParentId = async (
 	query: StudentListByParentIdQueryForm,
@@ -114,6 +125,22 @@ const insertStudent = async (data: InsertStudentForm): Promise<number> => {
 	return studentId;
 };
 
+const updateStudent = async (data: UpdateStudentForm): Promise<number> => {
+	let studentId = 0;
+	await post<UpdateStudentResponse>("/student/update", data).then((res) => {
+		console.log("更新学生响应:", res);
+		studentId = res.data.studentId;
+	});
+
+	const newStudentInfo = await getStudentByStudentId(studentId);
+	console.log("更新学生信息:", newStudentInfo);
+
+	const studentStore = useStudentStore();
+	studentStore.setStudentInfo(newStudentInfo);
+
+	return studentId;
+};
+
 export {
 	getStudentListByParentId,
 	updateStudentInfo,
@@ -121,4 +148,5 @@ export {
 	getStudentListByClassId,
 	insertStudent,
 	getStudent,
+	updateStudent,
 };

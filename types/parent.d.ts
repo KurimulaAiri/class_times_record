@@ -1,5 +1,9 @@
 interface Parent {
     username: string;
-    relation: string;
-    phone: string;
+	studentId: number;
+	parentId: number;
+	username: string;
+	relation: string;
+	phone: string;
+    isPrimary: boolean;
 }

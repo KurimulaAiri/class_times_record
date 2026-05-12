@@ -1,189 +1,362 @@
 /* index.scss */
+@import "../../../../../static/scss/index.scss";
+
+/* =========================
+   页面基础
+========================= */
 
 .user-container {
-	background-color: #f5f7fa; // 极浅的蓝灰色背景，更贴合原图
-	padding: 0 30rpx;
-	padding-bottom: 50rpx;
+	min-height: 100vh;
+	padding: 0 30rpx 50rpx;
+	background: #f5f7fa;
+	box-sizing: border-box;
 }
 
-/* 1. 顶部用户信息区 - 重构布局 */
+/* =========================
+   通用卡片
+========================= */
+
+.card {
+	background: #fff;
+	border-radius: 24rpx;
+	box-shadow: 0 6rpx 24rpx rgba(0, 0, 0, 0.03);
+	overflow: hidden;
+}
+
+/* =========================
+   顶部用户信息
+========================= */
+
 .header-section {
-	padding-top: 100rpx;
 	height: 160rpx;
-	display: flex;
-	justify-content: space-between; // 核心：左右两端对齐
-	align-items: center;
+	padding-top: 100rpx;
 	margin-bottom: 30rpx;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 
 	.header-left {
 		display: flex;
 		align-items: center;
-
-		.avatar {
-			width: 120rpx;
-			height: 120rpx;
-			border-radius: 50%;
-			background-color: #f0f0f0; // 浅灰底色
-			margin-right: 25rpx;
-		}
-
-		.user-text-info {
-			display: flex;
-			flex-direction: column;
-
-			.user-name {
-				font-size: 36rpx;
-				font-weight: bold;
-				color: #333;
-				margin-bottom: 10rpx;
-			}
-
-			.location-row {
-				display: flex;
-				align-items: center;
-
-				.location-text {
-					font-size: 24rpx;
-					color: #999;
-					margin-left: 8rpx;
-				}
-			}
-		}
+		flex: 1;
+		min-width: 0;
 	}
 
-	.manage-btn {
-		margin: 0;
-		background-color: #4f78ff;
-		color: #fff;
-		font-size: 26rpx;
-		font-weight: bold;
-		border-radius: 40rpx;
-		padding: 0 35rpx;
-		height: 70rpx;
-		line-height: 70rpx;
-		transition: all 0.1s; // 添加平滑过渡，让反馈更自然
+	.avatar {
+		width: 120rpx;
+		height: 120rpx;
+		border-radius: 50%;
+		background: $default-background-color;
+		margin-right: 24rpx;
+		flex-shrink: 0;
+	}
 
-		// 核心：点击后的样式
-		&-hover {
-			background-color: #3d60d1 !important; // 颜色变深
-			opacity: 0.9; // 增加一点透明度
-			transform: scale(0.96); // 轻微缩小的弹簧感
-		}
+	.user-text-info {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+	}
 
-		// 如果不使用 hover-class，也可以直接用 CSS 的 active 伪类作为兜底
-		&:active {
-			transform: scale(0.95); // 按下时稍微缩小，增加肉感
+	.user-name {
+		font-size: 38rpx;
+		font-weight: 700;
+		color: #333;
+		line-height: 1.4;
+	}
+
+	.location-row {
+		display: flex;
+		align-items: center;
+		margin-top: 8rpx;
+
+		.location-text {
+			margin-left: 8rpx;
+			font-size: 24rpx;
+			color: #999;
 		}
 	}
 }
 
-/* 2. 金刚区 - 微调图标间距和阴影 */
-.grid-menu {
-	display: flex;
-	justify-content: space-around;
-	padding: 30rpx 0;
-	margin-bottom: 30rpx;
-	background-color: #fff; // 图片中金刚区也是白色背景
-	border-radius: 20rpx;
-	box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.03);
+/* =========================
+   管理按钮
+========================= */
 
-	.grid-item {
+.manage-btn {
+	margin: 0;
+	padding: 0 36rpx;
+
+	height: 72rpx;
+	line-height: 72rpx;
+
+	border-radius: 999rpx;
+
+	font-size: 26rpx;
+	font-weight: 600;
+
+	color: #fff;
+	background: $theme-color;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	transition: all 0.15s ease;
+
+	&::after {
+		border: none;
+	}
+
+	&-hover {
+		background: $theme-color-light !important;
+		transform: scale(0.96);
+		opacity: 0.95;
+	}
+
+	&:active {
+		transform: scale(0.95);
+	}
+}
+
+/* =========================
+   当前学生卡片
+========================= */
+
+.student-card {
+	margin-bottom: 30rpx;
+	padding: 32rpx;
+
+	border-radius: 28rpx;
+
+	background: linear-gradient(135deg, $theme-color 0%, $theme-color-dark 100%);
+
+	box-shadow: 0 12rpx 30rpx rgba(79, 120, 255, 0.18);
+
+	color: #fff;
+
+	.student-card-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		margin-bottom: 36rpx;
+	}
+
+	.student-basic {
+		display: flex;
+		align-items: center;
+		flex: 1;
+		min-width: 0;
+	}
+
+	.student-avatar {
+		width: 88rpx;
+		height: 88rpx;
+		border-radius: 50%;
+
+		background: rgba(255, 255, 255, 0.2);
+
+		margin-right: 20rpx;
+
+		flex-shrink: 0;
+	}
+
+	.student-info {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+	}
+
+	.student-name {
+		font-size: 34rpx;
+		font-weight: 700;
+		line-height: 1.4;
+	}
+
+	.student-desc {
+		margin-top: 8rpx;
+
+		font-size: 24rpx;
+
+		opacity: 0.9;
+
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.student-tag {
+		padding: 10rpx 22rpx;
+
+		border-radius: 999rpx;
+
+		font-size: 22rpx;
+
+		background: rgba(255, 255, 255, 0.18);
+
+		backdrop-filter: blur(10rpx);
+	}
+
+	.student-data {
+		display: flex;
+		align-items: center;
+		justify-content: space-around;
+	}
+
+	.data-item {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		flex: 1; // 均分空间
+		flex: 1;
+	}
 
-		.grid-icon-box {
-			width: 100rpx;
-			height: 100rpx;
-			border-radius: 50%;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			margin-bottom: 15rpx;
-			box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.08); // 增加阴影深度
-		}
+	.data-value {
+		font-size: 30rpx;
+		font-weight: 700;
+		line-height: 1.4;
+	}
 
-		.grid-label {
-			font-size: 26rpx;
-			color: #444;
-		}
+	.data-label {
+		margin-top: 10rpx;
+
+		font-size: 22rpx;
+
+		opacity: 0.85;
 	}
 }
 
-/* 3. 列表区域 - 修改为通栏白色大底 */
-.list-card-bg {
-	background-color: #fff; // 列表区域整体为白色背景
-	border-radius: 24rpx;
-	padding: 10rpx 0; // 上下留白
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.02);
+/* =========================
+   金刚区
+========================= */
 
-	.list-item {
-		margin-bottom: 0rpx; // 移除单个 item 的 margin
-		padding: 35rpx 30rpx;
-		border-bottom: 1rpx solid #f2f2f2; // 增加分割线
+.grid-menu {
+	@extend .card;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+
+	padding: 30rpx 0;
+
+	margin-bottom: 30rpx;
+
+	.grid-item {
+		flex: 1;
+
 		display: flex;
-		justify-content: space-between;
+		flex-direction: column;
 		align-items: center;
+	}
 
-		&:last-child {
-			border-bottom: none; // 最后一个移除分割线
-		}
+	.grid-icon-box {
+		width: 100rpx;
+		height: 100rpx;
 
-		.item-left {
-			display: flex;
-			align-items: center;
+		border-radius: 50%;
 
-			.icon-wrap {
-				width: 60rpx;
-				height: 60rpx;
-				border-radius: 16rpx; // 调整为更接近图片的方圆
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				margin-right: 25rpx;
-			}
+		display: flex;
+		align-items: center;
+		justify-content: center;
 
-			.item-text {
-				font-size: 30rpx;
-				color: #333;
-				font-weight: 500;
-			}
-		}
+		margin-bottom: 16rpx;
+
+		box-shadow: 0 10rpx 24rpx rgba(0, 0, 0, 0.08);
+	}
+
+	.grid-label {
+		font-size: 26rpx;
+		color: #444;
 	}
 }
+
+/* =========================
+   菜单列表
+========================= */
+
+.list-card-bg {
+	@extend .card;
+
+	padding: 8rpx 0;
+}
+
+.list-item {
+	height: 110rpx;
+
+	padding: 0 30rpx;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	border-bottom: 1rpx solid #f3f4f6;
+
+	transition: background 0.15s ease;
+
+	&:last-child {
+		border-bottom: none;
+	}
+
+	.item-left {
+		display: flex;
+		align-items: center;
+	}
+
+	.icon-wrap {
+		width: 60rpx;
+		height: 60rpx;
+
+		border-radius: 18rpx;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		margin-right: 24rpx;
+	}
+
+	.item-text {
+		font-size: 30rpx;
+		font-weight: 500;
+		color: #333;
+	}
+}
+
+/* =========================
+   Hover
+========================= */
 
 .item-hover {
-	background-color: #fafafa !important;
+	background: #f8fafc !important;
 }
+
+/* =========================
+   底部操作
+========================= */
 
 .footer-actions {
+	@extend .card;
+
 	margin-top: 30rpx;
-	background-color: #fff;
-	border-radius: 24rpx; // 大圆角
-	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.02);
-	overflow: hidden;
 }
 
-// 底部退出/切换卡片
 .action-btn {
-	background-color: #fff;
-	border-radius: 24rpx;
-	padding: 30rpx 0;
-	text-align: center;
+	height: 110rpx;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
 	font-size: 30rpx;
+	font-weight: 500;
+
 	color: #444;
 
-	&.border-bottom {
-		margin-bottom: 0;
-		border-bottom-left-radius: 0;
-		border-bottom-right-radius: 0;
-		border-bottom: 1rpx solid #f8f8f8;
-	}
+	border-bottom: 1rpx solid #f3f4f6;
 
-	&:last-of-type {
-		border-top-left-radius: 0;
-		border-top-right-radius: 0;
-		color: #ff5e5e; // 退出登录标红
+	transition: background 0.15s ease;
+
+	&:last-child {
+		border-bottom: none;
+		color: #ff5e5e;
 	}
 }

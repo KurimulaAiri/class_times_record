@@ -142,7 +142,13 @@
 
 		<!-- 底部操作按钮 -->
 		<view class="footer-btns">
-			<view class="edit-btn" hover-class="btn-hover" hover-stay-time="50" @tap="handleEdit">编辑档案</view>
+			<view
+				class="edit-btn"
+				hover-class="btn-hover"
+				hover-stay-time="50"
+				@tap="handleEdit"
+				>编辑档案</view
+			>
 		</view>
 	</view>
 </template>
@@ -151,24 +157,25 @@
 	import { ref } from "vue";
 	import { useStudentStore } from "@/stores/student";
 	import { getClassListByStudentId } from "@/api/class";
-	import { onLoad } from "@dcloudio/uni-app";
+	import { onLoad, onShow } from "@dcloudio/uni-app";
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
 
 	const studentStore = useStudentStore();
 	// 模拟接收到的数据
 	const student = ref<Student>();
-
-	if (studentStore.studentInfo) {
-		student.value = studentStore.studentInfo;
-	}
-
 	const classList = ref<Class[]>([]);
 
 	onLoad(async () => {
 		const classListIn = await getClassListByStudentId(student?.value?.id || 0);
 		console.log("接收到报读班级:", classListIn.classList);
 		classList.value = classListIn.classList;
+	});
+
+	onShow(() => {
+		if (studentStore.studentInfo) {
+			student.value = studentStore.studentInfo;
+		}
 	});
 
 	// 头像文字处理：取名字最后两个字

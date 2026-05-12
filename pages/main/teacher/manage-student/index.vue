@@ -65,7 +65,7 @@
 <script lang="ts" setup>
 	import { jump } from "@/utils/common";
 	import { ref } from "vue";
-	import { onLoad } from "@dcloudio/uni-app";
+	import { onShow } from "@dcloudio/uni-app";
 	import { ROUTES } from "@/config/routes";
 	import { useUserStore } from "@/stores/user";
 	import { useStudentStore } from "@/stores/student";
@@ -77,7 +77,7 @@
 	const userStore = useUserStore();
 	const studentStore = useStudentStore();
 
-	onLoad(() => {
+	onShow(() => {
 		studentList.value = studentStore.studentList;
 	});
 

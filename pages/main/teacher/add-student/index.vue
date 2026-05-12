@@ -132,7 +132,8 @@
 
 	const themeColor = ref("#70a9a2"); // 你的主题色
 
-	const currentTeacher = userStore.userInfo?.roleId === 4 ? userStore.userInfo?.identityInfo : null;
+	const currentTeacher =
+		userStore.userInfo?.roleId === 4 ? userStore.userInfo?.identityInfo : null;
 
 	const genders = [
 		{ name: "男", value: 1 },
@@ -146,8 +147,22 @@
 		birth: "",
 		school: "",
 		address: "",
-		primaryParent: { username: "", relation: "", phone: "" },
-		secondaryParent: { username: "", relation: "", phone: "" },
+		primaryParent: {
+			studentId: 0,
+			parentId: 0,
+			username: "",
+			relation: "",
+			phone: "",
+			isPrimary: true
+		},
+		secondaryParent: {
+			studentId: 0,
+			parentId: 0,
+			username: "",
+			relation: "",
+			phone: "",
+			isPrimary: false
+		},
 	});
 
 	const onGenderChange = (e: any) => {
@@ -188,7 +203,7 @@
 			submitData.secondaryParent = null;
 		}
 
-		submitData
+		submitData;
 
 		console.log("最终提交数据：", submitData);
 

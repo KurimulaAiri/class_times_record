@@ -15,7 +15,7 @@
 			</view>
 			<image
 				class="banner-img"
-				src="/static/icon/books.svg"
+				src="/static/icon/book-4-white.svg"
 				mode="aspectFit"
 			></image>
 		</view>

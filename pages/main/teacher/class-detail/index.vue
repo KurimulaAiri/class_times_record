@@ -112,11 +112,13 @@
 	onLoad((options) => {
 		if (options) {
 			classDetail.value = parseData(options.data);
-			getStudentListByClassId({ classId: classDetail.value?.id || 0 }).then(
-				(res) => {
-					students.value = res;
-				},
-			);
+			getStudentListByClassId({
+				classId: classDetail.value?.id || 0,
+				currentPage: 1,
+				pageSize: 100,
+			}).then((res) => {
+				students.value = res;
+			});
 		}
 		console.log("班级详情:", classDetail.value);
 	});

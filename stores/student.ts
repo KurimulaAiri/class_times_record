@@ -16,6 +16,7 @@ export const useStudentStore = defineStore('student',() => {
 
     const setStudentInfo = (student: Student) => {
         studentInfo.value = student;
+        console.log("setStudentInfo:", student);
     }
     const clearStudentInfo = () => {
         studentInfo.value = null;

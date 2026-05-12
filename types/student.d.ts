@@ -67,6 +67,8 @@ interface StudentListResponse {
 
 interface StudentListByClassIdQueryForm {
 	classId: number;
+	currentPage: number;
+	pageSize: number;
 }
 
 interface InsertStudentForm {
@@ -81,5 +83,21 @@ interface InsertStudentForm {
 }
 
 interface InsertStudentResponse {
+	studentId: number;
+}
+
+interface UpdateStudentForm {
+	id: number;
+	avatar: string;
+	studentName: string;
+	sex: number;
+	birthStr: string;
+	school: string;
+	address: string;
+	primaryParent: Parent | null;
+	secondaryParent: Parent | null;
+}
+
+interface UpdateStudentResponse {
 	studentId: number;
 }

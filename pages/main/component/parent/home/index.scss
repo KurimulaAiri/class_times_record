@@ -1,4 +1,6 @@
 // 建议直接写在页面或 index.scss 中
+@import "../../../../../static/scss/index.scss";
+
 .container {
   padding: 30rpx;
   background-color: #f5f7fa;
@@ -7,7 +9,7 @@
 /* 顶部卡片重构 */
 .banner-box {
   // 使用了你代码中的渐变色，可以根据喜好调成主题绿
-  background: linear-gradient(135deg, #66cdaa 0%, #48b08f 100%);
+  background: linear-gradient(135deg, $theme-color-light 0%, $theme-color 100%);
   border-radius: 24rpx;
   padding: 40rpx;
   display: flex;
