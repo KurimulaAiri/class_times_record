@@ -21,54 +21,45 @@ export const encryptPassword = (data: string): string => {
 };
 
 /**
- * 对应后端的签算逻辑
- * @param {Object} params - 业务请求参数
+ * 修改后的清理函数：仅处理第一层
  */
 export function generateSign(params: any) {
-	// 1. 自动注入时间戳和随机数（安全加固）
-	const timestamp = Date.now(); // 毫秒级，后端校验时注意单位
-	const nonce = Math.random().toString(36).slice(-8);
+    const timestamp = Date.now();
+    const nonce = Math.random().toString(36).slice(-8);
 
-	const signObj = {
-		...params,
-		timestamp,
-		nonce,
-	};
+    // 1. 组装原始对象
+    const signObj = {
+        ...params,
+        timestamp,
+        nonce,
+    };
 
-	// 2. 严格字典序排序
-	const sortedKeys = Object.keys(signObj)
-		.filter(
-			(key) =>
-				signObj[key] !== null &&
-				signObj[key] !== undefined &&
-				signObj[key] !== "",
-		)
-		.sort();
+    // 2. 只对第一层进行排序和过滤（不要递归清理内部数组）
+    const sortedKeys = Object.keys(signObj)
+        .filter(key => {
+            const val = signObj[key];
+            // 只过滤第一层的 null, undefined, ""
+            return val !== null && val !== undefined && val !== "";
+        })
+        .sort();
 
-	// 2. 拼接字符串：关键点是对 object 类型执行 JSON.stringify
-	const stringA = sortedKeys
-		.map((key) => {
-			let value = signObj[key];
-			// 如果是对象（且非空），必须转为 JSON 字符串，与后端保持一致
-			if (typeof value === "object" && value !== null) {
-				value = JSON.stringify(value);
-			}
-			return `${key}=${value}`;
-		})
-		.join("&");
-		
-	console.log("stringA:", stringA);
+    // 3. 拼接字符串
+    const stringA = sortedKeys
+        .map((key) => {
+            let value = signObj[key];
+            // 如果是数组或对象，直接转 JSON 字符串，不改变其内部结构
+            if (typeof value === "object" && value !== null) {
+                value = JSON.stringify(value);
+            }
+            return `${key}=${value}`;
+        })
+        .join("&");
+        
+    console.log("stringA:", stringA);
 
-	// 4. 对应后端逻辑：digestWithSalt(srcData, salt) -> srcData + salt
-	// 注意：这里的拼接顺序必须与后端 digestWithSalt 函数中的 `srcData + salt` 严格一致
-	const rawData = stringA + API_SECRET;
+    // ... 剩余签名逻辑 (sm3, API_SECRET)
+    const rawData = stringA + API_SECRET;
+    const sign = sm3(rawData).toLowerCase();
 
-	// 5. 计算 SM3 摘要（sm-crypto 默认返回的就是 Hex 字符串）
-	const sign = sm3(rawData).toLowerCase(); // 后端 verify 一般不区分大小写，但规范建议统一
-
-	return {
-		sign,
-		timestamp,
-		nonce,
-	};
+    return { sign, timestamp, nonce };
 }

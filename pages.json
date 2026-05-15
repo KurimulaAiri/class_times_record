@@ -175,6 +175,18 @@
 			"style": {
 				"navigationBarTitleText": "编辑学生信息"
 			}
+		},
+		{
+			"path": "pages/main/teacher/select-student/index",
+			"style": {
+				"navigationBarTitleText": "选择学生"
+			}
+		},
+		{
+			"path": "pages/main/teacher/edit-class-info/index",
+			"style": {
+				"navigationBarTitleText": "编辑班级信息"
+			}
 		}
 	],
 	"globalStyle": {

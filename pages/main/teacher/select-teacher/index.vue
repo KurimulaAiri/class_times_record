@@ -1,15 +1,15 @@
 <template>
 	<view class="selector-page">
 		<view class="search-bar">
-			<input v-model="keyword" placeholder="输入姓名搜索老师" @tap="handleSearch" />
+			<input
+				v-model="keyword"
+				placeholder="输入姓名搜索老师"
+				@tap="handleSearch"
+			/>
 		</view>
 
 		<checkbox-group class="list-container" @change="onCheckChange">
-			<label
-				class="teacher-item"
-				v-for="item in list"
-				:key="item.teacherId"
-			>
+			<label class="teacher-item" v-for="item in list" :key="item.teacherId">
 				<view class="avatar">{{ item.username.charAt(0) }}</view>
 				<view class="name">{{ item.username }}</view>
 				<checkbox
@@ -55,12 +55,14 @@
 		}
 
 		if (opt) {
-			const res = parseData(opt.data);
+			const res: string = parseData(opt.data) || "";
 			console.log("传入的老师ID", res);
 			console.log("传入的老师ID，去除空格", res.split(","));
 
 			if (res) {
-				tempIds.value = res.split(",").filter((id) => id && id.trim() !== "");
+				tempIds.value = res
+					.split(",")
+					.filter((id: string) => id && id.trim() !== "");
 			} else {
 				tempIds.value = [];
 			}
@@ -102,7 +104,7 @@
 
 	const handleSearch = () => {
 		currentPage.value = 1;
-		// TODO 请求后端
+		// TODO 后端class表需要重构，需要将老师转移到class_teacher表中，所有查询都要重构
 		console.log("搜索后当前list", list.value);
 	};
 </script>

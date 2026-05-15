@@ -289,7 +289,10 @@
 			uni.showLoading({ title: "保存中..." });
 			const res = await updateStudent(submitData); // 调用更新接口
 			uni.showToast({ title: "修改成功", icon: "success" });
-			setTimeout(() => uni.navigateBack(), 1500);
+			setTimeout(() => {
+				uni.navigateBack()
+				uni.$emit("needRefresh");
+			}, 1500);
 		} catch (error) {
 			// 错误由拦截器处理
 		} finally {

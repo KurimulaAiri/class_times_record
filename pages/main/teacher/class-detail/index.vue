@@ -55,6 +55,7 @@
 					:key="item.id"
 					hover-class="item-hover"
 					@tap="goToStudentDetail(item)"
+					@longpress="handleLongPress(item)"
 				>
 					<view class="stu-info">
 						<view :class="['stu-avatar', item.sex === 1 ? 'male' : 'female']">
@@ -95,13 +96,14 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
-	import { onLoad } from "@dcloudio/uni-app";
+	import { onUnmounted, ref } from "vue";
+	import { onLoad, onShow } from "@dcloudio/uni-app";
 	import { parseData } from "@/utils/common";
 	import { getStudentListByClassId } from "@/api/student";
 	import { useStudentStore } from "@/stores/student";
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
+	import { addStudentToClass, getClassByClassId } from "@/api/class";
 
 	const themeColor = ref("#70a9a2"); // 对应你的 $theme-color
 	const classDetail = ref<Class>();
@@ -109,26 +111,69 @@
 	const students = ref<Student[]>([]);
 	const currentStudent = ref<Student>();
 
-	onLoad((options) => {
+	onLoad(async (options) => {
 		if (options) {
 			classDetail.value = parseData(options.data);
-			getStudentListByClassId({
-				classId: classDetail.value?.id || 0,
-				currentPage: 1,
-				pageSize: 100,
-			}).then((res) => {
-				students.value = res;
-			});
+			await loadStudentList();
+		}
+		if (classDetail.value?.id) {
+			const res = await getClassByClassId(classDetail.value?.id || 0);
+			classDetail.value = res.classList?.[0] || {};
 		}
 		console.log("班级详情:", classDetail.value);
 	});
 
+	// 页面显示时获取班级详情
+	onShow(async () => {});
+
+	const loadStudentList = async () => {
+		const res = await getStudentListByClassId({
+			classId: classDetail.value?.id || 0,
+			currentPage: 1,
+			pageSize: 100,
+		});
+		students.value = res;
+	};
+
+	// 处理长按事件
+	const handleLongPress = (item: Student) => {
+		uni.vibrateShort();
+
+		uni.showActionSheet({
+			itemList: ["编辑学生","快速扣课", "移除学生"],
+			itemColor: "#333",
+			success: (res) => {
+				switch (res.tapIndex) {
+					case 0:
+						console.log("点击编辑");
+						// 点击记录当前选中的学员
+						currentStudent.value = item;
+						// 点击记录当前选中的学员到store
+						const studentStore = useStudentStore();
+						studentStore.setStudentInfo(item);
+						// 编辑
+						jump(ROUTES.EDIT_STUDENT_INFO_TEACHER);
+						break;
+					case 1:
+						console.log("快速扣课, id:", item.id);
+						jump(ROUTES.FAST_DEDUCT, { student: item });
+						break;
+					case 2:
+						console.log("移除学生");
+						break;
+				}
+			},
+		});
+
+		console.log("长按学员", item);
+	};
+
 	const handleAddStudent = () => {
-		uni.navigateTo({ url: "/pages/student/add" });
+		jump(ROUTES.SELECT_STUDENT, { type: "multi" });
 	};
 
 	const handleEdit = () => {
-		uni.navigateTo({ url: "/pages/class-edit/index" });
+		jump(ROUTES.EDIT_CLASS_INFO, classDetail.value);
 	};
 
 	const handleAttendance = () => {
@@ -150,6 +195,69 @@
 		// 点击跳转学员详情页
 		jump(ROUTES.STUDENT_DETAIL);
 	};
+
+	// 建议将监听放在 onLoad 或 script 顶层
+	onLoad(() => {
+		// 监听全局事件
+		uni.$on("updateStudents", (data) => {
+			// 1. 处理 Proxy 问题（切断响应式引用）
+			const studentList = JSON.parse(JSON.stringify(data));
+
+			console.log("接收到的原始数据:", data);
+			console.log("转换后的纯对象:", studentList);
+
+			if (studentList && studentList.length > 0) {
+				// 2. 使用 showModal 而不是 showToast
+				setTimeout(() => {
+					uni.showModal({
+						title: "提示",
+						content: `确定要添加选中的 ${studentList.length} 名学员吗？`,
+						success: async (res) => {
+							if (res.confirm) {
+								// 执行添加逻辑...
+								console.log("用户点击了确定");
+								// 调用添加接口
+								const result = await addStudentToClass({
+									classId: classDetail.value?.id || 0,
+									students: studentList,
+								});
+								if (result !== 0) {
+									uni.showToast({
+										title: "添加成功",
+										icon: "success",
+									});
+									if (classDetail.value?.id) {
+										const res = await getClassByClassId(
+											classDetail.value?.id || 0,
+										);
+										classDetail.value = res.classList?.[0] || {};
+									}
+								} else {
+									uni.showToast({
+										title: "添加失败",
+										icon: "none",
+									});
+								}
+								await loadStudentList();
+							} else if (res.cancel) {
+								console.log("用户点击了取消");
+							}
+						},
+					});
+				}, 200);
+			}
+		});
+
+		uni.$on("needRefresh", () => {
+			loadStudentList();
+		});
+
+	});
+
+	onUnmounted(() => {
+		uni.$off("updateStudents");
+		uni.$off("needRefresh");
+	});
 </script>
 
 <style scoped lang="scss" src="./index.scss"></style>

@@ -59,7 +59,7 @@
 	import { ref } from "vue";
 	import { useUserStore } from "@/stores/user";
 	import { getClassListByTeacherId } from "@/api/class";
-	import { onLoad } from "@dcloudio/uni-app";
+	import { onLoad, onShow } from "@dcloudio/uni-app";
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
 
@@ -74,6 +74,10 @@
 
 	// 页面加载时获取班级列表
 	onLoad(async () => {
+		
+	});
+
+	onShow(async () => {
 		const teacherId =
 			userStore.userInfo?.roleId === 4
 				? userStore.userInfo?.identityInfo.teacherId
@@ -115,6 +119,7 @@
 				switch (res.tapIndex) {
 					case 0:
 						console.log("点击编辑");
+						jump(ROUTES.EDIT_CLASS_INFO, item);
 						break;
 					case 1:
 						console.log("查看名单");
