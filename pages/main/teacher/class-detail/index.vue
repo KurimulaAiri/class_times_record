@@ -13,7 +13,11 @@
 			<view class="info-grid">
 				<view class="info-item">
 					<text class="label">授课教师</text>
-					<text class="value">{{ classDetail?.username || "老师" }}</text>
+					<text class="value">{{
+						classDetail?.teachers
+							.map((teacher) => teacher.username)
+							.join("、") || "无"
+					}}</text>
 				</view>
 				<view class="info-item">
 					<text class="label">课程类型</text>
@@ -88,6 +92,78 @@
 			</view>
 		</view>
 
+		<!-- ✅ 排课时间列表区域 -->
+		<view class="list-section schedule-section">
+			<view class="section-header">
+				<view class="title-left">
+					<text class="title-text">排课时间</text>
+					<!-- 展示总共有多少个不同的日期服务周期 -->
+					<text class="count-tag">{{ aggregatedSchedule.length }}个周期</text>
+				</view>
+				<view class="action-right" @tap="handleEditSchedule">
+					<uni-icons type="compose" size="14" :color="themeColor"></uni-icons>
+					<text>调整排课</text>
+				</view>
+			</view>
+
+			<!-- 渲染聚合后的排课数据 -->
+			 <!-- TODO 这里不知道为什么一直渲染不出来 -->
+			<view class="schedule-list" v-if="aggregatedSchedule.length > 0">
+				<!-- 第一层：渲染合并后的日期区间 -->
+				<view
+					class="period-card"
+					v-for="(period, pIndex) in aggregatedSchedule"
+					:key="period.dateKey"
+				>
+					<view class="period-header">
+						<view class="date-range">
+							<uni-icons type="calendar" size="16" color="#666"></uni-icons>
+							<text class="date-text"
+								>{{ period.startDate }} 至 {{ period.endDate }}</text
+							>
+						</view>
+						<text class="period-remark" v-if="period.remark">{{
+							period.remark
+						}}</text>
+					</view>
+
+					<!-- 第二层：渲染该日期区间内包含的所有周内上课时间 -->
+					<view class="slots-box">
+						<view
+							class="slot-item"
+							v-for="(slot, sIndex) in period.timeSlots"
+							:key="slot.id || sIndex"
+						>
+							<view class="slot-left">
+								<view class="day-badge">{{
+									getDayOfWeekText(slot.dayOfWeek)
+								}}</view>
+								<view class="time-range">
+									<text class="time-text"
+										>{{ slot.startTimeStr }} - {{ slot.endTimeStr }}</text
+									>
+								</view>
+							</view>
+							<view class="slot-right" v-if="slot.classroom">
+								<uni-icons type="location" size="14" color="#999"></uni-icons>
+								<text class="classroom-text">{{ slot.classroom }}</text>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+
+			<!-- 排课空状态 -->
+			<view class="empty-box min-empty" v-else>
+				<image
+					src="/static/icon/empty-search.svg"
+					mode="aspectFit"
+					class="empty-img"
+				></image>
+				<text>暂无排课时间段</text>
+			</view>
+		</view>
+
 		<view class="bottom-bar">
 			<button class="btn btn-outline" @tap="handleEdit">编辑班级</button>
 			<button class="btn btn-main" @tap="handleAttendance">点名签到</button>
@@ -96,7 +172,7 @@
 </template>
 
 <script setup lang="ts">
-	import { onUnmounted, ref } from "vue";
+	import { onUnmounted, ref, computed } from "vue";
 	import { onLoad, onShow } from "@dcloudio/uni-app";
 	import { parseData } from "@/utils/common";
 	import { getStudentListByClassId } from "@/api/student";
@@ -104,6 +180,7 @@
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
 	import { addStudentToClass, getClassByClassId } from "@/api/class";
+	import { getClassScheduleByClassId } from "@/api/class-schedule";
 
 	const themeColor = ref("#70a9a2"); // 对应你的 $theme-color
 	const classDetail = ref<Class>();
@@ -111,10 +188,67 @@
 	const students = ref<Student[]>([]);
 	const currentStudent = ref<Student>();
 
+	// 3. 核心：通过计算属性，自动将平铺数据转为“日期段包裹时间段”的聚合结构
+	const aggregatedSchedule = computed(() => {
+		const list = classDetail.value?.scheduleList || [];
+		if (list.length === 0) return [];
+
+		const groups: {
+			dateKey: string;
+			startDate: string;
+			endDate: string;
+			remark?: string;
+			timeSlots: BackendScheduleItem[];
+		}[] = [];
+
+		list.forEach((item) => {
+			// 使用 开始日期+结束日期 作为分组的唯一标识键
+			const dateKey = `${item.startDateStr}_${item.endDateStr}`;
+
+			// 寻找是否已经存在该日期段的分组
+			let group = groups.find((g) => g.dateKey === dateKey);
+
+			if (!group) {
+				group = {
+					dateKey,
+					startDate: item.startDateStr,
+					endDate: item.endDateStr,
+					remark: item.remark,
+					timeSlots: [],
+				};
+				groups.push(group);
+			}
+
+			// 将当前的时间段推入该日期组中
+			group.timeSlots.push(item);
+		});
+
+		return groups;
+	});
+
+	// 数字周转换辅助函数
+	const getDayOfWeekText = (day: number): string => {
+		const weekMap: Record<number, string> = {
+			1: "周一",
+			2: "周二",
+			3: "周三",
+			4: "周四",
+			5: "周五",
+			6: "周六",
+			7: "周日",
+		};
+		return weekMap[day] || `周${day}`;
+	};
+
+	const handleEditSchedule = () => {
+		console.log("点击调整排课");
+	};
+
 	onLoad(async (options) => {
 		if (options) {
 			classDetail.value = parseData(options.data);
 			await loadStudentList();
+			await loadClassScheduleList();
 		}
 		if (classDetail.value?.id) {
 			const res = await getClassByClassId(classDetail.value?.id || 0);
@@ -125,6 +259,20 @@
 
 	// 页面显示时获取班级详情
 	onShow(async () => {});
+
+	const loadClassScheduleList = async () => {
+		const res = await getClassScheduleByClassId({
+			classId: classDetail.value?.id || 0,
+			currentPage: 1,
+			pageSize: 100,
+		});
+		if (classDetail.value) {
+			classDetail.value.scheduleList = res;
+			console.log("当前排课列表:", classDetail.value.scheduleList);
+			console.log("聚合后的排课列表:", aggregatedSchedule.value);
+			console.log("aggregatedSchedule.value.length", aggregatedSchedule.value.length);
+		}
+	};
 
 	const loadStudentList = async () => {
 		const res = await getStudentListByClassId({
@@ -140,7 +288,7 @@
 		uni.vibrateShort();
 
 		uni.showActionSheet({
-			itemList: ["编辑学生","快速扣课", "移除学生"],
+			itemList: ["编辑学生", "快速扣课", "移除学生"],
 			itemColor: "#333",
 			success: (res) => {
 				switch (res.tapIndex) {
@@ -251,7 +399,6 @@
 		uni.$on("needRefresh", () => {
 			loadStudentList();
 		});
-
 	});
 
 	onUnmounted(() => {

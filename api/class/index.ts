@@ -39,11 +39,15 @@ const addStudentToClass = async (
 const getClassByClassId = async (
 	classId: number,
 ): Promise<ClassListResponse> => {
-	const res = await post<ClassListResponse>(
-		"/class/get_class_by_id",
-		{ classId },
-	);
+	const res = await post<ClassListResponse>("/class/get_class_by_id", {
+		classId,
+	});
 	return res.data;
 };
 
-export { getClassListByStudentId, getClassListByTeacherId, addStudentToClass, getClassByClassId };
+export {
+	getClassListByStudentId,
+	getClassListByTeacherId,
+	addStudentToClass,
+	getClassByClassId,
+};

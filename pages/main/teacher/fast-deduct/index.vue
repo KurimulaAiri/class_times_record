@@ -33,7 +33,7 @@
 						<text class="course-name">{{ item.className }}</text>
 					</view>
 					<view class="course-detail">
-						<text>任教老师：{{ item.username }}</text>
+						<text>任教老师：{{ item.teachers.map((teacher) => teacher.username).join("、") }}</text>
 						<text>课程名称：{{ item.courseName }}</text>
 						<text
 							>该种课程剩余课时：{{ item.courseRecord.courseRestTime }}</text
@@ -219,9 +219,11 @@
 		if (options) {
 			const res: any = parseData(options.data);
 			console.log("options", res);
-			student.value = res.student;
-			submitData.value.studentId = student.value.id;
-			await loadData();
+			if (res) {
+				student.value = res.student;
+				submitData.value.studentId = student.value.id;
+				await loadData();
+			}
 		}
 
 		uni.$on("updateStudent", async (data: Student) => {

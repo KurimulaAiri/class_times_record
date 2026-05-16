@@ -21,8 +21,37 @@ export const encryptPassword = (data: string): string => {
 };
 
 /**
- * 修改后的清理函数：仅处理第一层
+ * 递归排序 key 并剔除 null/undefined/""
+ * 模拟后端 Jackson 的 SORT_PROPERTIES_ALPHABETICALLY + NON_NULL 行为
  */
+function stableStringify(obj: any): string {
+    // 基本类型直接返回
+    if (obj === null || obj === undefined || typeof obj !== 'object') {
+        return JSON.stringify(obj);
+    }
+
+    // 数组：递归处理每个元素
+    if (Array.isArray(obj)) {
+        return '[' + obj.map(item => stableStringify(item)).join(',') + ']';
+    }
+
+    // 对象：排序 key，过滤 null/undefined/""，递归处理值
+    const sortedKeys = Object.keys(obj)
+        .filter(key => {
+            const val = obj[key];
+            return val !== null && val !== undefined && val !== "";
+        })
+        .sort();
+
+    const keyValuePairs = sortedKeys.map(key => {
+        const val = obj[key];
+        // 递归处理嵌套的对象或数组
+        return `"${key}":${stableStringify(val)}`;
+    });
+
+    return '{' + keyValuePairs.join(',') + '}';
+}
+
 export function generateSign(params: any) {
     const timestamp = Date.now();
     const nonce = Math.random().toString(36).slice(-8);
@@ -34,11 +63,10 @@ export function generateSign(params: any) {
         nonce,
     };
 
-    // 2. 只对第一层进行排序和过滤（不要递归清理内部数组）
+    // 2. 只对第一层进行排序和过滤
     const sortedKeys = Object.keys(signObj)
         .filter(key => {
             const val = signObj[key];
-            // 只过滤第一层的 null, undefined, ""
             return val !== null && val !== undefined && val !== "";
         })
         .sort();
@@ -47,9 +75,9 @@ export function generateSign(params: any) {
     const stringA = sortedKeys
         .map((key) => {
             let value = signObj[key];
-            // 如果是数组或对象，直接转 JSON 字符串，不改变其内部结构
+            // ⚠️ 关键修改：使用自定义的 stableStringify 替代 JSON.stringify
             if (typeof value === "object" && value !== null) {
-                value = JSON.stringify(value);
+                value = stableStringify(value);
             }
             return `${key}=${value}`;
         })
@@ -57,7 +85,7 @@ export function generateSign(params: any) {
         
     console.log("stringA:", stringA);
 
-    // ... 剩余签名逻辑 (sm3, API_SECRET)
+    // ... 剩余签名逻辑
     const rawData = stringA + API_SECRET;
     const sign = sm3(rawData).toLowerCase();
 

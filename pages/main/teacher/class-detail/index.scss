@@ -208,6 +208,124 @@
 	}
 }
 
+.schedule-section {
+	margin-bottom: 10rpx; // 与下方的学生名单拉开一定间距
+}
+
+.schedule-list {
+	display: flex;
+	flex-direction: column;
+	gap: 20rpx;
+	padding: 10rpx 0;
+
+	// 日期段卡片
+	.period-card {
+		background-color: #f8fafc; // 比纯白背景略深的浅灰色，突出多层级感
+		border-radius: 16rpx;
+		padding: 24rpx;
+		border: 1rpx solid #eef2f6;
+
+		.period-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding-bottom: 16rpx;
+			border-bottom: 2rpx dashed #e2e8f0; // 虚线分割日期与具体时间
+			margin-bottom: 16rpx;
+
+			.date-range {
+				display: flex;
+				align-items: center;
+				gap: 8rpx;
+
+				.date-text {
+					font-size: 26rpx;
+					font-weight: 600;
+					color: #475569;
+				}
+			}
+
+			.period-remark {
+				font-size: 22rpx;
+				background-color: #e2e8f0;
+				color: #475569;
+				padding: 4rpx 12rpx;
+				border-radius: 8rpx;
+				max-width: 260rpx;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+		}
+
+		// 内部时间段包裹盒
+		.slots-box {
+			display: flex;
+			flex-direction: column;
+			gap: 16rpx;
+
+			// 具体时间段行条目
+			.slot-item {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				background-color: #ffffff; // 时间段内部回规纯白，视觉清爽
+				padding: 16rpx 20rpx;
+				border-radius: 12rpx;
+				box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.01);
+
+				.slot-left {
+					display: flex;
+					align-items: center;
+					gap: 20rpx;
+
+					// 星期标签
+					.day-badge {
+						font-size: 24rpx;
+						color: #70a9a2; // 沿用你的主题色
+						background-color: rgba(112, 169, 162, 0.1); // 主题色浅背景
+						padding: 4rpx 16rpx;
+						border-radius: 8rpx;
+						font-weight: bold;
+					}
+
+					.time-range {
+						.time-text {
+							font-size: 28rpx;
+							color: #1e293b;
+							font-weight: 500;
+						}
+					}
+				}
+
+				.slot-right {
+					display: flex;
+					align-items: center;
+					gap: 4rpx;
+
+					.classroom-text {
+						font-size: 24rpx;
+						color: #64748b;
+					}
+				}
+			}
+		}
+	}
+}
+
+// 顺手优化一下迷你空状态
+.min-empty {
+	padding: 40rpx 0 !important;
+	.empty-img {
+		width: 120rpx !important;
+		height: 120rpx !important;
+	}
+	text {
+		font-size: 24rpx !important;
+		color: #999;
+	}
+}
+
 // 底部操作
 .bottom-bar {
 	position: fixed;

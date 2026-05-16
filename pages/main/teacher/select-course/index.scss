@@ -7,20 +7,12 @@
 	flex-direction: column;
 }
 
-.search-bar {
-	background: #fff;
-	margin: 20rpx 30rpx;
-	padding: 0 30rpx;
-	height: 80rpx;
-	display: flex;
-	align-items: center;
-	border-radius: 40rpx;
-	input {
-		flex: 1;
-		margin-left: 20rpx;
-		font-size: 28rpx;
-	}
+.search-filter-bar {
+	position: sticky;
+	top: 0;
+	z-index: 99;
 }
+
 .course-item {
 	background: #fff;
 	padding: 30rpx;

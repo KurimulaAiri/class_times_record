@@ -15,6 +15,7 @@ interface CourseResponse {
 
 interface GetCourseByInstitutionIdForm {
 	institutionId: number;
+    keyword: string;
     currentPage: number;
     pageSize: number;
 }

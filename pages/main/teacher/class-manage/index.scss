@@ -4,17 +4,14 @@
 	min-height: 100vh;
 	background-color: $default-background-color;
 	padding-bottom: 40rpx;
+	display: flex;
+	flex-direction: column;
 }
 
-.search-sticky-wrapper {
+.search-filter-bar {
 	position: sticky;
 	top: 0;
-	z-index: 100;
-	background-color: $default-background-color;
-	padding: 24rpx 30rpx;
-
-	// 使用 border 模拟分割线
-	border-bottom: 2rpx solid #e1e3e4;
+	z-index: 100; // 确保在页面最上层
 }
 
 .search-bar {

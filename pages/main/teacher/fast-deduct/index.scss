@@ -4,7 +4,7 @@ $primary-color: $theme-color; // 定义主题色
 
 .container {
 	min-height: 100vh;
-	background-color: #f7f8fa;
+	background-color: $default-background-color;
 	padding: 20rpx;
 	padding-bottom: 120rpx;
 }

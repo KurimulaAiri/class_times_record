@@ -1,9 +1,11 @@
 <template>
 	<view class="selector-page">
-		<view class="search-bar">
-			<icon type="search" size="14" color="#999" />
-			<input v-model="keyword" placeholder="搜索课程名称" clearable="true" />
-		</view>
+		<SearchFilterBar
+			:keyword="keyword"
+			placeholder="搜索课程名称"
+			@search="onSearch"
+			class="search-filter-bar"
+		/>
 		<scroll-view scroll-y class="list-container">
 			<view
 				class="course-item"
@@ -28,19 +30,33 @@
 	import { ref } from "vue";
 	import { getCourseByInstitutionId } from "@/api/course";
 	import { onLoad } from "@dcloudio/uni-app";
+	import SearchFilterBar from "@/components/search-filter-bar/index.vue";
 
 	const keyword = ref("");
 
 	const list = ref<CourseResponse[]>([]);
 
 	onLoad(async () => {
+		loadData();
+	});
+
+	const onSearch = () => {
+		console.log(keyword.value);
+		loadData();
+	};
+
+	const loadData = async () => {
 		const res = await getCourseByInstitutionId({
 			institutionId: 1,
+			keyword: keyword.value,
 			currentPage: 1,
 			pageSize: 100,
 		});
 		list.value = res.courses;
-	});
+	};
+
+	loadData();
+	// 其他代码
 
 	const select = (item: CourseResponse) => {
 		uni.$emit("updateCourse", item);

@@ -10,8 +10,9 @@ interface Class {
 	studentMaxCount: number;
 	courseId: number;
 	courseName: string;
-	username: string;
+	teachers: TeacherResponse[];
 	courseRecord: CourseRecord;
+	scheduleList?: BackendScheduleItem[]; // 后端平铺的排课单表数据
 	courseType: number;
 	createTimeStr: string;
 	updateTimeStr: string;

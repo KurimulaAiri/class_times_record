@@ -1,12 +1,19 @@
 <template>
 	<view class="selector-page">
-		<view class="search-bar">
+		<SearchFilterBar
+			:keyword="keyword"
+			placeholder="输入姓名查找老师"
+			@search="handleSearch"
+			class="search-filter-bar"
+		/>
+
+		<!-- <view class="search-bar">
 			<input
 				v-model="keyword"
 				placeholder="输入姓名搜索老师"
 				@tap="handleSearch"
 			/>
-		</view>
+		</view> -->
 
 		<checkbox-group class="list-container" @change="onCheckChange">
 			<label class="teacher-item" v-for="item in list" :key="item.teacherId">
@@ -37,6 +44,7 @@
 	import { getTeachersByInstitutionId } from "@/api/teacher";
 	import { useUserStore } from "@/stores/user";
 	import { parseData } from "@/utils/common";
+	import SearchFilterBar from "@/components/search-filter-bar/index.vue";
 
 	const userStore = useUserStore();
 

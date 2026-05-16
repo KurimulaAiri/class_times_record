@@ -1,61 +1,14 @@
 <template>
 	<view class="container">
-		<!-- 固定头部容器 -->
-		<view class="fixed-header">
-			<!-- 搜索框 -->
-			<view class="header-search">
-				<input
-					class="search-input"
-					type="text"
-					v-model="tempKeyword"
-					@confirm="handleSearch"
-					placeholder="搜索姓名、学号或手机号"
-				/>
-				<button class="search-btn" @tap="handleSearch">搜索</button>
-			</view>
-
-			<!-- 下拉筛选 -->
-			<view class="filter-bar">
-				<view
-					v-for="(label, type) in filterLabels"
-					:key="type"
-					class="tab-item"
-					:class="{ active: currentSelectType === type }"
-					@tap="toggleDropdown(type)"
-				>
-					<text>{{ getLabel(type) }}</text>
-					<text class="arrow" :class="{ rotate: currentSelectType === type }"
-						>▼</text
-					>
-				</view>
-			</view>
-
-			<!-- 下拉选项内容 (绝对定位在 fixed-header 内部) -->
-			<view class="dropdown-content" :class="{ show: currentSelectType }">
-				<view
-					v-for="opt in currentOptions"
-					:key="opt.value"
-					class="option-item"
-					:class="{ selected: activeFilters[currentSelectType] === opt.value }"
-					@tap="handleSelect(opt.value)"
-				>
-					<text>{{ opt.label }}</text>
-					<icon
-						v-if="activeFilters[currentSelectType] === opt.value"
-						type="success_no_circle"
-						size="14"
-						color="#70a9a2"
-					/>
-				</view>
-			</view>
-		</view>
-
-		<!-- 遮罩层 (放在固定头部之外，覆盖全屏) -->
-		<view
-			class="dropdown-mask"
-			v-if="currentSelectType"
-			@tap="currentSelectType = ''"
-		></view>
+		<SearchFilterBar
+			:keyword="tempKeyword"
+			:activeFilters="activeFilters"
+			:filters="filterConfig"
+			placeholder="搜索姓名、学号或手机号"
+			@search="handleSearch"
+			@filterChange="handleFilterChange"
+			class="search-filter-bar"
+		/>
 
 		<view class="student-list" :class="{ 'has-footer': isMultiSelect }">
 			<view
@@ -68,7 +21,7 @@
 				]"
 				hover-class="card-hover-effect"
 				@tap="handleClick(item)"
-                @longpress="handleLongPress(item)"
+				@longpress="handleLongPress(item)"
 			>
 				<!-- 头像 -->
 				<view :class="['avatar', item.sex === 1 ? 'male' : 'female']">
@@ -150,14 +103,19 @@
 			</view>
 		</view>
 		<!-- 新增：右下角悬浮按钮 -->
-		<view class="fab-btn" hover-class="fab-btn-active" @tap="goToAddStudent" v-if="selectedList.length === 0">
+		<view
+			class="fab-btn"
+			hover-class="fab-btn-active"
+			@tap="goToAddStudent"
+			v-if="selectedList.length === 0"
+		>
 			<text class="plus-icon">+</text>
 		</view>
 	</view>
 </template>
 
 <script setup lang="ts">
-	import { ref, computed, toRaw } from "vue";
+	import { ref, toRaw } from "vue";
 	import { getStudent } from "@/api/student";
 	import { useUserStore } from "@/stores/user";
 	import { useStudentStore } from "@/stores/student";
@@ -169,6 +127,8 @@
 	} from "@dcloudio/uni-app";
 	import { jump, parseData } from "@/utils/common/index";
 	import { ROUTES } from "@/config/routes";
+
+	import SearchFilterBar from "@/components/search-filter-bar/index.vue";
 
 	const userStore = useUserStore();
 	let teacherId = ref(0);
@@ -194,66 +154,40 @@
 	const tempKeyword = ref("");
 	const searchKeyword = ref("");
 
-	// --- 新增：筛选状态 ---
-	const filterOptions = {
-		scope: [
-			{ label: "当前教师", value: 1 },
-			{ label: "当前机构", value: 2 },
-		],
-		gender: [
-			{ label: "性别不限", value: -1 },
-			{ label: "男", value: 1 },
-			{ label: "女", value: 0 },
-		],
-		classStatus: [
-			{ label: "班级不限", value: -1 },
-			{ label: "已分班", value: 1 },
-			{ label: "未分班", value: 0 },
-		],
-	};
+	const filterConfig = ref<FilterType>({
+		scope: {
+			label: "范围",
+			options: [
+				{ label: "当前教师", value: 1 },
+				{ label: "当前机构", value: 2 },
+			],
+		},
+		gender: {
+			label: "性别",
+			options: [
+				{ label: "性别不限", value: -1 },
+				{ label: "男", value: 1 },
+				{ label: "女", value: 0 },
+			],
+		},
+		classStatus: {
+			label: "班级",
+			options: [
+				{ label: "班级不限", value: -1 },
+				{ label: "已分班", value: 1 },
+				{ label: "未分班", value: 0 },
+			],
+		},
+	});
 
-	const filterLabels = {
-		scope: "范围",
-		gender: "性别",
-		classStatus: "班级",
-	};
-
-	// ... 保持之前的 currentSelectType, currentOptions, handleSelect 等逻辑不变 ...
-
-	const activeFilters = ref({
-		scope: 1, // 默认当前教师
+	const activeFilters = ref<ActiveFiltersType>({
+		scope: 1,
 		gender: -1,
 		classStatus: -1,
 	});
 
-	// 当前正在展开的下拉类型：'scope' | 'gender' | 'classStatus' | ''
-	const currentSelectType = ref("");
-
-	// 计算属性：根据当前点击的 Tab 获取对应的选项列表
-	const currentOptions = computed(() => {
-		if (!currentSelectType.value) return [];
-		return filterOptions[currentSelectType.value as keyof typeof filterOptions];
-	});
-
-	// 切换下拉框显示/隐藏
-	const toggleDropdown = (type: string) => {
-		currentSelectType.value = currentSelectType.value === type ? "" : type;
-	};
-
-	// 选择选项
-	const handleSelect = (value: number) => {
-		const type = currentSelectType.value;
-		if (type) {
-			(activeFilters.value as any)[type] = value;
-			currentSelectType.value = ""; // 选择后自动收起
-			loadData(true); // 重新加载数据
-		}
-	};
-
-	// 获取显示的文字（带兜底防止 TS 报错）
-	const getLabel = (type: keyof typeof filterOptions) => {
-		const val = activeFilters.value[type];
-		return filterOptions[type].find((i) => i.value === val)?.label || "请选择";
+	const handleFilterChange = () => {
+		loadData(true);
 	};
 
 	// --- 核心请求逻辑 ---
@@ -323,7 +257,8 @@
 	// 初始化加载
 	onLoad((options) => {
 		if (options) {
-			isMultiSelect.value = parseData<ToSelectStudentPageParams>(options.data)?.type === "multi";
+			isMultiSelect.value =
+				parseData<ToSelectStudentPageParams>(options.data)?.type === "multi";
 		}
 		loadData(true);
 	});

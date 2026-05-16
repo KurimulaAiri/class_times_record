@@ -1,17 +1,10 @@
 <template>
 	<view class="container">
-		<view class="search-sticky-wrapper">
-			<view class="search-bar">
-				<input
-					class="search-input"
-					type="text"
-					v-model="queryForm.keyword"
-					placeholder="请输入班级名称"
-					placeholder-style="color:#999"
-				/>
-				<button class="search-btn" @tap="handleSearch">搜索</button>
-			</view>
-		</view>
+		<SearchFilterBar
+			placeholder="请输入班级名称"
+			@search="handleSearch"
+			class="search-filter-bar"
+		/>
 
 		<view class="class-list">
 			<view
@@ -32,7 +25,10 @@
 					<view class="info-item">
 						<uni-icons type="person" size="16" color="#666"></uni-icons>
 						<text class="label">授课教师：</text>
-						<text class="value">{{ item.username }}</text>
+						<text class="value">{{
+							item.teachers.map((teacher) => teacher.username).join("、") ||
+							"无"
+						}}</text>
 					</view>
 					<view class="info-item">
 						<image src="/static/icon/book-3.svg" mode="aspectFit"></image>
@@ -62,6 +58,7 @@
 	import { onLoad, onShow } from "@dcloudio/uni-app";
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
+	import SearchFilterBar from "@/components/search-filter-bar/index.vue";
 
 	const userStore = useUserStore();
 
@@ -73,9 +70,7 @@
 	});
 
 	// 页面加载时获取班级列表
-	onLoad(async () => {
-		
-	});
+	onLoad(async () => {});
 
 	onShow(async () => {
 		const teacherId =
@@ -113,7 +108,7 @@
 		uni.vibrateShort();
 
 		uni.showActionSheet({
-			itemList: ["编辑班级", "查看学生名单", "结束课程", "删除班级"],
+			itemList: ["编辑班级", "结束课程", "删除班级"],
 			itemColor: "#333",
 			success: (res) => {
 				switch (res.tapIndex) {
@@ -121,10 +116,7 @@
 						console.log("点击编辑");
 						jump(ROUTES.EDIT_CLASS_INFO, item);
 						break;
-					case 1:
-						console.log("查看名单");
-						break;
-					case 3:
+					case 2:
 						handleDeleteClass(item);
 						break;
 				}
