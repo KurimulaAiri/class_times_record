@@ -220,10 +220,22 @@
 
 	// 日期段卡片
 	.period-card {
-		background-color: #f8fafc; // 比纯白背景略深的浅灰色，突出多层级感
-		border-radius: 16rpx;
+		background-color: #fff; // 比纯白背景略深的浅灰色，突出多层级感
+		border-radius: 24rpx;
 		padding: 24rpx;
 		border: 1rpx solid #eef2f6;
+		transition: all 0.1s ease; // 让大卡片的点击和恢复过渡平滑
+
+		// ✨ 新增：大卡片点击态
+		&.period-card-hover {
+			background-color: #f1f5f9 !important; // 整体变深一点的优雅灰
+			transform: scale(0.995); // 整体轻微下陷
+
+			// ✨ 联动：大卡片按下时，让内部小条目的背景也顺应变色，保持整体感
+			.slots-box .slot-item {
+				background-color: #eaedf2;
+			}
+		}
 
 		.period-header {
 			display: flex;
@@ -269,10 +281,11 @@
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
-				background-color: #ffffff; // 时间段内部回规纯白，视觉清爽
+				background-color: #fdfdfd; // 时间段内部回规纯白，视觉清爽
 				padding: 16rpx 20rpx;
 				border-radius: 12rpx;
 				box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.01);
+				transition: background-color 0.1s ease; // 配合父级变色
 
 				.slot-left {
 					display: flex;

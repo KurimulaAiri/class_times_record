@@ -45,9 +45,7 @@
 		</view>
 
 		<!-- 新增：右下角悬浮按钮 -->
-		<view class="fab-btn" hover-class="fab-btn-active" @tap="goToAddClass">
-			<text class="plus-icon">+</text>
-		</view>
+		<FloatingActionButton @click="goToAddClass"/>
 	</view>
 </template>
 
@@ -58,7 +56,9 @@
 	import { onLoad, onShow } from "@dcloudio/uni-app";
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
+	
 	import SearchFilterBar from "@/components/search-filter-bar/index.vue";
+	import FloatingActionButton from "@/components/floating-action-button/index.vue";
 
 	const userStore = useUserStore();
 

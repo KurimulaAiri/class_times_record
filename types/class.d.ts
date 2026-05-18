@@ -42,3 +42,16 @@ interface FastDeductRequest {
 	remark: string;
 	classes: ClassDeductRequest[];
 }
+
+interface InsertClassQueryForm {
+	className: string;
+	courseId: number;
+	maxCount: number;
+	schedules: ClassSchedule[];
+	teachers: TeacherResponse[];
+}
+
+interface InsertClassResponse {
+	classId: number;
+	className: string;
+}

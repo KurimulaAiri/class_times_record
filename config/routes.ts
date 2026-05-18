@@ -28,6 +28,8 @@ export const ROUTES = {
 	EDIT_STUDENT_INFO_TEACHER: "/pages/main/teacher/edit-student-info/index", // 教师端编辑学生信息
 	SELECT_STUDENT: "/pages/main/teacher/select-student/index", // 教师端选择学生
 	EDIT_CLASS_INFO: "/pages/main/teacher/edit-class-info/index", // 教师端编辑班级信息
+	ADD_COURSE: "/pages/main/teacher/add-course/index", // 教师端添加课程
+	COURSE_DETAIL: "/pages/main/teacher/course-detail/index", // 教师端课程详情
 } as const;
 
 export type PagePath = (typeof ROUTES)[keyof typeof ROUTES];

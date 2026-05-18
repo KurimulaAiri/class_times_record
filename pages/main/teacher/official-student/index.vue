@@ -65,10 +65,10 @@
 				<text class="empty-tips">可以尝试换个姓名或学号搜索</text>
 			</view>
 		</view>
+
 		<!-- 新增：右下角悬浮按钮 -->
-		<view class="fab-btn" hover-class="fab-btn-active" @tap="goToAddStudent">
-			<text class="plus-icon">+</text>
-		</view>
+		<!-- 使用封装好的通用悬浮按钮 -->
+		<FloatingActionButton @click="goToAddStudent"/>
 	</view>
 </template>
 
@@ -88,6 +88,7 @@
 
 	// 引入组件
 	import SearchFilterBar from "@/components/search-filter-bar/index.vue";
+	import FloatingActionButton from "@/components/floating-action-button/index.vue";
 
 	const userStore = useUserStore();
 	let teacherId = ref(0);

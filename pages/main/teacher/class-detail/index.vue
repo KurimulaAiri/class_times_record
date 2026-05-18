@@ -107,13 +107,16 @@
 			</view>
 
 			<!-- 渲染聚合后的排课数据 -->
-			 <!-- TODO 这里不知道为什么一直渲染不出来 -->
 			<view class="schedule-list" v-if="aggregatedSchedule.length > 0">
 				<!-- 第一层：渲染合并后的日期区间 -->
 				<view
 					class="period-card"
 					v-for="(period, pIndex) in aggregatedSchedule"
 					:key="period.dateKey"
+					hover-class="period-card-hover"
+					hover-stay-time="150"
+					@tap="handlePeriodTap(period)"
+					@longpress="handlePeriodLongPress(period)"
 				>
 					<view class="period-header">
 						<view class="date-range">
@@ -245,16 +248,84 @@
 	};
 
 	onLoad(async (options) => {
-		if (options) {
+		// 1. 优先从路由参数恢复基本数据
+		if (options && options.data) {
 			classDetail.value = parseData(options.data);
-			await loadStudentList();
-			await loadClassScheduleList();
 		}
+
+		// 2. 接着从后端 API 刷新/获取最新的班级详情基本信息
 		if (classDetail.value?.id) {
-			const res = await getClassByClassId(classDetail.value?.id || 0);
-			classDetail.value = res.classList?.[0] || {};
+			try {
+				const res = await getClassByClassId(classDetail.value.id);
+				// 这里建议采用浅拷贝合并，防止有些页面传入的临时字段被直接盖掉
+				classDetail.value = {
+					...classDetail.value,
+					...(res.classList?.[0] || {}),
+				};
+			} catch (err) {
+				console.error("获取班级详情失败:", err);
+			}
 		}
-		console.log("班级详情:", classDetail.value);
+
+		// 3. 🔥 最后再去加载关联的学员列表和排课列表数据
+		// 这样排课表数据就会稳稳地挂载在最新的 classDetail 上，不会被覆盖了
+		await Promise.all([loadStudentList(), loadClassScheduleList()]);
+
+		console.log("班级详情最终初始化完成:", classDetail.value);
+
+		// 监听全局事件
+		uni.$on("updateStudents", (data) => {
+			// 1. 处理 Proxy 问题（切断响应式引用）
+			const studentList = JSON.parse(JSON.stringify(data));
+
+			console.log("接收到的原始数据:", data);
+			console.log("转换后的纯对象:", studentList);
+
+			if (studentList && studentList.length > 0) {
+				// 2. 使用 showModal 而不是 showToast
+				setTimeout(() => {
+					uni.showModal({
+						title: "提示",
+						content: `确定要添加选中的 ${studentList.length} 名学员吗？`,
+						success: async (res) => {
+							if (res.confirm) {
+								// 执行添加逻辑...
+								console.log("用户点击了确定");
+								// 调用添加接口
+								const result = await addStudentToClass({
+									classId: classDetail.value?.id || 0,
+									students: studentList,
+								});
+								if (result !== 0) {
+									uni.showToast({
+										title: "添加成功",
+										icon: "success",
+									});
+									if (classDetail.value?.id) {
+										const res = await getClassByClassId(
+											classDetail.value?.id || 0,
+										);
+										classDetail.value = res.classList?.[0] || {};
+									}
+								} else {
+									uni.showToast({
+										title: "添加失败",
+										icon: "none",
+									});
+								}
+								await loadStudentList();
+							} else if (res.cancel) {
+								console.log("用户点击了取消");
+							}
+						},
+					});
+				}, 200);
+			}
+		});
+
+		uni.$on("needRefresh", () => {
+			loadStudentList();
+		});
 	});
 
 	// 页面显示时获取班级详情
@@ -270,7 +341,10 @@
 			classDetail.value.scheduleList = res;
 			console.log("当前排课列表:", classDetail.value.scheduleList);
 			console.log("聚合后的排课列表:", aggregatedSchedule.value);
-			console.log("aggregatedSchedule.value.length", aggregatedSchedule.value.length);
+			console.log(
+				"aggregatedSchedule.value.length",
+				aggregatedSchedule.value.length,
+			);
 		}
 	};
 
@@ -344,62 +418,54 @@
 		jump(ROUTES.STUDENT_DETAIL);
 	};
 
-	// 建议将监听放在 onLoad 或 script 顶层
-	onLoad(() => {
-		// 监听全局事件
-		uni.$on("updateStudents", (data) => {
-			// 1. 处理 Proxy 问题（切断响应式引用）
-			const studentList = JSON.parse(JSON.stringify(data));
+	// 点击整个排课日期周期大卡片
+	const handlePeriodTap = (period: any) => {
+		console.log("点击了排课周期:", period);
+		// 示例：点击大卡片可以跳转到该周期的修改页面，并把日期区间等参数带过去
+		/* 
+    jump(ROUTES.EDIT_SCHEDULE, { 
+        startDate: period.startDate, 
+        endDate: period.endDate 
+    }); 
+    */
+	};
 
-			console.log("接收到的原始数据:", data);
-			console.log("转换后的纯对象:", studentList);
+	// 长按整个排课日期周期大卡片
+	const handlePeriodLongPress = (period: any) => {
+		// 触发震动反馈
+		uni.vibrateShort();
 
-			if (studentList && studentList.length > 0) {
-				// 2. 使用 showModal 而不是 showToast
-				setTimeout(() => {
-					uni.showModal({
-						title: "提示",
-						content: `确定要添加选中的 ${studentList.length} 名学员吗？`,
-						success: async (res) => {
-							if (res.confirm) {
-								// 执行添加逻辑...
-								console.log("用户点击了确定");
-								// 调用添加接口
-								const result = await addStudentToClass({
-									classId: classDetail.value?.id || 0,
-									students: studentList,
-								});
-								if (result !== 0) {
-									uni.showToast({
-										title: "添加成功",
-										icon: "success",
-									});
-									if (classDetail.value?.id) {
-										const res = await getClassByClassId(
-											classDetail.value?.id || 0,
-										);
-										classDetail.value = res.classList?.[0] || {};
-									}
-								} else {
-									uni.showToast({
-										title: "添加失败",
-										icon: "none",
-									});
+		console.log("长按了排课周期:", period);
+
+		uni.showActionSheet({
+			itemList: ["调整该周期排课", "删除该周期全部排课"],
+			itemColor: "#333",
+			success: (res) => {
+				switch (res.tapIndex) {
+					case 0:
+						console.log("点击调整该周期:", period.dateKey);
+						break;
+					case 1:
+						uni.showModal({
+							title: "批量删除提示",
+							content: `确定要删除 [${period.startDate} 至 ${period.endDate}] 期间内的所有排课时间段吗？该操作不可撤销。`,
+							confirmColor: "#dd524d", // 警告类操作用红色按钮
+							success: (modalRes) => {
+								if (modalRes.confirm) {
+									console.log("执行批量删除，日期标识为:", period.dateKey);
+									// 这里可以过滤出该周期下所有 timeSlots 的 id 传给后端
+									const idsToDelete = period.timeSlots.map(
+										(slot: any) => slot.id,
+									);
+									console.log("待删除的排课ID列表:", idsToDelete);
 								}
-								await loadStudentList();
-							} else if (res.cancel) {
-								console.log("用户点击了取消");
-							}
-						},
-					});
-				}, 200);
-			}
+							},
+						});
+						break;
+				}
+			},
 		});
-
-		uni.$on("needRefresh", () => {
-			loadStudentList();
-		});
-	});
+	};
 
 	onUnmounted(() => {
 		uni.$off("updateStudents");

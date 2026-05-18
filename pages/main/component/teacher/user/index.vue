@@ -86,6 +86,7 @@
 	import { ref } from "vue";
 	import { logOut } from "@/api/auth";
 	import { useUserStore } from "@/stores/user";
+	import { switchUser } from "@/utils/common";
 
 	const userStore = useUserStore();
 
@@ -127,6 +128,7 @@
 		switch (type) {
 			case "switch":
 				// 切换账号逻辑
+				switchUser(4);
 				break;
 			case "logout":
 				logOut();

@@ -43,7 +43,8 @@ $card-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
 
 		// 左侧小图标
 		.course-icon {
-			font-size: 40rpx;
+			width: 50rpx;
+			height: 50rpx;
 			margin-right: 24rpx;
 			flex-shrink: 0;
 		}

@@ -2,6 +2,9 @@ interface ToSelectStudentPageParams {
 	type: "multi" | "single";
 }
 
+/**
+ * 搜索筛选配置项
+ */
 interface SearchFilterConfig {
 	label: string;
 	options: { label: string; value: any }[];

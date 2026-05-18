@@ -19,7 +19,7 @@
 				@tap="handleCourseClick(item)"
 			>
 				<!-- 课程左侧的装饰小图标/前缀（可选，增加精致感） -->
-				<view class="course-icon">📚</view>
+				<image class="course-icon" src="@/static/icon/bachelor-cap.svg"></image>
 
 				<!-- 课程内容区域 -->
 				<view class="course-content">
@@ -36,17 +36,21 @@
 				<text class="empty-text">未找到相关课程</text>
 			</view>
 		</view>
+		<!-- 新增：右下角悬浮按钮 -->
+		<FloatingActionButton @click="goToAddCourse" />
 	</view>
 </template>
 
 <script setup lang="ts">
 	import { ref } from "vue";
-
 	import { useUserStore } from "@/stores/user";
-
-	import SearchFilterBar from "@/components/search-filter-bar/index.vue";
 	import { getCourseByInstitutionId } from "@/api/course";
 	import { onLoad } from "@dcloudio/uni-app";
+	import { ROUTES } from "@/config/routes";
+
+	import SearchFilterBar from "@/components/search-filter-bar/index.vue";
+	import FloatingActionButton from "@/components/floating-action-button/index.vue";
+	import { jump } from "@/utils/common";
 
 	// 定义课程的 TypeScript 接口
 	interface Course {
@@ -70,6 +74,14 @@
 
 	// 用于界面展示的响应式数组
 	const courses = ref<Course[]>([...allCourses.value]);
+
+	// 新增：添加课程的回调
+	const goToAddCourse = () => {
+		console.log("点击了添加课程按钮");
+		// 这里可以写跳转逻辑，例如：
+		// uni.navigateTo({ url: "/pages/course/add" });
+		jump(ROUTES.ADD_COURSE);
+	};
 
 	onLoad(() => {
 		loadData();
@@ -102,6 +114,7 @@
 		console.log("点击了课程：", item);
 		// 这里可以写跳转逻辑，例如：
 		// uni.navigateTo({ url: `/pages/course/detail?id=${item.id}` })
+		jump(ROUTES.COURSE_DETAIL, item);
 	};
 </script>
 

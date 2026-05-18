@@ -1,4 +1,5 @@
 import { ROUTES, PagePath } from "@/config/routes";
+import { logOut } from "@/api/auth";
 
 /**
  * 这里的 GlobalPagePath 提供提示
@@ -88,6 +89,16 @@ const parseData = <T>(dataStr: any): T | undefined => {
 		return undefined; // 或者返回 {} 根据业务需求决定
 	}
 };
+
+/**
+ * 切换账号
+ * @param role 退出账号的角色，会自动跳转到该角色的登录页
+ */
+const switchUser = (role: number) => {
+	logOut();
+	jump(ROUTES.LOGIN, { role });
+};
+
 /**
  * 重写类型 T 中的属性 K
  * @param T 原类型
@@ -109,6 +120,6 @@ type FormModel<T, K extends keyof T> = Overwrite<
 	}
 >;
 
-export { jump, parseData };
+export { jump, parseData, switchUser };
 
 export type { Overwrite, FormModel };

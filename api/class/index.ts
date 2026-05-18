@@ -45,9 +45,26 @@ const getClassByClassId = async (
 	return res.data;
 };
 
+const insertClass = async (
+	form: InsertClassQueryForm,
+): Promise<number> => {
+	let result = 0;
+	await post<InsertClassResponse>(
+		"/class/insert",
+		form,
+	).then((res) => {
+		if (res.code === 200) {
+			result = res.data.classId;
+			return result;
+		}
+	});
+	return result;
+};
+
 export {
 	getClassListByStudentId,
 	getClassListByTeacherId,
 	addStudentToClass,
 	getClassByClassId,
+	insertClass,
 };

@@ -187,6 +187,18 @@
 			"style": {
 				"navigationBarTitleText": "编辑班级信息"
 			}
+		},
+		{
+			"path": "pages/main/teacher/add-course/index",
+			"style": {
+				"navigationBarTitleText": "添加课程"
+			}
+		},
+		{
+			"path": "pages/main/teacher/course-detail/index",
+			"style": {
+				"navigationBarTitleText": "课程详情"
+			}
 		}
 	],
 	"globalStyle": {

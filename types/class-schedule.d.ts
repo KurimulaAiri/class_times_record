@@ -11,6 +11,15 @@ interface BackendScheduleItem {
 	updateTimeStr: string;
 }
 
+interface ClassSchedule {
+	dayOfWeek: number;
+	startDate: string;
+	endDate: string;
+	startTime: string;
+	endTime: string;
+	remark?: string;
+}
+
 interface QueryClassScheduleForm {
 	classId: number;
 	currentPage: number;

@@ -4,7 +4,7 @@
 	background: $default-background-color;
 	height: 100vh;
 	padding-bottom: 120rpx;
-	display: flex; 
+	display: flex;
 	flex-direction: column;
 }
 
@@ -50,6 +50,9 @@
 	border-top: 1rpx solid #eee;
 	.count {
 		font-size: 28rpx;
+		text {
+			color: $theme-color;
+		}
 	}
 	.btn {
 		background: $theme-color;

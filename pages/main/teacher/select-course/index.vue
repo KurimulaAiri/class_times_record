@@ -1,7 +1,7 @@
 <template>
 	<view class="selector-page">
 		<SearchFilterBar
-			:keyword="keyword"
+			v-model:keyword="keyword"
 			placeholder="搜索课程名称"
 			@search="onSearch"
 			class="search-filter-bar"
@@ -54,10 +54,7 @@
 		});
 		list.value = res.courses;
 	};
-
-	loadData();
-	// 其他代码
-
+	
 	const select = (item: CourseResponse) => {
 		uni.$emit("updateCourse", item);
 		uni.navigateBack();
