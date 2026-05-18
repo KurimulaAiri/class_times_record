@@ -182,7 +182,11 @@
 	import { useStudentStore } from "@/stores/student";
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
-	import { addStudentToClass, getClassByClassId } from "@/api/class";
+	import {
+		addStudentToClass,
+		removeStudentFromClass,
+		getClassByClassId,
+	} from "@/api/class";
 	import { getClassScheduleByClassId } from "@/api/class-schedule";
 
 	const themeColor = ref("#70a9a2"); // 对应你的 $theme-color
@@ -305,7 +309,12 @@
 										const res = await getClassByClassId(
 											classDetail.value?.id || 0,
 										);
-										classDetail.value = res.classList?.[0] || {};
+
+										// ✅ 修复：保留原有的 scheduleList 不被覆盖
+										classDetail.value = {
+											...res.classList?.[0], // 后端返回的新班级基础数据
+											scheduleList: classDetail.value.scheduleList, // 牢牢抱住我们原有的排课数据
+										};
 									}
 								} else {
 									uni.showToast({
@@ -325,6 +334,7 @@
 
 		uni.$on("needRefresh", () => {
 			loadStudentList();
+			loadClassScheduleList();
 		});
 	});
 
@@ -358,13 +368,13 @@
 	};
 
 	// 处理长按事件
-	const handleLongPress = (item: Student) => {
+	const handleLongPress = async (item: Student) => {
 		uni.vibrateShort();
 
 		uni.showActionSheet({
 			itemList: ["编辑学生", "快速扣课", "移除学生"],
 			itemColor: "#333",
-			success: (res) => {
+			success: async (res) => {
 				switch (res.tapIndex) {
 					case 0:
 						console.log("点击编辑");
@@ -382,6 +392,53 @@
 						break;
 					case 2:
 						console.log("移除学生");
+						uni.showModal({
+							title: "提示",
+							content: `确定要移除 ${item.studentName} 吗？`,
+							success: async (res) => {
+								if (res.confirm) {
+									// 执行移除逻辑...
+									console.log("用户点击了确定");
+									// 调用移除接口
+									const result = await removeStudentFromClass({
+										classId: classDetail.value?.id || 0,
+										students: [item],
+									});
+									if (result !== 0) {
+										setTimeout(() => {
+											uni.showToast({
+												title: "移除成功",
+												icon: "success",
+												duration: 2000,
+											});
+										}, 200);
+										if (classDetail.value?.id) {
+											const res = await getClassByClassId(
+												classDetail.value?.id || 0,
+											);
+
+											// ✅ 修复：保留原有的 scheduleList 不被覆盖
+											classDetail.value = {
+												...res.classList?.[0], // 后端返回的新班级基础数据
+												scheduleList: classDetail.value.scheduleList, // 牢牢抱住我们原有的排课数据
+											};
+										}
+										// 刷新学员列表
+										await loadStudentList();
+									} else {
+										setTimeout(() => {
+											uni.showToast({
+												title: "移除失败",
+												icon: "none",
+											});
+										}, 200);
+									}
+								} else if (res.cancel) {
+									console.log("用户点击了取消");
+								}
+							},
+						});
+
 						break;
 				}
 			},
@@ -395,7 +452,7 @@
 	};
 
 	const handleEdit = () => {
-		jump(ROUTES.EDIT_CLASS_INFO, classDetail.value);
+		jump(ROUTES.EDIT_CLASS_INFO, classDetail.value, "navigate", true);
 	};
 
 	const handleAttendance = () => {

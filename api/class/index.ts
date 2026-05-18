@@ -36,6 +36,22 @@ const addStudentToClass = async (
 	return result;
 };
 
+const removeStudentFromClass = async (
+	form: RemoveStudentFromClassQueryForm,
+): Promise<number> => {
+	let result = 0;
+	await post<RemoveStudentFromClassResponse>(
+		"/class/remove_student_from_class",
+		form,
+	).then((res) => {
+		if (res.code === 200) {
+			result = res.data.result;
+			return result;
+		}
+	});
+	return result;
+};
+
 const getClassByClassId = async (
 	classId: number,
 ): Promise<ClassListResponse> => {
@@ -45,14 +61,9 @@ const getClassByClassId = async (
 	return res.data;
 };
 
-const insertClass = async (
-	form: InsertClassQueryForm,
-): Promise<number> => {
+const insertClass = async (form: InsertClassQueryForm): Promise<number> => {
 	let result = 0;
-	await post<InsertClassResponse>(
-		"/class/insert",
-		form,
-	).then((res) => {
+	await post<InsertClassResponse>("/class/insert", form).then((res) => {
 		if (res.code === 200) {
 			result = res.data.classId;
 			return result;
@@ -61,10 +72,25 @@ const insertClass = async (
 	return result;
 };
 
+const updateClassById = async (form: UpdateClassForm): Promise<number> => {
+	let result = 0;
+	await post<UpdateClassResponse>("/class/update_by_id", form).then((res) => {
+		if (res.code === 200) {
+			result = res.data.result;
+			return result;
+		}
+	});
+	return result;
+};
+
+
+
 export {
 	getClassListByStudentId,
 	getClassListByTeacherId,
 	addStudentToClass,
+	removeStudentFromClass,
 	getClassByClassId,
 	insertClass,
+	updateClassById,
 };

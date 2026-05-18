@@ -31,6 +31,14 @@ interface AddStudentToClassResponse {
 	result: number;
 }
 
+interface RemoveStudentFromClassQueryForm {
+	classId: number;
+	students: Student[];
+}
+interface RemoveStudentFromClassResponse {
+	result: number;
+}
+
 interface ClassDeductRequest {
 	classId: number;
 	courseId: number;
@@ -54,4 +62,17 @@ interface InsertClassQueryForm {
 interface InsertClassResponse {
 	classId: number;
 	className: string;
+}
+
+interface UpdateClassForm {
+	classId: number;
+	className: string;
+	courseId: number;
+	maxCount: number;
+	schedules: ClassSchedule[];
+	teachers: TeacherResponse[];
+}
+
+interface UpdateClassResponse {
+	result: number;
 }

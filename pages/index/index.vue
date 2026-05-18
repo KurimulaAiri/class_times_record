@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-	import { jump } from "@/utils/common/index";
+	import { jump, parseData } from "@/utils/common/index";
 	import { ROUTES } from "@/config/routes";
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
@@ -35,7 +35,15 @@
 
 	const version = ref("1.0.0"); // 默认版本号
 
-	onLoad(() => {
+	onLoad((options: any) => {
+		if (options.data) {
+			const data: any = parseData(options.data);
+			console.log("options.data:", data);
+			if (data && data.role) {
+				jump(ROUTES.LOGIN, { role: data.role });
+			}
+		}
+
 		console.log("onLoad 执行");
 		const token = uni.getStorageSync("token");
 		if (token) {

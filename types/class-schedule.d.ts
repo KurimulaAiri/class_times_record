@@ -12,6 +12,7 @@ interface BackendScheduleItem {
 }
 
 interface ClassSchedule {
+	classId: number | null;
 	dayOfWeek: number;
 	startDate: string;
 	endDate: string;

@@ -16,6 +16,60 @@ $primary-color: $theme-color; // 定义主题色
 	margin-bottom: 20rpx;
 }
 
+// 升级：带有极致平滑滑动动画的胶囊选择组件
+.mode-tab-box {
+	position: relative;
+	display: flex;
+	background-color: #f1f3f5;
+	border-radius: 40rpx;
+	padding: 6rpx;
+	margin-bottom: 30rpx;
+	border: 1rpx solid #e9ecef;
+	overflow: hidden; // 隐藏滑块溢出剪影
+
+	// 运动滑块背景
+	.tab-slider {
+		position: absolute;
+		top: 6rpx;
+		left: 6rpx;
+		width: calc(50% - 6rpx); // 宽度占一半（扣除掉间距）
+		height: 72rpx;
+		background-color: $primary-color; // 使用你的全局主题色
+		border-radius: 36rpx;
+		box-shadow: 0 6rpx 16rpx rgba($primary-color, 0.35);
+
+		// 💡 核心：动效过渡。使用贝塞尔曲线让位移看起来带有顺滑的“弹性快进”感
+		transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+		transform: translateX(0);
+		z-index: 1;
+
+		// 切换到右侧按课程时的滑块偏移位置
+		&.slide-right {
+			transform: translateX(100%);
+		}
+	}
+
+	// 前景文字项
+	.tab-item {
+		position: relative;
+		flex: 1;
+		text-align: center;
+		font-size: 28rpx;
+		height: 72rpx;
+		line-height: 72rpx;
+		color: #666666;
+		font-weight: 500;
+		z-index: 2; // 确保文字浮在滑块之上，能被看清和点击
+		transition: color 0.25s linear;
+
+		// 当被选中时，由于滑块移过来了，文字变成白色
+		&.active {
+			color: #ffffff;
+			font-weight: bold;
+		}
+	}
+}
+
 .select-student {
 	display: flex;
 	justify-content: space-between;

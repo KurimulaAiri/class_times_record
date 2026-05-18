@@ -42,13 +42,9 @@ type RequestOptions = {
 
 const request = <T>(options: RequestOptions): Promise<T> => {
 	// 解构参数，设置默认值
-	const {
-		url,
-		method = "GET",
-		data = {},
-		header = {},
-		loading = true,
-	} = options;
+	const { url, method = "GET", data = {}, header = {} } = options;
+
+	let loading = true;
 
 	// 显示加载中（可自定义样式）
 	if (loading) {
@@ -59,7 +55,7 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 	}
 
 	// 生成签名信息
-    const { sign, timestamp, nonce } = generateSign(data);
+	const { sign, timestamp, nonce } = generateSign(data);
 
 	// 拼接完整接口地址
 	// 2. 检查 url 字符串逻辑
@@ -78,11 +74,11 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 			header: {
 				// 默认请求头（可根据后端要求调整，如JSON格式、token）
 				"Content-Type": "application/json",
-				'token': uni.getStorageSync("token") || "", // 从本地缓存取token
+				token: uni.getStorageSync("token") || "", // 从本地缓存取token
 				...header, // 合并自定义请求头（优先级更高）
-				'x-sign': sign,
-                'x-timestamp': timestamp,
-                'x-nonce': nonce
+				"x-sign": sign,
+				"x-timestamp": timestamp,
+				"x-nonce": nonce,
 			},
 			timeout,
 			// 请求成功回调
@@ -147,15 +143,9 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 						reject(res as T);
 						break;
 				}
-				if (loading) {
-					uni.hideLoading();
-				}
 			},
 			// 请求失败回调（网络错误、超时等）
 			fail: (err) => {
-				if (loading) {
-					uni.hideLoading();
-				}
 				let errMsg = "网络异常，请检查网络";
 				if (err.errMsg.includes("timeout")) {
 					errMsg = "请求超时，请稍后重试";

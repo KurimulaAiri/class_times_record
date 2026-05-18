@@ -114,7 +114,7 @@
 				switch (res.tapIndex) {
 					case 0:
 						console.log("点击编辑");
-						jump(ROUTES.EDIT_CLASS_INFO, item);
+						jump(ROUTES.EDIT_CLASS_INFO, item, "navigate", true);
 						break;
 					case 2:
 						handleDeleteClass(item);

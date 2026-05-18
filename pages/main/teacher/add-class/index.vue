@@ -209,6 +209,7 @@
 	// 初始化或追加一组空的排班
 	const addSchedule = () => {
 		form.value.schedules.push({
+            classId: null,
 			dayOfWeek: 0,
 			startDate: "",
 			endDate: "",

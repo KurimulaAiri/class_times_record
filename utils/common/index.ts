@@ -1,3 +1,6 @@
+import { ref } from "vue";
+import type { Ref } from "vue";
+import { onLoad } from "@dcloudio/uni-app";
 import { ROUTES, PagePath } from "@/config/routes";
 import { logOut } from "@/api/auth";
 
@@ -10,13 +13,15 @@ type FlexiblePath = PagePath | (string & {});
 /**
  * 跳转页面
  * @param path 目标页面路径
- * @param data 要传递的参数
+ * @param data 要传递的参数 (支持普通的 URL 传参 或 EventChannel 大对象传参)
  * @param type 跳转类型，默认 navigate，可选 redirect 或 relaunch
+ * @param useEventChannel 是否使用 EventChannel 管道传递数据 (默认 false，仅在 type 为 'navigate' 时有效)
  */
 const jump = (
 	path: FlexiblePath,
 	data?: any,
 	type: "redirect" | "navigate" | "relaunch" = "navigate",
+	useEventChannel: boolean = false, // 新增：默认关闭高级管道传参
 ) => {
 	// 1. 统一处理路径格式（补齐开头的 /）
 	let targetPath = path.trim();
@@ -39,27 +44,50 @@ const jump = (
 		return; // 拦截跳转
 	}
 
-	// 关键点：使用 encodeURIComponent 包装 JSON 字符串
+	// 3. 处理传统的 URL 传参字符串 (在不使用 EventChannel 时作为兜底)
 	const dataStr = encodeURIComponent(JSON.stringify(data));
 
 	switch (type) {
 		case "redirect":
-			console.log("重定向到", path, "参数", dataStr);
+			console.log("重定向到", targetPath, "参数", dataStr);
 			uni.redirectTo({
-				url: `${path}?data=${dataStr}`,
+				url: `${targetPath}?data=${dataStr}`,
 			});
 			return;
-		case "navigate":
-			console.log("跳转到", path, "参数", dataStr);
-			uni.navigateTo({
-				url: `${path}?data=${dataStr}`,
-			});
-			return;
+
 		case "relaunch":
-			console.log("重新启动应用，跳转到", path, "参数", dataStr);
+			console.log("重新启动应用，跳转到", targetPath, "参数", dataStr);
 			uni.reLaunch({
-				url: `${path}?data=${dataStr}`,
+				url: `${targetPath}?data=${dataStr}`,
 			});
+			return;
+
+		case "navigate":
+			// 💡 核心改造：如果开启了 EventChannel 且带有数据
+			if (useEventChannel && data !== undefined && data !== null) {
+				console.log(
+					"通过 EventChannel 管道跳转到",
+					targetPath,
+					"数据对象:",
+					data,
+				);
+				uni.navigateTo({
+					url: targetPath, // 💡 路径保持纯净，不再拼接超长字符串
+					success: (res) => {
+						// 向上发派名为 'acceptClassData' 的事件，将整个大对象完整送出
+						res.eventChannel.emit("acceptClassData", data);
+					},
+					fail: (err) => {
+						console.error("[Jump EventChannel Error]: 跳转失败", err);
+					},
+				});
+			} else {
+				// 传统 URL 传参模式兜底
+				console.log("通过传统 URL 跳转到", targetPath, "参数", dataStr);
+				uni.navigateTo({
+					url: `${targetPath}?data=${dataStr}`,
+				});
+			}
 			return;
 	}
 };
@@ -91,12 +119,68 @@ const parseData = <T>(dataStr: any): T | undefined => {
 };
 
 /**
+ * 专门用于接收通过 jump 传过来的大对象参数（兼容 EventChannel 与 传统URL传参）
+ * @param callback 接收到数据后的回调函数
+ * @returns 返回一个包含响应式 data 的对象
+ */
+const usePageData = <T = any>(
+	callback?: (data: T) => void,
+): { data: Ref<T | null> } => {
+	const data = ref<T | null>(null) as Ref<T | null>;
+
+	onLoad((options) => {
+		let hasReceived = false;
+
+		// 核心通道 1：优先尝试通过高级的 EventChannel 管道接收数据
+		try {
+			const pages = getCurrentPages();
+			if (pages && pages.length > 0) {
+				const currentPage = pages[pages.length - 1] as any;
+				const eventChannel = currentPage?.getOpenerEventChannel?.();
+
+				if (eventChannel && typeof eventChannel.on === "function") {
+					eventChannel.on("acceptClassData", (res: T) => {
+						if (res) {
+							hasReceived = true;
+							data.value = res;
+							if (callback) callback(res);
+						}
+					});
+				}
+			}
+		} catch (e) {
+			console.warn(
+				"[usePageData Warning]: EventChannel 获取失败，尝试切换 URL 兜底解析",
+				e,
+			);
+		}
+
+		// 核心通道 2：如果 EventChannel 没拿到（比如走的是 redirect/relaunch 或传统模式），则通过 URL 兜底解析
+		if (!hasReceived && options && options.data) {
+			try {
+				const decoded = decodeURIComponent(options.data);
+				const parsed = JSON.parse(decoded) as T;
+				if (parsed) {
+					data.value = parsed;
+					if (callback) callback(parsed);
+				}
+			} catch (e) {
+				console.error("[usePageData Error]: URL 兜底参数 JSON 解析失败", e);
+			}
+		}
+	});
+
+	return {
+		data,
+	};
+};
+
+/**
  * 切换账号
  * @param role 退出账号的角色，会自动跳转到该角色的登录页
  */
 const switchUser = (role: number) => {
-	logOut();
-	jump(ROUTES.LOGIN, { role });
+	logOut(ROUTES.INDEX, { role });
 };
 
 /**
@@ -120,6 +204,6 @@ type FormModel<T, K extends keyof T> = Overwrite<
 	}
 >;
 
-export { jump, parseData, switchUser };
+export { jump, parseData, switchUser, usePageData };
 
 export type { Overwrite, FormModel };

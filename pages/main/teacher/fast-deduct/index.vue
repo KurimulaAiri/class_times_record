@@ -1,8 +1,33 @@
 <template>
 	<view class="container">
-		<!-- 选择学生区域 -->
+		<!-- 💡 修复增改：带平滑滑动动画的互斥切换模式按钮 -->
+		<view class="mode-tab-box">
+			<!-- 背后滑动的白色/主题色胶囊滑块 -->
+			<view
+				class="tab-slider"
+				:class="{ 'slide-right': deductMode === 'course' }"
+			></view>
+
+			<!-- 前景文字选项 -->
+			<view
+				class="tab-item"
+				:class="{ active: deductMode === 'student' }"
+				@tap="switchMode('student')"
+				>按学员扣课</view
+			>
+			<view
+				class="tab-item"
+				:class="{ active: deductMode === 'course' }"
+				@tap="switchMode('course')"
+				>按课程扣课</view
+			>
+		</view>
+
+		<!-- 选择学生区域（仅在按学员模式或未选择课程时作为辅助显示，这里默认都留着但文案随模式改变） -->
 		<view class="section select-student" @tap="navigateToSelect">
-			<view class="label">选择学生</view>
+			<view class="label">{{
+				deductMode === "student" ? "选择学生" : "指定学生"
+			}}</view>
 			<view class="content">
 				<text v-if="student.studentName" class="name">{{
 					student.studentName
@@ -16,6 +41,7 @@
 		<view class="section-title" v-if="classes && classes.length > 0"
 			>班级课时信息（可多选）</view
 		>
+
 		<scroll-view
 			scroll-y
 			class="course-list"
@@ -33,7 +59,11 @@
 						<text class="course-name">{{ item.className }}</text>
 					</view>
 					<view class="course-detail">
-						<text>任教老师：{{ item.teachers.map((teacher) => teacher.username).join("、") }}</text>
+						<text
+							>任教老师：{{
+								item.teachers.map((teacher) => teacher.username).join("、")
+							}}</text
+						>
 						<text>课程名称：{{ item.courseName }}</text>
 						<text
 							>该种课程剩余课时：{{ item.courseRecord.courseRestTime }}</text
@@ -78,11 +108,11 @@
 				mode="aspectFit"
 				class="empty-img"
 			></image>
-			<text v-if="classes && classes.length === 0">该学生暂未加入任何班级</text>
-			<text v-else>请先选择学生以查看班级</text>
+			<text v-if="classes && classes.length === 0">暂无关联的班级课时信息</text>
+			<text v-else>请先选择信息以查看班级列表</text>
 		</view>
 
-		<!-- 班级信息展示区 -->
+		<!-- 备注展示区 -->
 		<view class="section-title">其他信息</view>
 		<!-- 备注区域 -->
 		<view class="section remark-section">
@@ -109,6 +139,9 @@
 	import { onLoad } from "@dcloudio/uni-app";
 	import { getClassListByStudentId } from "@/api/class";
 	import { deductByStudentId } from "@/api/course-record";
+
+	// 💡 新增状态：扣课模式 'student'(按学员) 或 'course'(按课程)
+	const deductMode = ref<"student" | "course">("student");
 
 	// 状态管理
 	const student = ref<Student>({
@@ -183,6 +216,20 @@
 				target.count = next;
 			}
 		}
+	};
+
+	// 💡 新增：切换扣课模式逻辑
+	const switchMode = (mode: "student" | "course") => {
+		if (deductMode.value === mode) return;
+		deductMode.value = mode;
+
+		// 切换模式时清空已选数据，避免数据混乱
+		classes.value = [];
+		selectedMap.value = {};
+		student.value.id = 0;
+		student.value.studentName = "";
+		submitData.value.studentId = 0;
+		submitData.value.classes = [];
 	};
 
 	// 跳转选择学生界面
