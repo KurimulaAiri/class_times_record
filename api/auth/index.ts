@@ -45,6 +45,7 @@ const loginByPwd = async (
 		return await post<LoginResponse>("/auth/login_by_pwd", {
 			...data,
 			openId,
+			needValidateAdmin: true,
 		});
 	} catch (error) {
 		console.error("登录链路失败:", error);
@@ -90,6 +91,7 @@ const loginByToken = async (
 		return await post<LoginResponse>("/auth/login_by_token", {
 			token,
 			openId,
+			needValidateAdmin: true,
 		});
 	} catch (error) {
 		console.error("登录链路失败:", error);
