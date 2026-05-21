@@ -11,13 +11,41 @@ const getClassListByStudentId = async (
 };
 
 const getClassListByTeacherId = async (
-	QueryForm: ClassListByTeacherIdQueryForm,
+	QueryForm: ClassListQueryByTeacherIdForm,
 ): Promise<ClassListResponse> => {
 	const res = await post<ClassListResponse>(
 		"/class/get_classes_by_teacher_id",
 		QueryForm,
 	);
 	return res.data;
+};
+
+const getClassListByInstitutionId = async (
+	QueryForm: ClassListQueryByInstitutionIdForm,
+): Promise<ClassListResponse> => {
+	const res = await post<ClassListResponse>(
+		"/class/get_classes_by_institution_id",
+		QueryForm,
+	);
+	return res.data;
+};
+
+const getClassList = async (
+	QueryForm: ClassListQueryForm,
+): Promise<ClassListResponse> => {
+	if (QueryForm.scope === 1) {
+		return getClassListByTeacherId({
+			teacherId: QueryForm.targetId,
+			keyword: QueryForm.keyword,
+		});
+	} else if (QueryForm.scope === 2) {
+		return getClassListByInstitutionId({
+			institutionId: QueryForm.targetId,
+			keyword: QueryForm.keyword,
+		});
+	} else {
+		return {} as ClassListResponse;
+	}
 };
 
 const addStudentToClass = async (
@@ -83,8 +111,6 @@ const updateClassById = async (form: UpdateClassForm): Promise<number> => {
 	return result;
 };
 
-
-
 export {
 	getClassListByStudentId,
 	getClassListByTeacherId,
@@ -92,5 +118,7 @@ export {
 	removeStudentFromClass,
 	getClassByClassId,
 	insertClass,
+	getClassListByInstitutionId,
+	getClassList,
 	updateClassById,
 };

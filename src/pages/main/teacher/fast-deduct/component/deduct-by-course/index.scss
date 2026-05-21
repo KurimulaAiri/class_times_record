@@ -1,0 +1,173 @@
+$primary-color: $theme-color; // 定义主题色
+
+.component-container {
+	width: 100%;
+	/* 避免多余的 padding 嵌套带来的布局错位 */
+}
+
+.section {
+	background-color: #ffffff;
+	border-radius: 16rpx;
+	padding: 30rpx;
+	margin-bottom: 20rpx;
+}
+
+// 适配：选择课程班级栏（由原 .select-student 衍生）
+.select-course {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	.label {
+		font-size: 30rpx;
+		font-weight: bold;
+		color: #333;
+	}
+
+	.content {
+		display: flex;
+		align-items: center;
+
+		.name {
+			font-size: 30rpx;
+			color: $primary-color;
+			margin-right: 10rpx;
+			// 避免班级名过长导致右侧箭头挤压变形
+			max-width: 400rpx;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.placeholder {
+			font-size: 28rpx;
+			color: #999;
+			margin-right: 10rpx;
+		}
+	}
+}
+
+.section-title {
+	font-size: 28rpx;
+	color: #666;
+	margin: 30rpx 0 20rpx 10rpx;
+}
+
+// 学员列表（与原 course-list 结构完全复用，保证卡片动效一致）
+.course-list {
+	.course-card {
+		background-color: #fff;
+		border-radius: 12rpx;
+		padding: 24rpx;
+		margin-bottom: 20rpx;
+		border: 2rpx solid transparent;
+		transition: all 0.2s;
+
+		// 左右布局
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		&.active {
+			border-color: $primary-color;
+			background-color: rgba($primary-color, 0.05);
+		}
+
+		// 左侧学员基础信息
+		.course-info {
+			flex: 1;
+			margin-right: 20rpx;
+		}
+
+		.course-header {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 12rpx;
+
+			.course-name {
+				font-weight: bold;
+				font-size: 32rpx;
+				color: #333;
+			}
+		}
+
+		.course-detail {
+			font-size: 26rpx;
+			color: #999;
+			display: flex;
+			flex-direction: column;
+			gap: 8rpx;
+		}
+
+		// 右侧扣课次数控制区 - 增强版
+		.deduct-control {
+			display: flex;
+			align-items: center;
+			background: #f1f3f5;
+			padding: 8rpx;
+			border-radius: 12rpx;
+			border: 1rpx solid #e9ecef;
+
+			.btn {
+				width: 64rpx;
+				height: 64rpx;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background-color: #fff;
+				border-radius: 8rpx;
+				font-size: 36rpx;
+				font-weight: bold;
+				color: #333;
+				box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.08);
+
+				&:active {
+					transform: scale(0.9);
+					background-color: #f8f9fa;
+				}
+
+				&.plus {
+					color: $primary-color;
+				}
+			}
+
+			.count-input {
+				width: 90rpx;
+				height: 64rpx;
+				text-align: center;
+				font-size: 32rpx;
+				font-weight: bold;
+				color: $primary-color;
+			}
+
+			.unit {
+				font-size: 26rpx;
+				color: #666;
+				margin: 0 16rpx 0 8rpx;
+				font-weight: 500;
+			}
+		}
+
+		// 未选中时的圆圈图标占位（对应你 DOM 里的 .unselected-check）
+		.unselected-check {
+			padding-right: 10rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+}
+
+.empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 80rpx 0; // 稍微加深上下留白
+	color: #ccc;
+
+	.empty-img {
+		width: 200rpx;
+		height: 200rpx;
+		margin-bottom: 20rpx;
+	}
+}

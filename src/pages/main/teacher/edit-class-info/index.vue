@@ -351,18 +351,21 @@
 		console.log("更新班级响应:", res);
 
 		if (res > 0) {
-			uni.showToast({
-				title: "班级修改成功",
-				icon: "success",
-				duration: 1500, // 提示持续 1.5 秒
-				mask: true, // 开启蒙层，防止用户在提示期间乱点
-			});
+			setTimeout(() => {
+				uni.showToast({
+					title: "班级修改成功",
+					icon: "success",
+					duration: 1500, // 提示持续 1.5 秒
+					mask: true, // 开启蒙层，防止用户在提示期间乱点
+				});
+			}, 1500);
 
 			// 发送刷新通知
 			uni.$emit("needRefresh");
 
 			// 💡 确保延迟时间与 duration 接近，让用户看清楚再后退
 			setTimeout(() => {
+				uni.$emit("backFromEditClass");
 				uni.navigateBack();
 			}, 1500);
 		} else {

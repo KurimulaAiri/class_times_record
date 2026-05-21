@@ -2,7 +2,7 @@
 	<view class="container">
 		<SearchFilterBar
 			:keyword="tempKeyword"
-			:activeFilters="activeFilters"
+			v-model:activeFilters="activeFilters" 
 			:filters="filterConfig"
 			placeholder="搜索姓名、学号或手机号"
 			@search="handleSearch"

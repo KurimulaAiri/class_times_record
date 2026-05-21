@@ -18,8 +18,19 @@ interface Class {
 	updateTimeStr: string;
 }
 
-interface ClassListByTeacherIdQueryForm {
+interface ClassListQueryForm {
+	scope: number;
+	targetId: number;
+	keyword: string | null;
+}
+
+interface ClassListQueryByTeacherIdForm {
 	teacherId: number;
+	keyword: string | null;
+}
+
+interface ClassListQueryByInstitutionIdForm {
+	institutionId: number;
 	keyword: string | null;
 }
 

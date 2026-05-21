@@ -1,8 +1,11 @@
 <template>
 	<view class="container">
 		<SearchFilterBar
+			:filters="filterConfig"
+			v-model:active-filters="activeFilters"
 			placeholder="请输入班级名称"
 			@search="handleSearch"
+			@filter-change="handleFilterChange"
 			class="search-filter-bar"
 		/>
 
@@ -45,27 +48,42 @@
 		</view>
 
 		<!-- 新增：右下角悬浮按钮 -->
-		<FloatingActionButton @click="goToAddClass"/>
+		<FloatingActionButton @click="goToAddClass" />
 	</view>
 </template>
 
 <script setup lang="ts">
 	import { ref } from "vue";
 	import { useUserStore } from "@/stores/user";
-	import { getClassListByTeacherId } from "@/api/class";
+	import { getClassList } from "@/api/class";
 	import { onLoad, onShow } from "@dcloudio/uni-app";
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
-	
+
 	import SearchFilterBar from "@/components/search-filter-bar/index.vue";
 	import FloatingActionButton from "@/components/floating-action-button/index.vue";
+
+	const filterConfig = ref<FilterType>({
+		scope: {
+			label: "范围",
+			options: [
+				{ label: "当前机构", value: 2 },
+				{ label: "当前教师", value: 1 },
+			],
+		},
+	});
+
+	const activeFilters = ref<ActiveFiltersType>({
+		scope: 2,
+	});
 
 	const userStore = useUserStore();
 
 	const classList = ref<Class[]>([]);
 
-	const queryForm = ref<ClassListByTeacherIdQueryForm>({
-		teacherId: 0,
+	const queryForm = ref<ClassListQueryForm>({
+		scope: 0,
+		targetId: 0,
 		keyword: null,
 	});
 
@@ -80,11 +98,11 @@
 		console.log("teacherId", teacherId);
 		if (teacherId) {
 			queryForm.value = {
-				teacherId,
+				scope: activeFilters.value.scope,
+				targetId: teacherId,
 				keyword: queryForm.value.keyword,
 			};
-			const res = await getClassListByTeacherId(queryForm.value);
-			classList.value = res.classList || [];
+			loadData();
 		}
 	});
 
@@ -92,7 +110,15 @@
 		console.log("搜索关键字：", queryForm.value.keyword);
 		// 如果是后端搜索，这里可以发起网络请求
 		queryForm.value.keyword = queryForm.value.keyword || "";
-		const res = await getClassListByTeacherId(queryForm.value);
+		loadData();
+	};
+
+	const loadData = async () => {
+		const res = await getClassList({
+			scope: activeFilters.value.scope,
+			targetId: queryForm.value.targetId,
+			keyword: queryForm.value.keyword,
+		});
 		classList.value = res.classList || [];
 	};
 
@@ -137,6 +163,11 @@
 				}
 			},
 		});
+	};
+
+	// 处理筛选变化
+	const handleFilterChange = () => {
+		loadData();
 	};
 
 	// 新增：点击添加班级按钮

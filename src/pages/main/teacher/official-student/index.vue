@@ -3,7 +3,7 @@
 		<!-- ✅ 使用通用搜索筛选组件 -->
 		<SearchFilterBar
 			:keyword="tempKeyword"
-			:activeFilters="activeFilters"
+			v-model:activeFilters="activeFilters" 
 			:filters="filterConfig"
 			placeholder="搜索姓名、学号或手机号"
 			@search="handleSearch"

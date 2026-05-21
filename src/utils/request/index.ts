@@ -1,36 +1,22 @@
 import { generateSign } from "@/utils/crypto";
 
-// 基础域名（根据环境切换，如开发/生产环境）
 let baseUrl: string;
 console.log("process.env.NODE_ENV:", process.env.NODE_ENV);
 switch (process.env.NODE_ENV) {
 	case "development":
-		// baseUrl = "https://api.kurimula-airi.top"; // 生产环境
-		baseUrl = "http://localhost:9999"; // 开发环境
+		baseUrl = "http://localhost:9999";
 		break;
 	case "production":
-		baseUrl = "https://api.kurimula-airi.top"; // 生产环境
+		baseUrl = "https://api.kurimula-airi.top";
 		break;
 	case "trial":
-		baseUrl = "https://api.kurimula-airi.top"; // 试用环境
+		baseUrl = "https://api.kurimula-airi.top";
 		break;
 	default:
-		baseUrl = "https://api.kurimula-airi.top"; // 默认生产环境
+		baseUrl = "https://api.kurimula-airi.top";
 		break;
 }
-// 请求超时时间（毫秒）
 const timeout = 10000;
-
-/**
- * 基础请求函数
- * @param {Object} options - 请求配置
- * @param {string} options.url - 接口路径（无需写基础域名）
- * @param {string} options.method - 请求方法（GET/POST/PUT/DELETE）
- * @param {Object} [options.data] - 请求参数（GET拼在url，POST在body）
- * @param {Object} [options.header] - 自定义请求头（会合并默认头）
- * @param {boolean} [options.loading=true] - 是否显示加载中提示
- * @returns {Promise} 返回请求结果
- */
 
 type RequestOptions = {
 	url: string;
@@ -40,133 +26,263 @@ type RequestOptions = {
 	loading?: boolean;
 };
 
+let isRefreshing = false;
+let refreshSubscribers: Array<(token: string) => void> = [];
+
+const onRefreshed = (newToken: string) => {
+	refreshSubscribers.forEach((callback) => callback(newToken));
+	refreshSubscribers = [];
+};
+
+const addRefreshSubscriber = (callback: (token: string) => void) => {
+	refreshSubscribers.push(callback);
+};
+
 const request = <T>(options: RequestOptions): Promise<T> => {
-	// 解构参数，设置默认值
 	const { url, method = "GET", data = {}, header = {} } = options;
 
 	let loading = true;
 
-	// 显示加载中（可自定义样式）
 	if (loading) {
 		uni.showLoading({
 			title: "加载中...",
-			mask: true, // 防止点击穿透
+			mask: true,
 		});
 	}
 
-	// 生成签名信息
 	const { sign, timestamp, nonce } = generateSign(data);
 
-	// 拼接完整接口地址
-	// 2. 检查 url 字符串逻辑
-	// 确保 url 是以 / 开头的，防止拼接出 localhost:9999course_record/get
 	const safeUrl = url.startsWith("/") ? url : "/" + url;
 	const fullUrl = baseUrl + safeUrl;
 
 	console.log("请求URL:", fullUrl);
 
-	// 返回Promise，统一处理请求
 	return new Promise((resolve, reject) => {
-		uni.request({
-			url: fullUrl,
-			method,
-			data,
-			header: {
-				// 默认请求头（可根据后端要求调整，如JSON格式、token）
-				"Content-Type": "application/json",
-				token: uni.getStorageSync("token") || "", // 从本地缓存取token
-				...header, // 合并自定义请求头（优先级更高）
-				"x-sign": sign,
-				"x-timestamp": timestamp,
-				"x-nonce": nonce,
-			},
-			timeout,
-			// 请求成功回调
-			success: (res) => {
-				// console.log("请求成功:", res);
-				// 1. 自动检测响应头是否有新 Token
-				// 注意：微信小程序中 header 的 key 通常是小写
-				const newToken = res.header["new-token"] || res.header["New-Token"];
-				if (newToken) {
-					uni.setStorageSync("token", newToken);
-					console.log("Token 已自动延期");
-				}
+		const doRequest = () => {
+			const accessToken = uni.getStorageSync("accessToken") || "";
 
-				const statusCode = res.statusCode;
-				const data = res.data as ApiResponse<any>;
+			uni.request({
+				url: fullUrl,
+				method,
+				data,
+				header: {
+					"Content-Type": "application/json",
+					token: accessToken,
+					...header,
+					"x-sign": sign,
+					"x-timestamp": timestamp,
+					"x-nonce": nonce,
+				},
+				timeout,
+				success: (res) => {
+					const statusCode = res.statusCode;
+					const responseData = res.data as ApiResponse<any>;
 
-				switch (statusCode) {
-					case 200:
-						// HTTP 请求成功，开始判断业务逻辑状态码
-						if (data.code === 200) {
-							resolve(data as T); // 业务逻辑成功
-						} else {
-							// 业务逻辑错误（如：参数非法、权限不足但非登录失效）
+					switch (statusCode) {
+						case 200:
+							if (responseData.code === 200) {
+								resolve(responseData as T);
+							} else {
+								uni.showToast({
+									title: responseData.message || "业务逻辑错误",
+									icon: "none",
+								});
+								reject(responseData as T);
+							}
+							break;
+
+						case 401:
+							handle401(url, method, data, header, options, resolve, reject, res);
+							break;
+
+						case 404:
+							uni.showToast({ title: "资源不存在 (404)", icon: "none" });
+							reject(res as T);
+							break;
+
+						case 500:
+							uni.showToast({ title: "服务器开小差了 (500)", icon: "none" });
+							reject(res as T);
+							break;
+
+						default:
 							uni.showToast({
-								title: data.message || "业务逻辑错误",
+								title: `系统错误：${statusCode}`,
 								icon: "none",
 							});
-							reject(data as T);
-						}
-						break;
+							reject(res as T);
+							break;
+					}
+				},
+				fail: (err) => {
+					let errMsg = "网络异常，请检查网络";
+					if (err.errMsg.includes("timeout")) {
+						errMsg = "请求超时，请稍后重试";
+					}
+					uni.showToast({
+						title: errMsg,
+						icon: "none",
+					});
+					reject(err);
+				},
+				complete: () => {
+					if (loading) {
+						uni.hideLoading();
+					}
+				},
+			});
+		};
 
-					case 401:
-						// Token 过期或无效
-						uni.removeStorageSync("token");
-						uni.showToast({
-							title: "登录过期，请重新登录",
-							icon: "none",
-						});
-						// 延迟跳转
-						setTimeout(() => {
-							uni.reLaunch({ url: "/pages/index/index" });
-						}, 1500);
-						reject(res as T);
-						break;
-
-					case 404:
-						uni.showToast({ title: "资源不存在 (404)", icon: "none" });
-						reject(res as T);
-						break;
-
-					case 500:
-						uni.showToast({ title: "服务器开小差了 (500)", icon: "none" });
-						reject(res as T);
-						break;
-
-					default:
-						// 其他 HTTP 错误
-						uni.showToast({
-							title: `系统错误：${statusCode}`,
-							icon: "none",
-						});
-						reject(res as T);
-						break;
-				}
-			},
-			// 请求失败回调（网络错误、超时等）
-			fail: (err) => {
-				let errMsg = "网络异常，请检查网络";
-				if (err.errMsg.includes("timeout")) {
-					errMsg = "请求超时，请稍后重试";
-				}
-				uni.showToast({
-					title: errMsg,
-					icon: "none",
-				});
-				reject(err);
-			},
-			// 无论成功失败，最终执行（隐藏加载中）
-			complete: () => {
-				if (loading) {
-					uni.hideLoading();
-				}
-			},
-		});
+		doRequest();
 	});
 };
 
-// 封装GET请求
+const handle401 = (
+	url: string,
+	method: string,
+	data: any,
+	header: any,
+	options: RequestOptions,
+	resolve: Function,
+	reject: Function,
+	_res: any,
+) => {
+	if (url === "/auth/refresh") {
+		uni.removeStorageSync("accessToken");
+		uni.removeStorageSync("refreshToken");
+		uni.showToast({
+			title: "登录过期，请重新登录",
+			icon: "none",
+		});
+		setTimeout(() => {
+			uni.reLaunch({ url: "/pages/index/index" });
+		}, 1500);
+		reject(_res);
+		return;
+	}
+
+	if (!isRefreshing) {
+		isRefreshing = true;
+
+		const refreshToken = uni.getStorageSync("refreshToken") || "";
+
+		if (!refreshToken) {
+			isRefreshing = false;
+			uni.removeStorageSync("accessToken");
+			uni.showToast({
+				title: "登录过期，请重新登录",
+				icon: "none",
+			});
+			setTimeout(() => {
+				uni.reLaunch({ url: "/pages/index/index" });
+			}, 1500);
+			reject(_res);
+			return;
+		}
+
+		uni.request({
+			url: baseUrl + "/auth/refresh",
+			method: "POST",
+			data: { token: refreshToken },
+			header: { "Content-Type": "application/json" },
+			timeout,
+			success: (refreshRes) => {
+				isRefreshing = false;
+				const refreshData = refreshRes.data as ApiResponse<LoginResponse>;
+
+				if (refreshRes.statusCode === 200 && refreshData.code === 200 && refreshData.data.accessToken) {
+					uni.setStorageSync("accessToken", refreshData.data.accessToken);
+					console.log("Access Token 静默刷新成功");
+					onRefreshed(refreshData.data.accessToken);
+					retryRequest(url, method, data, header, options, resolve, reject);
+				} else {
+					uni.removeStorageSync("accessToken");
+					uni.removeStorageSync("refreshToken");
+					uni.showToast({
+						title: "登录过期，请重新登录",
+						icon: "none",
+					});
+					setTimeout(() => {
+						uni.reLaunch({ url: "/pages/index/index" });
+					}, 1500);
+					reject(refreshRes);
+				}
+			},
+			fail: () => {
+				isRefreshing = false;
+				uni.removeStorageSync("accessToken");
+				uni.removeStorageSync("refreshToken");
+				uni.showToast({
+					title: "登录过期，请重新登录",
+					icon: "none",
+				});
+				setTimeout(() => {
+					uni.reLaunch({ url: "/pages/index/index" });
+				}, 1500);
+				reject(_res);
+			},
+		});
+
+		addRefreshSubscriber(() => {
+			retryRequest(url, method, data, header, options, resolve, reject);
+		});
+	} else {
+		addRefreshSubscriber(() => {
+			retryRequest(url, method, data, header, options, resolve, reject);
+		});
+	}
+};
+
+const retryRequest = (
+	url: string,
+	method: string,
+	data: any,
+	header: any,
+	options: RequestOptions,
+	resolve: Function,
+	reject: Function,
+) => {
+	const { sign, timestamp, nonce } = generateSign(data);
+	const accessToken = uni.getStorageSync("accessToken") || "";
+
+	const fullUrl = baseUrl + (url.startsWith("/") ? url : "/" + url);
+
+	uni.request({
+		url: fullUrl,
+		method: method as any,
+		data,
+		header: {
+			"Content-Type": "application/json",
+			token: accessToken,
+			...header,
+			"x-sign": sign,
+			"x-timestamp": timestamp,
+			"x-nonce": nonce,
+		},
+		timeout,
+		success: (res) => {
+			const responseData = res.data as ApiResponse<any>;
+			if (res.statusCode === 200 && responseData.code === 200) {
+				resolve(responseData);
+			} else {
+				uni.showToast({
+					title: responseData.message || "请求失败",
+					icon: "none",
+				});
+				reject(responseData);
+			}
+		},
+		fail: (err) => {
+			reject(err);
+		},
+		complete: () => {
+			if (options.loading !== false) {
+				uni.hideLoading();
+			}
+		},
+	});
+};
+
 export const get = <T>(
 	url: string,
 	data = {},
@@ -180,7 +296,6 @@ export const get = <T>(
 	});
 };
 
-// 封装POST请求
 export const post = <T>(
 	url: string,
 	data = {},
@@ -194,7 +309,6 @@ export const post = <T>(
 	});
 };
 
-// 封装PUT请求（按需扩展）
 export const put = <T>(
 	url: string,
 	data = {},
@@ -208,7 +322,6 @@ export const put = <T>(
 	});
 };
 
-// 封装DELETE请求（按需扩展）
 export const del = <T>(
 	url: string,
 	data = {},
@@ -222,5 +335,4 @@ export const del = <T>(
 	});
 };
 
-// 暴露默认请求方法（如需自定义method时使用）
 export default request;

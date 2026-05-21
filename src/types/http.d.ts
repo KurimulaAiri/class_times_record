@@ -5,7 +5,8 @@ type ApiResponse<T> = {
 };
 
 type LoginResponse = {
-	token: string
+	accessToken: string
+	refreshToken: string
 	openId: string
 	user: User
 }

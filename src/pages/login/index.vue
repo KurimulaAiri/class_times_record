@@ -127,11 +127,9 @@
 		})
 			.then((res) => {
 				console.log("登录响应:", res);
-				// 缓存 token
-				// res 现在就是你后端 data 里的内容
-				uni.setStorageSync("token", res.data.token);
+				uni.setStorageSync("accessToken", res.data.accessToken);
+				uni.setStorageSync("refreshToken", res.data.refreshToken);
 				console.log("Token 已缓存");
-				// 缓存用户信息
 				const userStore = useUserStore();
 				userStore.setUserInfo(res.data.user);
 				if (res.code === 200) {

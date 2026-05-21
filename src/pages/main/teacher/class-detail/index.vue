@@ -277,6 +277,20 @@
 
 		console.log("班级详情最终初始化完成:", classDetail.value);
 
+		uni.$on("backFromEditClass", async () => {
+			const newClassDetail = await getClassByClassId(
+				classDetail.value?.id || 0,
+			);
+			if (newClassDetail) {
+				classDetail.value = {
+					...newClassDetail.classList?.[0], // 后端返回的新班级基础数据
+					scheduleList: classDetail.value?.scheduleList || [], // 牢牢抱住我们原有的排课数据
+				};
+			}
+			loadStudentList();
+			loadClassScheduleList();
+		});
+
 		// 监听全局事件
 		uni.$on("updateStudents", (data) => {
 			// 1. 处理 Proxy 问题（切断响应式引用）
@@ -335,6 +349,7 @@
 		uni.$on("needRefresh", () => {
 			loadStudentList();
 			loadClassScheduleList();
+			getClassByClassId(classDetail.value?.id || 0);
 		});
 	});
 
@@ -527,6 +542,7 @@
 	onUnmounted(() => {
 		uni.$off("updateStudents");
 		uni.$off("needRefresh");
+		uni.$off("backFromEditClass");
 	});
 </script>
 

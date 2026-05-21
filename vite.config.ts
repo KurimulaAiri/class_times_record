@@ -22,7 +22,7 @@ export default defineConfig({
           @use "${path.resolve(__dirname, "src/static/scss/index.scss").replace(/\\/g, "/")}" as *;
         `,
 				includePaths: [path.resolve(__dirname, "")],
-				silenceDeprecations: ["legacy-js-api"],
+				silenceDeprecations: ["legacy-js-api"], // 解决旧版颜色函数警告],
 			},
 		},
 	},
