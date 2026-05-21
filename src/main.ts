@@ -12,7 +12,6 @@ export function createApp() {
   app.config.globalProperties.$ROUTES = ROUTES
 
   // 全局注册 pinia
-  app.use(pinia)
   return {
     app,
     pinia

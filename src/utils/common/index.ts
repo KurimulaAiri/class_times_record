@@ -10,6 +10,7 @@ import { logOut } from "@/api/auth";
  */
 type FlexiblePath = PagePath | (string & {});
 
+
 /**
  * 跳转页面
  * @param path 目标页面路径
