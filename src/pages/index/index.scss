@@ -1,0 +1,99 @@
+$bg-color: $theme-color;
+$text-main: #333333;
+$white: #ffffff;
+
+.content {
+	display: flex;
+	align-content: center;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	background-color: $bg-color;
+	padding: 0 40rpx;
+}
+
+.entry-select-form {
+	width: 80%;
+	background-color: $white;
+	border-radius: 32rpx;
+	padding: 60rpx 40rpx;
+	margin-bottom: 20rpx;
+	box-shadow: 0 20rpx 60rpx rgba(112, 169, 162, 0.15); // 柔和的主题色阴影
+
+	&-title {
+		font-size: 44rpx;
+		font-weight: bold;
+		color: $text-main;
+		text-align: center;
+		margin-bottom: 80rpx;
+		position: relative;
+
+		// 标题下方的装饰线条
+		&::after {
+			content: "";
+			position: absolute;
+			bottom: -20rpx;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 60rpx;
+			height: 6rpx;
+			background-color: $theme-color;
+			border-radius: 4rpx;
+		}
+	}
+}
+
+.entry-select-btn-group {
+	display: flex;
+	flex-direction: column;
+	gap: 40rpx; // 按钮之间的间距
+}
+
+.entry-select-btn {
+	height: 110rpx;
+	line-height: 110rpx;
+	text-align: center;
+	border-radius: 55rpx;
+	font-size: 32rpx;
+	font-weight: 500;
+	transition: all 0.2s ease;
+
+	// 家长端样式 (实心)
+	&:first-child {
+		background: linear-gradient(
+			135deg,
+			color.adjust($theme-color, $lightness: 5%),
+			$theme-color
+		);
+		color: $white;
+		box-shadow: 0 10rpx 20rpx rgba($theme-color, 0.3);
+
+		&:active {
+			transform: scale(0.97);
+			filter: brightness(0.9);
+		}
+	}
+
+	// 老师端样式 (描边/浅色)
+	&:last-child {
+		background-color: color.adjust($theme-color, $lightness: 42%);
+		color: $theme-color;
+		border: 2rpx solid $theme-color;
+
+		&:active {
+			background-color: color.adjust($theme-color, $lightness: 35%);
+			transform: scale(0.97);
+		}
+	}
+}
+
+.version-text {
+	padding-top: 200rpx;
+	bottom: -400rpx; // 距离底部一点间距
+	padding-bottom: 40rpx; // 距离底部一点间距
+	text-align: center;
+	font-size: 24rpx; // 字体调小
+	color: #cccccc; // 颜色调浅，不明显
+	letter-spacing: 1px;
+}

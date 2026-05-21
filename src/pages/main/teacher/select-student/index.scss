@@ -1,0 +1,365 @@
+// 变量增强
+$male-color: #007aff;
+$male-bg: #eef6ff;
+$female-color: #ff4d94;
+$female-bg: #fff0f6;
+$card-shadow: 0 4rpx 16rpx rgba(94, 52, 52, 0.06);
+$gray-light: #fdfdfd;
+
+.container {
+	background-color: #f4f7f9; // 稍微冷一点的底色，衬托纯白卡片
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.search-filter-bar {
+	position: sticky;
+	top: 0;
+	z-index: 100; // 确保在页面最上层
+}
+
+// 列表区域
+.student-list {
+	// 这里的 padding-top 可以不加，因为 sticky 不脱离文档流
+	// 但为了美观可以加一点 padding
+	padding: 20rpx 0;
+}
+
+// 适配你之前的 card 列表，给列表加点间距
+.student-list {
+	padding-top: 10rpx;
+}
+
+.student-list {
+	padding: 20rpx 30rpx;
+
+	.student-card {
+		position: relative;
+		background-color: #ffffff;
+		border-radius: 20rpx;
+		padding: 30rpx;
+		margin-bottom: 24rpx;
+		display: flex;
+		align-items: center;
+		box-shadow: $card-shadow;
+		overflow: hidden; // 确保装饰条不超出
+		transition: all 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28); // 增加回弹感动画
+
+		// 新增点击/长按时的视觉反馈
+		&.card-hover-effect {
+			background-color: #f8f9fa !important; // 强制变色覆盖偶数行颜色
+			transform: Scale(0.97); // 稍微深一点的缩放感
+			box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+
+			// 如果有装饰条，点击时也可以微调透明度
+			&::before {
+				opacity: 0.8;
+			}
+		}
+
+		// 确保内部元素不干扰点击效果
+		.avatar,
+		.content,
+		.arrow-icon {
+			pointer-events: none;
+		}
+
+		// 方案 1: 相邻卡片区分 - 偶数行背景微调
+		&:nth-child(even) {
+			background-color: $gray-light;
+		}
+
+		// 方案 2: 侧边彩色装饰条，增加精致感
+		&::before {
+			content: "";
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			width: 8rpx;
+			background-color: transparent;
+		}
+
+		// 男生卡片特有样式
+		&.card-male {
+			&::before {
+				background-color: $male-color;
+			}
+			&:active {
+				transform: translateX(4rpx);
+			} // 点击时微动反馈
+		}
+
+		// 女生卡片特有样式
+		&.card-female {
+			&::before {
+				background-color: $female-color;
+			}
+			&:active {
+				transform: translateX(4rpx);
+			}
+		}
+
+		.avatar {
+			width: 100rpx;
+			height: 100rpx;
+			border-radius: 24rpx; // 采用大圆角矩形，比纯圆更有设计感
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 26rpx;
+			font-weight: bold;
+			margin-right: 24rpx;
+			flex-shrink: 0;
+			box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.05);
+
+			&.male {
+				background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+				color: #1976d2;
+			}
+
+			&.female {
+				background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+				color: #d81b60;
+			}
+		}
+
+		.content {
+			flex: 1;
+
+			.top-row {
+				display: flex;
+				align-items: center;
+				margin-bottom: 10rpx;
+
+				.name {
+					font-size: 34rpx;
+					font-weight: bold;
+					color: #2c3e50;
+				}
+
+				.gender-tag {
+					font-size: 20rpx;
+					padding: 2rpx 12rpx;
+					border-radius: 8rpx;
+					margin-left: 16rpx;
+					background-color: #f0f0f0;
+					color: #999;
+					border: 1rpx solid #eee;
+				}
+			}
+
+			.info-text {
+				font-size: 26rpx;
+				color: #7f8c8d;
+				display: flex;
+				align-items: center;
+
+				&::before {
+					content: "ID";
+					font-size: 18rpx;
+					font-weight: bold;
+					background: #eee;
+					padding: 2rpx 6rpx;
+					border-radius: 4rpx;
+					margin-right: 8rpx;
+					color: #aaa;
+				}
+			}
+		}
+
+		// 右侧箭头装饰（可选）
+		.arrow-icon {
+			font-size: 24rpx;
+			color: #ddd;
+			margin-left: 10rpx;
+		}
+	}
+}
+
+/* 加载状态容器 */
+.load-status {
+	padding: 60rpx 0; // 增加上下间距
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	// 统一样式
+	.loading-text,
+	.finished,
+	.more-text {
+		font-size: 26rpx;
+		color: #999;
+	}
+
+	.finished {
+		display: flex;
+		align-items: center;
+		color: #ccc;
+
+		&::before,
+		&::after {
+			content: "";
+			width: 100rpx; // 横线长一点
+			height: 1rpx;
+			background-color: #e0e0e0;
+			margin: 0 20rpx;
+		}
+	}
+
+	.loading-text {
+		animation: breathe 1.5s infinite ease-in-out;
+	}
+}
+
+@keyframes breathe {
+	0%,
+	100% {
+		opacity: 0.5;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+.empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding-top: 200rpx; // 避开固定的搜索栏
+	width: 100%;
+
+	.empty-icon {
+		font-size: 120rpx;
+		margin-bottom: 40rpx;
+		opacity: 0.6;
+		// 如果想更精致，可以加一个淡淡的圆圈背景
+		width: 200rpx;
+		height: 200rpx;
+		background-color: #fff;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.05);
+	}
+
+	.empty-text {
+		font-size: 32rpx;
+		color: #333;
+		font-weight: bold;
+		margin-bottom: 16rpx;
+	}
+
+	.empty-tips {
+		font-size: 26rpx;
+		color: #999;
+	}
+}
+
+.fab-btn {
+	position: fixed;
+	right: 40rpx;
+	bottom: calc(60rpx + var(--window-bottom)); // 考虑底部 tabbar 的高度
+	width: 110rpx;
+	height: 110rpx;
+	background: linear-gradient(135deg, color.adjust($theme-color, $lightness: 5%), $theme-color);
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-shadow: 0 10rpx 30rpx rgba($theme-color, 0.4);
+	z-index: 99;
+	transition: all 0.1s ease;
+
+	.plus-icon {
+		color: #ffffff;
+		font-size: 60rpx;
+		font-weight: 300;
+		margin-top: -4rpx; // 微调加号垂直居中
+	}
+}
+
+// 点击时的反馈效果
+.fab-btn-active {
+	transform: Scale(0.9); // 点击时缩小
+	filter: brightness(0.9);
+}
+
+/* 列表底部避让 (当有底部确认栏时) */
+.has-footer {
+	padding-bottom: 120rpx;
+}
+
+/* 选中后的卡片微调 (比如增加边框色或浅背景) */
+.selected-card {
+	background-color: rgba($theme-color, 0.05) !important;
+	border: 2rpx solid $theme-color !important;
+}
+
+/* 自定义复选框样式 */
+.checkbox-wrapper {
+	padding-left: 20rpx;
+
+	.custom-checkbox {
+		width: 40rpx;
+		height: 40rpx;
+		border: 3rpx solid #ddd;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.2s;
+
+		&.checked {
+			background-color: $theme-color;
+			border-color: $theme-color;
+		}
+	}
+}
+
+/* 底部操作栏 */
+.multi-footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 110rpx;
+	background: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 40rpx;
+	box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
+	z-index: 99;
+
+	.footer-info {
+		font-size: 28rpx;
+		color: #666;
+		.count {
+			color: $theme-color;
+			font-weight: bold;
+			margin: 0 8rpx;
+			font-size: 34rpx;
+		}
+	}
+
+	.confirm-btn {
+		margin: 0;
+		width: 240rpx;
+		height: 76rpx;
+		line-height: 76rpx;
+		background: $theme-color;
+		color: #fff;
+		border-radius: 38rpx;
+		font-size: 28rpx;
+
+		&[disabled] {
+			background: #ccc;
+			color: #eee;
+		}
+	}
+}

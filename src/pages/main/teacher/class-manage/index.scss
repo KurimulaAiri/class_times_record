@@ -1,0 +1,133 @@
+.container {
+	min-height: 100vh;
+	background-color: $default-background-color;
+	padding-bottom: 40rpx;
+	display: flex;
+	flex-direction: column;
+}
+
+.search-filter-bar {
+	position: sticky;
+	top: 0;
+	z-index: 100; // 确保在页面最上层
+}
+
+.search-bar {
+	display: flex;
+	align-items: center;
+	background: #fff;
+	padding: 10rpx 10rpx 10rpx 30rpx;
+	border-radius: 50rpx;
+	box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+	border: 1rpx solid #eee;
+
+	.search-input {
+		flex: 1;
+		font-size: 28rpx;
+		height: 70rpx;
+	}
+
+	.search-btn {
+		width: 140rpx;
+		height: 70rpx;
+		line-height: 70rpx;
+		background-color: $theme-color; // 主题蓝
+		color: #fff;
+		font-size: 28rpx;
+		border-radius: 40rpx;
+		margin-left: 20rpx;
+		border: none;
+
+		&:active {
+			opacity: 0.8;
+		}
+	}
+}
+
+/* 列表卡片样式 */
+.class-list {
+	padding: 20rpx 30rpx;
+	/* 确保第一条数据不会贴着分割线 */
+	margin-top: 10rpx;
+
+	.class-card {
+		background: #fff;
+		border-radius: 20rpx;
+		padding: 30rpx;
+		margin-bottom: 30rpx;
+		box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.02);
+		transition: all 0.2s ease; // 增加过渡效果，让回弹更自然
+
+		// 定义点击时的视觉反馈类
+		&.card-hover-effect {
+			background-color: #fcfcfc; // 稍微变暗一点
+			transform: scale(0.98); // 微微缩小，模拟按压感
+			box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08); // 阴影加深
+		}
+
+		.card-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 20rpx;
+			border-bottom: 2rpx solid #f5f5f5;
+			padding-bottom: 20rpx;
+
+			.class-name {
+				font-size: 32rpx;
+				font-weight: bold;
+				color: #333;
+			}
+
+			.status-tag {
+				font-size: 22rpx;
+				background-color: #e3f2fd;
+				color: #2196f3;
+				padding: 4rpx 12rpx;
+				border-radius: 6rpx;
+			}
+		}
+
+		.card-body {
+			.info-item {
+				display: flex;
+				align-items: center;
+				margin-bottom: 12rpx;
+
+				image {
+					width: 16px;
+					height: 16px;
+				}
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+
+				.label {
+					font-size: 26rpx;
+					color: #999;
+					margin-left: 10rpx;
+				}
+
+				.value {
+					font-size: 28rpx;
+					color: #444;
+					font-weight: 500;
+				}
+			}
+		}
+	}
+}
+
+.empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 200rpx;
+	color: #999;
+	font-size: 28rpx;
+
+	text {
+		margin-top: 20rpx;
+	}
+}

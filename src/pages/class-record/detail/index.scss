@@ -1,0 +1,283 @@
+.content {
+	width: 100%;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	background-color: $theme-color;
+	overflow: hidden; // 禁止页面整体滚动，只允许 scroll-view 滚
+}
+.detail-card {
+	left: 0;
+	right: 0;
+	margin: auto;
+	padding: 20px 2.5%;
+	width: 95%;
+	margin-bottom: 20px;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	align-content: center;
+	flex-wrap: nowrap;
+	flex-direction: column;
+	background-color: white;
+	box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
+}
+.card-title {
+	width: 95%;
+	float: left;
+	font-size: 20px;
+}
+.card-content {
+	display: flex;
+	justify-content: space-around;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	width: 95%;
+	font-size: 14px;
+	margin-top: 10px;
+}
+.card-content-left {
+	width: 50%;
+}
+.card-content-right {
+	width: 50%;
+	display: flex;
+	justify-content: flex-end;
+	float: right;
+}
+.card {
+	width: 95%;
+	margin-top: 10%;
+	padding-top: 20px;
+	border-radius: 20px;
+}
+/* 底部固定栏样式 */
+.bottom-action-bar {
+	width: 100%;
+	bottom: 0;
+	position: fixed;
+	background-color: rgba(255, 255, 255, 0.95);
+	backdrop-filter: blur(10px); // 毛玻璃效果
+	padding: 20rpx 0 calc(20rpx + env(safe-area-inset-bottom)); // 兼容全面屏底部安全区
+	border-top-left-radius: 30rpx;
+	border-top-right-radius: 30rpx;
+	box-shadow: 0 -10rpx 30rpx rgba(0, 0, 0, 0.08);
+}
+
+.text {
+	color: #fff;
+	font-size: 20px;
+	font-weight: bold;
+	margin: 20rpx 0;
+}
+
+.button-group {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	padding: 0 30rpx;
+	gap: 20rpx;
+}
+
+.action-btn {
+	flex: 1;
+	height: 90rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 45rpx;
+	font-size: 28rpx;
+	font-weight: bold;
+	transition: all 0.2s;
+
+	text {
+		margin-left: 8rpx;
+	}
+
+	&:active {
+		transform: scale(0.95);
+		opacity: 0.8;
+	}
+
+	/* 主按钮样式 */
+	&.primary {
+		background: linear-gradient(135deg, #7ccac0, #569e94);
+		color: #fff;
+		box-shadow: 0 8rpx 20rpx rgba(86, 158, 148, 0.3);
+	}
+
+	/* 次要按钮样式 */
+	&.secondary {
+		background-color: #f5f7f7;
+		color: #5c5c5c;
+		border: 1rpx solid #e0e6e6;
+	}
+}
+
+.scroll-view {
+	// 移除 margin-top: 20px; (改用 padding 避免撑开高度)
+	padding: 0 5%;
+	padding-bottom: 150rpx;
+	// 移除 height: 100vh; (改用 flex 自适应)
+	width: 90%;
+	flex: 1;
+	min-height: 0; // 必须加，否则在某些浏览器下无法正确计算高度
+	// 移除 scroll-view 上的 flex 布局属性，scroll-view 内部不支持直接这样写
+	// display: flex;  <-- 删掉这些
+}
+.record-list {
+	left: 0;
+	right: 0;
+}
+
+.record-item {
+	width: 90%;
+	padding: 10px 5%;
+	margin-top: 10px;
+	border-radius: 10px;
+	background-color: white;
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: column;
+	align-content: space-between;
+	align-items: center;
+	justify-content: flex-start;
+	box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
+	&:first-child {
+		margin-top: 0;
+	}
+	&-top {
+		width: 100%;
+		height: 25px;
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: row;
+		align-content: center;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	&-bottom {
+		width: 100%;
+		display: flex;
+		margin-top: 5px;
+		color: gray;
+		flex-wrap: nowrap;
+		flex-direction: row;
+		align-content: center;
+		align-items: center;
+		justify-content: flex-start;
+	}
+
+	&-left {
+		width: 50%;
+		font-size: 18px;
+	}
+	&-right {
+		width: 50%;
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: column;
+		justify-content: flex-end;
+		float: right;
+		&-plus {
+			color: #7ccac0;
+		}
+		&-minus {
+			color: #ff4d4f;
+		}
+	}
+}
+
+.record-remark {
+	width: 80%;
+	font-size: 14px;
+}
+.record-text {
+	display: flex;
+	justify-content: flex-end;
+	font-size: 18px;
+	float: right;
+	&-plus {
+		color: #009933;
+	}
+	&-minus {
+		color: #ff0000;
+	}
+}
+
+/* 分享弹窗容器 */
+.share-container {
+	background-color: #f7f7f7; // 微信原生底板色
+	padding-bottom: env(safe-area-inset-bottom);
+
+	.share-header {
+		height: 100rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 26rpx;
+		color: #888;
+		background-color: #f8f8f8;
+	}
+
+	.share-list {
+		background-color: #f8f8f8;
+	}
+
+	.share-item {
+		width: 90%;
+		height: 110rpx;
+		padding: 30rpx 0;
+		border-radius: 10rpx;
+		display: flex;
+		background-color: #fff;
+		margin-top: 10rpx;
+		justify-content: space-evenly;
+		align-content: center;
+		flex-wrap: nowrap;
+		flex-direction: column;
+		align-items: center;
+		border-top: 1rpx solid #f0f0f0;
+
+		&:active {
+			background-color: #f2f2f2;
+		}
+
+		&-main {
+			height: 40rpx;
+			font-size: 34rpx;
+			color: #000;
+			margin-bottom: 8rpx;
+		}
+
+		&-note {
+			height: 40rpx;
+			font-size: 24rpx;
+			color: #999;
+		}
+	}
+
+	.share-cancel {
+		margin-top: 20rpx;
+		height: 100rpx;
+		background-color: #fff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 34rpx;
+		color: #000;
+
+		&:active {
+			background-color: #f2f2f2;
+		}
+	}
+}
+
+.uni-load-more {
+	color: white;
+}

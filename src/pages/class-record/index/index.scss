@@ -1,0 +1,239 @@
+.content {
+	width: 100%;
+	height: 100%;
+	background-color: $theme-color;
+	display: flex;
+	align-content: center;
+	flex-wrap: nowrap;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+}
+// 简单的线条出现动画
+@keyframes lineMove {
+	from {
+		width: 0;
+		opacity: 0;
+	}
+	to {
+		width: 40rpx;
+		opacity: 1;
+	}
+}
+.data-tabs {
+	width: 90%;
+	display: flex;
+	color: #dfdfdf;
+	font-size: 15px;
+	align-content: center;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-evenly;
+	position: relative; // 必须开启定位，才能使用 absolute 定位子元素
+	.tab-item {
+		padding: 10px 0;
+		position: relative;
+		transition: all 0.3s;
+
+		.tab-text {
+			color: rgba(255, 255, 255, 0.7); // 未选中时略显透明
+			transition: color 0.3s;
+		}
+
+		// 选中的样式
+		&.active {
+			.tab-text {
+				color: #fff; // 选中后纯白
+				font-weight: bold;
+			}
+
+			// 底部横线
+			&::after {
+				content: "";
+				position: absolute;
+				bottom: 0;
+				left: 50%;
+				transform: translateX(-50%); // 居中
+				width: 40rpx; // 横线宽度
+				height: 4rpx; // 横线粗细
+				background-color: #fff; // 横线颜色
+				border-radius: 4rpx;
+				animation: lineMove 0.3s ease-out; // 切换时的弹性动画
+			}
+		}
+	}
+}
+
+.status {
+	margin-left: 10px;
+	font-size: 12px;
+	color: #999;
+}
+
+.no-data {
+	height: calc(85vh);
+	bottom: -5vh;
+	font-size: 20px;
+	color: #666;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	// overflow: hidden;
+}
+.data-card-container {
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	width: 90%;
+}
+.fab {
+	position: fixed;
+	bottom: 5%;
+	right: 5%;
+	width: 65px;
+	height: 65px;
+	z-index: 3;
+	border-radius: 50%;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: $theme-color;
+	color: #fff;
+	font-size: 20px;
+	&:active {
+		background-color: #7ccac0;
+		transform: scale(0.95);
+		transition: transform 0.1s ease-in-out;
+	}
+}
+
+.top {
+	width: 100%;
+	height: 200rpx;
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: column;
+	align-content: center;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	background-color: $theme-color;
+	z-index: 2;
+}
+
+.search-bar {
+	width: 70%;
+	height: 50px;
+	background-color: $theme-color;
+	&-line {
+		width: 100%;
+		background-color: $theme-color;
+	}
+}
+
+.bottom {
+	width: 100%;
+	margin-top: 200rpx;
+	padding-top: 10%;
+	background-color: #fff;
+	border-radius: 20px;
+	display: flex;
+	align-content: center;
+	flex-wrap: nowrap;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	// overflow: hidden;
+}
+.data-card {
+	width: 90%;
+}
+.name {
+	margin-left: 10px;
+}
+.title {
+	width: 100%;
+	display: inline-flex;
+	justify-content: space-around;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	gap: 1;
+}
+.card-title {
+	font-size: 20px;
+	color: #333;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	&-left {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+	}
+	&-right {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+	}
+}
+
+.card-content {
+	margin-top: 10px;
+	font-size: 15px;
+	color: #666;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+.more-icon {
+	z-index: 1;
+}
+// 通用按钮基础样式
+.button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 14px;
+	font-weight: 500;
+	transition: all 0.1s ease-in-out; // 统一过渡效果
+	border: none; // 默认去掉原生边框
+	margin-top: 10px;
+
+	// 图标样式
+	.btn-icon {
+		margin-right: 4px; // 图标与文字的间距
+	}
+
+	// 通用点击反馈：轻微缩小
+	&:active {
+		transform: scale(0.96);
+	}
+}
+
+// 管理员专用按钮修饰样式 (计课时)
+.admin-btn {
+	width: 400rpx; // 稍微加宽，视觉更平衡
+	height: 42px;
+	border-radius: 10px; // 精致的大圆角矩形，比纯半圆更现代
+	border: 1px solid $theme-color;
+	background-color: transparent; // 透明背景，更有活力
+	color: $theme-color; // 主题色文字
+	font-weight: bold; // 加粗文字，强调核心操作
+	letter-spacing: 0.5px; // 微调字间距
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03); // 极其微弱的浮起阴影
+
+	// 管理员按钮特有的点击反馈
+	&:active {
+		background-color: $theme-color; // 点击时背景变主题色
+		color: #fff; // 文字变白，反色切换，反馈极强
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); // 阴影变小，营造压下去的感觉
+
+		// 同时把图标也变白
+		.btn-icon :deep(.uni-icons) {
+			color: #fff !important;
+		}
+	}
+}

@@ -1,0 +1,130 @@
+// 建议直接写在页面或 index.scss 中
+.container {
+  padding: 30rpx;
+  background-color: #f5f7fa;
+}
+
+/* 顶部卡片重构 */
+.banner-box {
+  // 使用了你代码中的渐变色，可以根据喜好调成主题绿
+  background: linear-gradient(135deg, $theme-color-light 0%, $theme-color 100%);
+  border-radius: 24rpx;
+  padding: 40rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10rpx 30rpx rgba(102, 205, 170, 0.3);
+
+  .banner-content {
+    .title {
+      color: #fff;
+      font-size: 40rpx;
+      font-weight: bold;
+      margin-bottom: 10rpx;
+    }
+    .sub-title {
+      color: #fff;
+      font-size: 28rpx;
+      opacity: 0.9;
+      margin-bottom: 20rpx;
+    }
+    .tag {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 22rpx;
+      padding: 8rpx 20rpx;
+      border-radius: 50rpx;
+      display: inline-block;
+    }
+  }
+  .banner-img {
+    width: 160rpx;
+    height: 160rpx;
+  }
+}
+
+/* 四列金刚区重构 */
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 50rpx;
+
+  .grid-item {
+    width: 25%; // 改为四列，更适合功能多的情况
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40rpx;
+    transition: all 0.2s;
+
+    &.item-hover {
+      transform: scale(0.92);
+      opacity: 0.8;
+    }
+
+    .icon-wrapper {
+      width: 100rpx;
+      height: 100rpx;
+      border-radius: 35%; // 稍微圆角矩形的感觉更现代
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 15rpx;
+      box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.05);
+
+      .custom-icon {
+        width: 50rpx;
+        height: 50rpx;
+      }
+    }
+
+    .grid-label {
+      font-size: 24rpx;
+      color: #444;
+    }
+  }
+}
+
+/* 微信通知组件适配 */
+.wechat-notice {
+  background-color: #f8faf9; // 稍微带一点绿意的白
+  border-radius: 24rpx;
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20rpx;
+  border: 1px solid #edf2f0;
+
+  .left-info {
+    display: flex;
+    align-items: center;
+    .wechat-icon {
+      width: 70rpx;
+      height: 70rpx;
+      margin-right: 20rpx;
+    }
+    .main-text {
+      font-size: 28rpx;
+      font-weight: bold;
+      color: #333;
+    }
+    .sub-text {
+      font-size: 22rpx;
+      color: #999;
+      margin-top: 4rpx;
+    }
+  }
+
+  .follow-btn {
+    margin: 0;
+    font-size: 24rpx;
+    background-color: #66cdaa;
+    color: #fff;
+    border-radius: 40rpx;
+    padding: 0 35rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    &::after { border: none; }
+  }
+}

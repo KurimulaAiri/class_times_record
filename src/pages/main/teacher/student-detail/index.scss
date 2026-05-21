@@ -1,0 +1,223 @@
+$bg-color: $default-background-color;
+$text-main: #2c3e50;
+$text-grey: #95a5a6;
+
+.container {
+	min-height: 100vh;
+	background-color: $bg-color;
+	padding-bottom: 60rpx;
+}
+
+.header-bg {
+	height: 280rpx;
+	position: absolute;
+	width: 100%;
+	z-index: 0;
+}
+
+.main-card {
+	position: relative;
+	z-index: 1;
+	margin: 0 30rpx 40rpx 30rpx;
+	background: #ffffff;
+	border-radius: 32rpx;
+	padding: 60rpx 40rpx 40rpx;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.05);
+
+	.avatar-big {
+		width: 160rpx;
+		height: 160rpx;
+		border-radius: 80rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 48rpx;
+		color: #fff;
+		border: 6rpx solid #fff;
+		box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.1);
+
+		&.male {
+			background: linear-gradient(135deg, #a8dadc, $theme-color);
+		}
+		&.female {
+			background: linear-gradient(135deg, #ffb7b2, #e5989b);
+		}
+	}
+
+	.name-section {
+		margin-top: 30rpx;
+		display: flex;
+		align-items: center;
+		gap: 16rpx;
+
+		.name {
+			font-size: 44rpx;
+			font-weight: bold;
+			color: $text-main;
+		}
+
+		.gender-tag {
+			padding: 4rpx 16rpx;
+			border-radius: 8rpx;
+			font-size: 22rpx;
+			&.male-tag {
+				background: #e1f5fe;
+				color: #0288d1;
+			}
+			&.female-tag {
+				background: #fff0f0;
+				color: #ff5252;
+			}
+		}
+	}
+
+	.id-badge {
+		margin-top: 16rpx;
+		font-size: 26rpx;
+		color: $text-grey;
+		background: #f1f3f5;
+		padding: 6rpx 20rpx;
+		border-radius: 100rpx;
+	}
+}
+
+.info-group {
+	background: #fff;
+	margin: 0 30rpx 30rpx;
+	border-radius: 24rpx;
+	padding: 30rpx;
+
+	.class-list {
+		display: flex;
+		flex-direction: column;
+
+		.class-card {
+			padding: 10rpx 0;
+			position: relative;
+
+			// 在班级卡片之间添加分割线，最后一个除外
+			&:not(:last-child) {
+				margin-bottom: 20rpx;
+				padding-bottom: 20rpx;
+				border-bottom: 2rpx dashed #eee; // 使用虚线区分不同班级
+			}
+
+			// 内部的 info-item 沿用你原本的样式
+			.info-item {
+				border-bottom: none; // 卡片内部的项建议取消实线，靠虚线区分大块
+				padding: 12rpx 0;
+
+				// 确保对齐
+				.label {
+					flex-shrink: 0;
+				}
+				.value {
+					text-align: right;
+				}
+			}
+		}
+	}
+
+	.group-title {
+		font-size: 28rpx;
+		font-weight: bold;
+		color: $theme-color;
+		margin-bottom: 30rpx;
+		padding-left: 16rpx;
+		border-left: 8rpx solid $theme-color;
+	}
+
+	.info-item {
+		display: flex;
+		justify-content: space-between;
+		align-items: center; // 确保左边的 label 和右边的内容中心对齐
+		padding: 24rpx 0;
+
+		.contact-horizontal {
+			display: flex;
+			flex-direction: row; // 横向排列
+			align-items: center; // 垂直方向同高居中
+			justify-content: flex-end; // 整体靠右对齐
+
+			.relation-tag {
+				font-size: 24rpx;
+				color: #666;
+				background: #f0f4f3;
+				padding: 4rpx 12rpx;
+				border-radius: 8rpx;
+				margin-right: 16rpx; // 标签与手机号的间距
+				// 确保高度与手机号容器接近
+				display: flex;
+				align-items: center;
+				height: 44rpx;
+			}
+
+			.phone-wrapper-mini {
+				display: flex;
+				align-items: center;
+				padding: 6rpx 16rpx;
+				background-color: rgba($theme-color, 0.08);
+				border-radius: 40rpx;
+				height: 44rpx; // 强制与标签同高
+
+				&:active {
+					transform: scale(0.95);
+					background-color: rgba($theme-color, 0.15);
+				}
+
+				.phone {
+					color: $theme-color;
+					font-size: 28rpx;
+					font-weight: 500;
+					margin-right: 8rpx;
+				}
+
+				.phone-icon {
+					width: 28rpx;
+					height: 28rpx;
+				}
+			}
+		}
+	}
+
+	.empty-state {
+		padding: 80rpx 0;
+		display: flex;
+		flex-direction: column; // 图标和文字垂直排列
+		justify-content: center;
+		align-items: center;
+
+		.empty-text {
+			margin-top: 16rpx; // 图标和文字的间距
+			font-size: 26rpx;
+			color: #999;
+			letter-spacing: 2rpx;
+		}
+	}
+}
+
+.footer-btns {
+	padding: 40rpx 30rpx;
+	.edit-btn {
+		height: 90rpx;
+		line-height: 90rpx;
+		text-align: center;
+		background: $theme-color;
+		color: #fff;
+		border-radius: 45rpx;
+		font-size: 32rpx;
+		box-shadow: 0 10rpx 20rpx rgba($theme-color, 0.2);
+		transition: all 0.1s ease;
+	}
+}
+
+// 定义一个专用的点击态类名
+.btn-hover {
+	opacity: 0.7;
+	background-color: color.adjust($theme-color, $lightness: -10%) !important; // 如果想变深颜色
+	transform: translateY(4rpx); // 向下移动一点点
+	box-shadow: 0 4rpx 10rpx rgba($theme-color, 0.3); // 阴影变小变深
+}
