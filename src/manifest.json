@@ -50,11 +50,17 @@
     "mp-weixin" : {
         "appid" : "wx8b6acdafc6f87e0c",
         "setting" : {
-            "ignoreUploadUnusedFiles": false,
-            "ignoreDevUnusedFiles": false,
-            "urlCheck" : false
+            "ignoreUploadUnusedFiles" : false,
+            "ignoreDevUnusedFiles" : false,
+            "urlCheck" : true, // 是否检查安全域名
+            "es6" : true, // 开启ES6转ES5
+            "postcss" : true, // 开启样式自动补全
+            "minified" : true // 开启代码压缩
         },
-        "usingComponents" : true
+        "usingComponents" : true,
+        "optimization" : {
+            "subPackages" : true // 极其重要：开启分包优化
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true

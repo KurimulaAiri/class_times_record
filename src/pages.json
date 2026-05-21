@@ -1,155 +1,12 @@
 {
+	//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 	"pages": [
-		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "课时管理KA",
 				"navigationBarBackgroundColor": "#70a9a2",
 				"navigationBarTextStyle": "white"
-			}
-		},
-		{
-			"path": "pages/login/index",
-			"style": {
-				"navigationBarTitleText": "登录",
-				"navigationBarBackgroundColor": "#70a9a2",
-				"navigationBarTextStyle": "white"
-			}
-		},
-		{
-			"path": "pages/main/index/index",
-			"style": {
-				"navigationBarTitleText": "首页",
-				"navigationBarBackgroundColor": "#f5f7fa",
-				"navigationBarTextStyle": "black"
-			}
-		},
-		{
-			"path": "pages/class-record/index/index",
-			"style": {
-				"navigationBarTitleText": "课时管理",
-				"navigationBarBackgroundColor": "#70a9a2",
-				"navigationBarTextStyle": "white",
-				"enablePullDownRefresh": true,
-				"onReachBottomDistance": 120
-			}
-		},
-		{
-			"path": "pages/class-record/detail/index",
-			"style": {
-				"navigationBarTitleText": "课程详情"
-			}
-		},
-		{
-			"path": "pages/class-record/edit/index",
-			"style": {
-				"navigationBarTitleText": "编辑信息"
-			}
-		},
-		{
-			"path": "pages/class-record/adjust/index",
-			"style": {
-				"navigationBarTitleText": "调整课时"
-			}
-		},
-		{
-			"path": "pages/class-record/add-course/index",
-			"style": {
-				"navigationBarTitleText": "添加课程"
-			}
-		},
-		{
-			"path": "pages/main/parent/my-course/index",
-			"style": {
-				"navigationBarTitleText": "我的课程",
-				"enablePullDownRefresh": true,
-				"onReachBottomDistance": 100,
-				"backgroundTextStyle": "dark"
-			}
-		},
-		{
-			"path": "pages/main/teacher/manage-student/index",
-			"style": {
-				"navigationBarTitleText": "学员管理",
-				"navigationBarBackgroundColor": "#f5f7fa",
-				"navigationBarTextStyle": "black"
-			}
-		},
-		{
-			"path": "pages/main/parent/edit-student-info/index",
-			"style": {
-				"navigationBarTitleText": "编辑学员信息"
-			}
-		},
-		{
-			"path": "pages/main/teacher/official-student/index",
-			"style": {
-				"navigationBarTitleText": "正式学员",
-				"enablePullDownRefresh": true,
-				"onReachBottomDistance": 100
-			}
-		},
-		{
-			"path": "pages/main/teacher/deduct-fee/index",
-			"style": {
-				"navigationBarTitleText": "上课扣费"
-			}
-		},
-		{
-			"path": "pages/main/teacher/fast-deduct/index",
-			"style": {
-				"navigationBarTitleText": "快速扣课"
-			}
-		},
-		{
-			"path": "pages/main/teacher/student-detail/index",
-			"style": {
-				"navigationBarTitleText": "学员详情"
-			}
-		},
-		{
-			"path": "pages/main/teacher/add-student/index",
-			"style": {
-				"navigationBarTitleText": "添加正式学员"
-			}
-		},
-		{
-			"path": "pages/main/teacher/class-manage/index",
-			"style": {
-				"navigationBarTitleText": "班级管理"
-			}
-		},
-		{
-			"path": "pages/main/teacher/class-detail/index",
-			"style": {
-				"navigationBarTitleText": "班级详情",
-				"navigationBarBackgroundColor": "#70a9a2",
-				"navigationBarTextStyle": "white"
-			}
-		},
-		{
-			"path": "pages/main/teacher/add-class/index",
-			"style": {
-				"navigationBarTitleText": "添加班级"
-			}
-		},
-		{
-			"path": "pages/main/teacher/school-schedule/index",
-			"style": {
-				"navigationBarTitleText": "学校课表"
-			}
-		},
-		{
-			"path": "pages/main/teacher/select-course/index",
-			"style": {
-				"navigationBarTitleText": "选择课程"
-			}
-		},
-		{
-			"path": "pages/main/teacher/select-teacher/index",
-			"style": {
-				"navigationBarTitleText": "选择老师"
 			}
 		},
 		{
@@ -165,46 +22,204 @@
 			}
 		},
 		{
-			"path": "pages/main/teacher/course-manage/index",
+			"path": "pages/login/index",
 			"style": {
-				"navigationBarTitleText": "课程管理"
+				"navigationBarTitleText": "登录",
+				"navigationBarBackgroundColor": "#70a9a2",
+				"navigationBarTextStyle": "white"
 			}
-		},
+		}
+	],
+	"subPackages": [
 		{
-			"path": "pages/main/teacher/edit-student-info/index",
-			"style": {
-				"navigationBarTitleText": "编辑学生信息"
-			}
+			"root": "pages/main",
+			"pages": [
+				{
+					"path": "index/index",
+					"style": {
+						"navigationBarTitleText": "首页",
+						"navigationBarBackgroundColor": "#f5f7fa",
+						"navigationBarTextStyle": "black"
+					}
+				},
+				{
+					"path": "parent/my-course/index",
+					"style": {
+						"navigationBarTitleText": "我的课程",
+						"enablePullDownRefresh": true,
+						"onReachBottomDistance": 100,
+						"backgroundTextStyle": "dark"
+					}
+				},
+
+				{
+					"path": "parent/edit-student-info/index",
+					"style": {
+						"navigationBarTitleText": "编辑学员信息"
+					}
+				},
+				{
+					"path": "teacher/manage-student/index",
+					"style": {
+						"navigationBarTitleText": "学员管理",
+						"navigationBarBackgroundColor": "#f5f7fa",
+						"navigationBarTextStyle": "black"
+					}
+				},
+				{
+					"path": "teacher/official-student/index",
+					"style": {
+						"navigationBarTitleText": "正式学员",
+						"enablePullDownRefresh": true,
+						"onReachBottomDistance": 100
+					}
+				},
+				{
+					"path": "teacher/deduct-fee/index",
+					"style": {
+						"navigationBarTitleText": "上课扣费"
+					}
+				},
+				{
+					"path": "teacher/fast-deduct/index",
+					"style": {
+						"navigationBarTitleText": "快速扣课"
+					}
+				},
+				{
+					"path": "teacher/student-detail/index",
+					"style": {
+						"navigationBarTitleText": "学员详情"
+					}
+				},
+				{
+					"path": "teacher/add-student/index",
+					"style": {
+						"navigationBarTitleText": "添加正式学员"
+					}
+				},
+				{
+					"path": "teacher/class-manage/index",
+					"style": {
+						"navigationBarTitleText": "班级管理"
+					}
+				},
+				{
+					"path": "teacher/class-detail/index",
+					"style": {
+						"navigationBarTitleText": "班级详情",
+						"navigationBarBackgroundColor": "#70a9a2",
+						"navigationBarTextStyle": "white"
+					}
+				},
+				{
+					"path": "teacher/add-class/index",
+					"style": {
+						"navigationBarTitleText": "添加班级"
+					}
+				},
+				{
+					"path": "teacher/school-schedule/index",
+					"style": {
+						"navigationBarTitleText": "学校课表"
+					}
+				},
+				{
+					"path": "teacher/select-course/index",
+					"style": {
+						"navigationBarTitleText": "选择课程"
+					}
+				},
+				{
+					"path": "teacher/select-teacher/index",
+					"style": {
+						"navigationBarTitleText": "选择老师"
+					}
+				},
+
+				{
+					"path": "teacher/course-manage/index",
+					"style": {
+						"navigationBarTitleText": "课程管理"
+					}
+				},
+				{
+					"path": "teacher/edit-student-info/index",
+					"style": {
+						"navigationBarTitleText": "编辑学生信息"
+					}
+				},
+				{
+					"path": "teacher/select-student/index",
+					"style": {
+						"navigationBarTitleText": "选择学生"
+					}
+				},
+				{
+					"path": "teacher/edit-class-info/index",
+					"style": {
+						"navigationBarTitleText": "编辑班级信息"
+					}
+				},
+				{
+					"path": "teacher/add-course/index",
+					"style": {
+						"navigationBarTitleText": "添加课程"
+					}
+				},
+				{
+					"path": "teacher/course-detail/index",
+					"style": {
+						"navigationBarTitleText": "课程详情"
+					}
+				},
+				{
+					"path": "teacher/select-class/index",
+					"style": {
+						"navigationBarTitleText": "选择班级"
+					}
+				}
+			]
 		},
+
 		{
-			"path": "pages/main/teacher/select-student/index",
-			"style": {
-				"navigationBarTitleText": "选择学生"
-			}
-		},
-		{
-			"path": "pages/main/teacher/edit-class-info/index",
-			"style": {
-				"navigationBarTitleText": "编辑班级信息"
-			}
-		},
-		{
-			"path": "pages/main/teacher/add-course/index",
-			"style": {
-				"navigationBarTitleText": "添加课程"
-			}
-		},
-		{
-			"path": "pages/main/teacher/course-detail/index",
-			"style": {
-				"navigationBarTitleText": "课程详情"
-			}
-		},
-		{
-			"path": "pages/main/teacher/select-class/index",
-			"style": {
-				"navigationBarTitleText": "选择班级"
-			}
+			"root": "pages/class-record",
+			"pages": [
+				{
+					"path": "index/index",
+					"style": {
+						"navigationBarTitleText": "课时管理",
+						"navigationBarBackgroundColor": "#70a9a2",
+						"navigationBarTextStyle": "white",
+						"enablePullDownRefresh": true,
+						"onReachBottomDistance": 120
+					}
+				},
+				{
+					"path": "detail/index",
+					"style": {
+						"navigationBarTitleText": "课程详情"
+					}
+				},
+				{
+					"path": "edit/index",
+					"style": {
+						"navigationBarTitleText": "编辑信息"
+					}
+				},
+				{
+					"path": "adjust/index",
+					"style": {
+						"navigationBarTitleText": "调整课时"
+					}
+				},
+				{
+					"path": "add-course/index",
+					"style": {
+						"navigationBarTitleText": "添加课程"
+					}
+				}
+			]
 		}
 	],
 	"easycom": {
@@ -222,6 +237,6 @@
 	},
 	"uniIdRouter": {
 		"loginPage": "pages/login/index",
-		"needLogin": ["pages/main/index/index"]
+		"needLogin": ["index/index"]
 	}
 }
