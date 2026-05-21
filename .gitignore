@@ -1,3 +1,4 @@
 node_modules/**
 unpackage/**
 uni_modules/**
+.npm-cache/**
