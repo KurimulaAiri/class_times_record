@@ -3,20 +3,33 @@
 	<view class="component-container">
 		<!-- 选择课程/班级区域 -->
 		<view class="section select-course" @tap="navigateToSelectCourse">
-			<view class="label">选择课程班级</view>
+			<view class="label">选择课程</view>
 			<view class="content">
-				<text v-if="courseClass.className" class="name">
-					{{ courseClass.courseName }} - {{ courseClass.className }}
+				<text
+					v-if="course.courseName && course.institution.institutionName"
+					class="name"
+				>
+					{{ course.courseName }}
 				</text>
-				<text v-else class="placeholder">请选择扣课班级</text>
+				<text v-else class="placeholder">请选择扣课课程</text>
 				<uni-icons type="right" size="16" color="#999"></uni-icons>
 			</view>
 		</view>
 
-		<!-- 班级学员列表 -->
-		<view class="section-title" v-if="students && students.length > 0"
-			>选择扣课学员（可多选）</view
-		>
+		<!-- 班级学员列表顶部控制栏（含全选） -->
+		<view class="list-header" v-if="students && students.length > 0">
+			<view class="section-title">选择扣课学员（可多选）</view>
+			<view class="select-all-btn" @tap="toggleSelectAll">
+				<uni-icons
+					:type="isAllSelected ? 'checkbox-filled' : 'circle'"
+					size="18"
+					:color="isAllSelected ? themeColor : '#999'"
+				></uni-icons>
+				<text class="select-all-text" :class="{ active: isAllSelected }"
+					>全选</text
+				>
+			</view>
+		</view>
 
 		<scroll-view
 			scroll-y
@@ -74,58 +87,95 @@
 				mode="aspectFit"
 				class="empty-img"
 			></image>
-			<text v-if="courseClass.classId">该班级暂无在读学员</text>
-			<text v-else>请先选择课程班级以加载学员列表</text>
+			<text v-if="course.id">该课程暂无在读学员</text>
+			<text v-else>请先选择课程以加载学员列表</text>
 		</view>
 	</view>
 </template>
 
 <script setup lang="ts">
-	import { ref, watch, onUnmounted } from "vue";
+	import { ref, computed, watch, onUnmounted } from "vue";
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
-	// 💡 注意：此处需要换成你实际根据班级ID获取学生列表的API
-	import { getStudentListByClassId } from "@/api/student";
+	import { getStudentListByCourseId } from "@/api/student";
 
-	const courseClass = ref<any>({
-		classId: 0,
-		className: "",
-		courseId: 0,
+	const themeColor = ref("#70a9a2");
+
+	const emit = defineEmits(["updateData"]);
+
+	const course = ref<CourseResponse>({
+		id: 0,
 		courseName: "",
+		courseType: 0,
+		available: false,
+		institution: {
+			id: 0,
+			institutionName: "",
+			institutionAddress: "",
+			status: 0,
+			createTimeStr: "",
+			updateTimeStr: "",
+		},
 	});
 	const students = ref<Student[]>([]);
 	const selectedMap = ref<Record<number, { detail: Student; count: number }>>(
 		{},
 	);
 
+	// 💡 计算属性：动态判断当前学员是否处于全选状态
+	const isAllSelected = computed(() => {
+		if (students.value.length === 0) return false;
+		return students.value.every(
+			(item) => selectedMap.value[item.id] !== undefined,
+		);
+	});
+
 	watch(
 		selectedMap,
 		(newMap) => {
 			const selectedEntries = Object.values(newMap);
 			const result = {
-				classId: courseClass.value.classId,
-				courseId: courseClass.value.courseId,
-				isValid: courseClass.value.classId > 0 && selectedEntries.length > 0,
-				// 将结构整理成方便后端批量处理的格式
+				courseId: course.value.id,
+				isValid: course.value.id > 0 && selectedEntries.length > 0,
 				students: selectedEntries.map((entry) => ({
 					studentId: entry.detail.id,
 					deductCount: entry.count,
 				})),
 			};
-			uni.$emit("updateData", result);
+			emit("updateData", result);
 		},
 		{ deep: true },
 	);
 
-	const toggleStudent = (item: any) => {
-		if (selectedMap.value[item.studentId] !== undefined) {
+	// 💡 全选 / 反选点击事件
+	const toggleSelectAll = () => {
+		if (isAllSelected.value) {
+			// 当前是全选，则清空
+			selectedMap.value = {};
+		} else {
+			// 当前非全选，则把所有未选中的学员都加上，默认 1 课时
+			const tempMap: Record<number, { detail: Student; count: number }> = {};
+			students.value.forEach((item) => {
+				// 如果原本就已经有输入的课时数量，保留原数量，否则赋初始值 1
+				const existCount = selectedMap.value[item.id]?.count;
+				tempMap[item.id] = {
+					detail: item,
+					count: existCount || 1,
+				};
+			});
+			selectedMap.value = tempMap;
+		}
+	};
+
+	const toggleStudent = (item: Student) => {
+		if (selectedMap.value[item.id] !== undefined) {
 			const newMap = { ...selectedMap.value };
-			delete newMap[item.studentId];
+			delete newMap[item.id];
 			selectedMap.value = newMap;
 		} else {
 			selectedMap.value = {
 				...selectedMap.value,
-				[item.studentId]: { detail: item, count: 1 },
+				[item.id]: { detail: item, count: 1 },
 			};
 		}
 	};
@@ -138,29 +188,34 @@
 		}
 	};
 
-	// 跳转去选择课程班级的页面
 	const navigateToSelectCourse = () => {
-		// 假设你有这个路由，如果没有，可以跳转到已有选择页
-		jump(ROUTES.SELECT_CLASS || "/pages/class/select-course-class");
+		jump(ROUTES.SELECT_COURSE);
 	};
 
 	const loadStudents = async () => {
-		if (courseClass.value.classId !== 0) {
-			// 调用接口获取班级下的学生名单
-			const res = await getStudentListByClassId(courseClass.value.classId);
+		if (course.value.id !== 0) {
+			const res = await getStudentListByCourseId({
+				courseId: course.value.id,
+				currentPage: 1,
+				pageSize: 1000,
+			});
 			students.value = res || [];
 		}
 	};
 
-	// 监听跨页面选完课程班级后的回调
-	uni.$on("updateCourseClass", async (data: any) => {
-		courseClass.value = data;
+	uni.$on("updateCourse", async (data: CourseResponse) => {
+		course.value = data;
 		selectedMap.value = {};
 		await loadStudents();
 	});
 
+	uni.$on("refreshDeductList", async () => {
+		await loadStudents();
+	});
+
 	onUnmounted(() => {
-		uni.$off("updateCourseClass");
+		uni.$off("refreshDeductList");
+		uni.$off("updateCourse");
 	});
 </script>
 <style scoped lang="scss" src="./index.scss"></style>

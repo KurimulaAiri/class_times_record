@@ -31,6 +31,8 @@ export const ROUTES = {
 	ADD_COURSE: "/pages/main/teacher/add-course/index", // 教师端添加课程
 	COURSE_DETAIL: "/pages/main/teacher/course-detail/index", // 教师端课程详情
 	SELECT_CLASS: "/pages/main/teacher/select-class/index", // 教师端选择班级
+	LEAVE_MANAGE: "/pages/main/teacher/leave-manage/index", // 教师端请假管理
+	ADJUST_CLASS_SCHEDULE: "/pages/main/teacher/adjust-class-schedule/index", // 教师端调整排课
 } as const;
 
 export type PagePath = (typeof ROUTES)[keyof typeof ROUTES];

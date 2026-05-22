@@ -1,0 +1,194 @@
+.timetable-container {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	background-color: $default-background-color; // 沿用你的微熏绿底色
+}
+
+// 顶部周卡片选择器样式
+.week-selector-card {
+	background-color: #ffffff;
+	padding: 20rpx 30rpx;
+	border-bottom: 1rpx solid #eaeaea;
+
+	// 💡 新增：周控制器布局（左右按钮，中间月份）
+	.week-controller {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 25rpx;
+		padding: 0 10rpx;
+
+		.month-indicator {
+			font-size: 32rpx;
+			font-weight: bold;
+			color: #333;
+		}
+
+		.arrow-btn {
+			display: flex;
+			align-items: center;
+			padding: 8rpx 16rpx;
+			border-radius: 30rpx;
+			background-color: #f3f8f7; // 淡淡的微醺绿底色衬托
+			transition: all 0.1s ease;
+
+			&:active {
+				opacity: 0.7;
+				transform: scale(0.95);
+			}
+
+			.arrow-icon {
+				font-size: 20rpx;
+				color: #70a9a2; // 你的主题色
+			}
+
+			.btn-txt {
+				font-size: 24rpx;
+				color: #555;
+				margin: 0 8rpx;
+			}
+		}
+	}
+
+	.week-days-row {
+		display: flex;
+		justify-content: space-between;
+
+		.day-box {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 80rpx;
+			padding: 12rpx 0;
+			border-radius: 12rpx;
+
+			.week-txt {
+				font-size: 22rpx;
+				color: #999;
+				margin-bottom: 8rpx;
+			}
+
+			.date-txt {
+				font-size: 28rpx;
+				font-weight: bold;
+				color: #333;
+			}
+
+			&.is_today {
+				background-color: #f0f7f6;
+				.date-txt {
+					color: #70a9a2;
+				}
+			}
+
+			&.active {
+				background-color: #70a9a2 !important; // 激活时变成你的主题色
+				.week-txt,
+				.date-txt {
+					color: #ffffff !important;
+				}
+			}
+		}
+	}
+}
+
+// 核心课表滚动区域
+.schedule-scroll {
+	flex: 1;
+	overflow: hidden;
+}
+
+.schedule-body {
+	display: flex;
+	padding: 30rpx 20rpx;
+	position: relative;
+}
+
+// 左侧时间轴刻度
+.time-axis {
+	width: 90rpx;
+	display: flex;
+	flex-direction: column;
+
+	.time-node {
+		height: 70px; // 与 JS 中的 HOUR_HEIGHT 保持绝对一致
+		position: relative;
+
+		.time-str {
+			font-size: 24rpx;
+			color: #999;
+			position: absolute;
+			top: -16rpx; // 让时间字样居中对齐刻度线
+			width: 100%;
+			text-align: center;
+		}
+	}
+}
+
+// 右侧课程舞台
+.course-stage {
+	flex: 1;
+	position: relative;
+	margin-left: 10rpx;
+
+	.grid-line-row {
+		height: 70px; // 与 JS 中的 HOUR_HEIGHT 保持绝对一致
+		border-top: 1rpx dashed #ececec; // 横向背景虚线
+		box-sizing: border-box;
+	}
+
+	// 绝对定位的课程卡片
+	.course-card-item {
+		position: absolute;
+		left: 10rpx;
+		right: 10rpx;
+		border-radius: 12rpx;
+		border-left: 6rpx solid #70a9a2; // 左边框高亮增加精致感
+		padding: 12rpx;
+		box-sizing: border-box;
+		overflow: hidden;
+		transition: all 0.2s ease;
+
+		&:active {
+			transform: scale(0.98);
+			opacity: 0.9;
+		}
+
+		.card-inner {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			justify-content: space-between;
+
+			.course-name {
+				font-size: 26rpx;
+				font-weight: bold;
+				color: #333;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			.course-room,
+			.course-time {
+				font-size: 22rpx;
+				color: #666;
+			}
+		}
+	}
+}
+
+.empty-layer {
+	position: absolute;
+	top: 100rpx;
+	left: 0;
+	right: 0;
+	display: flex;
+	justify-content: center;
+
+	.empty-txt {
+		font-size: 26rpx;
+		color: #ccc;
+	}
+}

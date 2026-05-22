@@ -205,7 +205,7 @@
 			startDate: string;
 			endDate: string;
 			remark?: string;
-			timeSlots: BackendScheduleItem[];
+			timeSlots: ClassSchedule[];
 		}[] = [];
 
 		list.forEach((item) => {
@@ -249,6 +249,7 @@
 
 	const handleEditSchedule = () => {
 		console.log("点击调整排课");
+		jump(ROUTES.ADJUST_CLASS_SCHEDULE);
 	};
 
 	onLoad(async (options) => {

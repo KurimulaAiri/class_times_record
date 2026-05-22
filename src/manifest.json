@@ -50,9 +50,9 @@
     "mp-weixin" : {
         "appid" : "wx8b6acdafc6f87e0c",
         "setting" : {
-            "ignoreUploadUnusedFiles" : false,
-            "ignoreDevUnusedFiles" : false,
-            "urlCheck" : true, // 是否检查安全域名
+            "ignoreUploadUnusedFiles" : false, // 解决上传未使用的文件问题
+            "ignoreDevUnusedFiles" : false, // 解决开发未使用的文件问题，和上面一起可以避免微信小程序打开时vender.js找不到关联文件的问题（如jsbn）
+            "urlCheck" : false, // 是否检查安全域名
             "es6" : true, // 开启ES6转ES5
             "postcss" : true, // 开启样式自动补全
             "minified" : true // 开启代码压缩

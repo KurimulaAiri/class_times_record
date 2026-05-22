@@ -70,11 +70,11 @@
 		deductMode.value = mode;
 	};
 
-	const handleStudentDataUpdate = (data: any) => {
+	const handleStudentDataUpdate = (data: Student) => {
 		studentPayload.value = data;
 	};
 
-	const handleCourseDataUpdate = (data: any) => {
+	const handleCourseDataUpdate = (data: CourseResponse) => {
 		coursePayload.value = data;
 	};
 
@@ -92,31 +92,29 @@
 				}
 
 				// 拼接最终请求体
-				const finalData = {
+				const finalData: FastDeductRequest = {
+					mode: "student",
 					studentId: studentPayload.value.studentId,
 					remark: remark.value,
 					classes: studentPayload.value.classes,
 				};
-
 				await deductByStudentId(finalData);
 			} else {
 				if (!coursePayload.value?.isValid) {
 					return uni.showToast({
-						title: "请选择班级并至少勾选一名学生",
+						title: "请选择课程并至少勾选一名学生",
 						icon: "none",
 					});
 				}
 
 				// 拼接按课程扣课的请求体
-				const finalData = {
-					// classId: coursePayload.value.classId,
-					// courseId: coursePayload.value.courseId,
-					// remark: remark.value,
-					// students: coursePayload.value.students,
+				const finalData: FastDeductRequest = {
+					mode: "course",
+					courseId: coursePayload.value.courseId,
+					remark: remark.value,
+					students: coursePayload.value.students,
 				};
-
-				//  TODO 调用按课程扣减的后端接口 
-				// await deductByCourseId(finalData);
+				await deductByCourseId(finalData);
 			}
 
 			uni.hideLoading();

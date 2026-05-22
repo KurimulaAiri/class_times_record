@@ -47,6 +47,43 @@ $primary-color: $theme-color; // 定义主题色
 	}
 }
 
+.list-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 30rpx 10rpx 20rpx 10rpx;
+
+	// 把原本的 margin 抹平，由父级统筹
+	.section-title {
+		margin: 0;
+	}
+
+	.select-all-btn {
+		display: flex;
+		align-items: center;
+		gap: 8rpx;
+		padding: 10rpx 20rpx;
+		background-color: #fff;
+		border-radius: 100rpx; // 胶囊块造型
+		box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.04);
+
+		&:active {
+			opacity: 0.7;
+		}
+
+		.select-all-text {
+			font-size: 26rpx;
+			color: #666;
+			font-weight: 500;
+
+			&.active {
+				color: $theme-color; // 激活时亮起主题色
+				font-weight: bold;
+			}
+		}
+	}
+}
+
 .section-title {
 	font-size: 28rpx;
 	color: #666;

@@ -121,7 +121,9 @@
 				{
 					"path": "teacher/school-schedule/index",
 					"style": {
-						"navigationBarTitleText": "学校课表"
+						"navigationBarTitleText": "学校课表",
+						"navigationBarBackgroundColor": "#ffffff",
+						"navigationBarTextStyle": "black"
 					}
 				},
 				{
@@ -177,6 +179,18 @@
 					"path": "teacher/select-class/index",
 					"style": {
 						"navigationBarTitleText": "选择班级"
+					}
+				},
+				{
+					"path": "teacher/leave-manage/index",
+					"style": {
+						"navigationBarTitleText": "请假管理"
+					}
+				},
+				{
+					"path": "teacher/adjust-class-schedule/index",
+					"style": {
+						"navigationBarTitleText": "调整排课"
 					}
 				}
 			]

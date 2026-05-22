@@ -65,6 +65,12 @@ interface StudentListResponse {
 	total: number;
 }
 
+interface StudentListByCourseIdQueryForm {
+	courseId: number;
+	currentPage: number;
+	pageSize: number;
+}
+
 interface StudentListByClassIdQueryForm {
 	classId: number;
 	currentPage: number;

@@ -128,10 +128,24 @@
 		switch (type) {
 			case "switch":
 				// 切换账号逻辑
-				switchUser(4);
+				uni
+					.showModal({
+						title: "切换账号",
+						content: "确定切换账号吗？",
+					})
+					.then(() => {
+						switchUser(4);
+					});
 				break;
 			case "logout":
-				logOut();
+				uni
+					.showModal({
+						title: "退出登录",
+						content: "确定退出登录吗？",
+					})
+					.then(() => {
+						logOut();
+					});
 				break;
 			default:
 				break;

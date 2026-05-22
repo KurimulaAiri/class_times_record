@@ -1,13 +1,19 @@
-// publish.js
-const { exec } = require("child_process");
-const path = require("path");
+// publish.ts
+let exec = null;
+import("child_process").then((module) => {
+	exec = module.exec;
+});
+const path = import("path");
+let pkg = {
+	version: "1.0.0",
+};
 // 自动读取项目 package.json 中的版本号，省去手动输入的麻烦
-const pkg = require("./package.json");
+import("./package.json").then((module) => (pkg = module.default));
 
 // 1. 获取命令行传入的动态参数 (例如: npm run publish -- -desc="增加全选功能" -robot=2)
 const args = process.argv.slice(2);
 
-const getArgValue = (key, defaultValue) => {
+const getArgValue = (key: string, defaultValue: string | number) => {
 	const arg = args.find((a) => a.startsWith(`-${key}=`));
 	return arg ? arg.split("=")[1] : defaultValue;
 };
@@ -33,19 +39,22 @@ console.log(`更新描述: ${description}`);
 console.log(`指定机器人: ${robot} 号`);
 
 // 5. 执行命令
-const worker = exec(cmd, (error, stdout, stderr) => {
-	if (error) {
-		console.error(`❌ 上传失败: ${error.message}`);
-		return;
-	}
-	if (stderr) {
-		console.warn(`⚠️ 编译警告: ${stderr}`);
-	}
-	console.log(`\n============== LOG ============== \n${stdout}`);
-	console.log("上传过程结束");
-});
+const worker = exec(
+	cmd,
+	(error: Error | null, stdout: Buffer | string, stderr: string | null) => {
+		if (error) {
+			console.error(`❌ 上传失败: ${error.message}`);
+			return;
+		}
+		if (stderr) {
+			console.warn(`⚠️ 编译警告: ${stderr}`);
+		}
+		console.log(`\n============== LOG ============== \n${stdout}`);
+		console.log("上传过程结束");
+	},
+);
 
 // 实时打印 HBuilderX 的编译进度
-worker.stdout.on("data", (data) => {
+worker.stdout.on("data", (data: Buffer | string) => {
 	process.stdout.write(data);
 });

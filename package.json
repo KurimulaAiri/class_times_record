@@ -1,6 +1,6 @@
 {
 	"name": "uni-preset-vue",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"scripts": {
 		"dev:custom": "uni -p",
 		"dev:h5": "uni",
@@ -56,6 +56,7 @@
 		"@dcloudio/uni-quickapp-webview": "3.0.0-alpha-5000820260508001",
 		"@dcloudio/uni-ui": "^1.5.12",
 		"@types/node": "^25.9.1",
+		"dayjs": "^1.11.20",
 		"jsbn": "^1.1.0",
 		"pinia": "^3.0.4",
 		"sm-crypto": "^0.4.0",

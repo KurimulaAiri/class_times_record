@@ -1,33 +1,33 @@
-interface BackendScheduleItem {
-	id?: number;
+interface ClassSchedule {
+	id: number;
+	classId: number;
+	className: string;
+	classroom: string;
+	dayOfWeek: number;
 	startDateStr: string;
 	endDateStr: string;
-	dayOfWeek: number;
 	startTimeStr: string;
 	endTimeStr: string;
-	classroom?: string;
+	teachers: TeacherResponse[];
 	remark?: string;
+	color?: string;
 	createTimeStr: string;
 	updateTimeStr: string;
 }
 
-interface ClassSchedule {
-	classId: number | null;
-	dayOfWeek: number;
-	startDate: string;
-	endDate: string;
-	startTime: string;
-	endTime: string;
-	remark?: string;
-}
-
-interface QueryClassScheduleForm {
-	classId: number;
+type QueryClassScheduleForm = {
 	currentPage: number;
 	pageSize: number;
-}
+} & (
+	| {
+			classId: number;
+	  }
+	| {
+			institutionId: number;
+	  }
+);
 
 interface ClassScheduleResponse {
-	classSchedules: BackendScheduleItem[];
+	classSchedules: ClassSchedule[];
 	total: number;
 }

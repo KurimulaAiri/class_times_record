@@ -14,6 +14,7 @@ interface Class {
 	courseRecord: CourseRecord;
 	scheduleList?: BackendScheduleItem[]; // 后端平铺的排课单表数据
 	courseType: number;
+	status: number;
 	createTimeStr: string;
 	updateTimeStr: string;
 }
@@ -56,11 +57,20 @@ interface ClassDeductRequest {
 	deductCount: number;
 }
 
-interface FastDeductRequest {
-	studentId: number;
+type FastDeductRequest = {
 	remark: string;
-	classes: ClassDeductRequest[];
-}
+} & (
+	| {
+		mode: "student";
+		studentId: number;
+		classes: ClassDeductRequest[];
+	}
+	| {
+		mode: "course";
+		courseId: number;
+		students: Student[];
+	}
+)
 
 interface InsertClassQueryForm {
 	className: string;

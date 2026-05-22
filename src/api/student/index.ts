@@ -3,11 +3,11 @@ import { useStudentStore } from "@/stores/student";
 
 const getStudentByStudentId = async (studentId: number): Promise<Student> => {
 	let student: Student = {} as Student;
-	await post<StudentListResponse>("/student/get_by_student_id", { studentId }).then(
-		(res) => {
-			student = res.data.list[0];
-		},
-	);
+	await post<StudentListResponse>("/student/get_by_student_id", {
+		studentId,
+	}).then((res) => {
+		student = res.data.list[0];
+	});
 	return student;
 };
 
@@ -61,6 +61,25 @@ const getStudentListByClassId = async (
 		return studentList;
 	}
 	await post<StudentListResponse>("/student/get_by_class_id", QueryForm).then(
+		(res) => {
+			studentList = res.data.list;
+		},
+	);
+	return studentList;
+};
+
+const getStudentListByCourseId = async (
+	query: StudentListByCourseIdQueryForm,
+): Promise<Student[]> => {
+	let studentList: Student[] = [];
+	if (query.courseId === 0) {
+		uni.showToast({
+			title: "身份错误",
+			icon: "error",
+		});
+		return studentList;
+	}
+	await post<StudentListResponse>("/student/get_by_course_id", query).then(
 		(res) => {
 			studentList = res.data.list;
 		},
@@ -146,6 +165,8 @@ export {
 	updateStudentInfo,
 	getStudentListByTeacherId,
 	getStudentListByClassId,
+	getStudentListByCourseId,
+	getStudentListByInstitutionId,
 	insertStudent,
 	getStudent,
 	updateStudent,
