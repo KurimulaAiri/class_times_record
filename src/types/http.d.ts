@@ -8,5 +8,5 @@ type LoginResponse = {
 	accessToken: string
 	refreshToken: string
 	openId: string
-	user: User
+	user: UserResponse
 }

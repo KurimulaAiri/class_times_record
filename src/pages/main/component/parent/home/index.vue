@@ -59,7 +59,7 @@
 
 	const studentStore = useStudentStore();
 
-	const menuList = ref<Menu[]>([]);
+	const menuList = ref<MenuResponse[]>([]);
 
 	onMounted(() => {
 		fetchMenus();
@@ -73,8 +73,8 @@
 			});
 			// 过滤并排序
 			menuList.value = res.data.menus
-				.filter((m: Menu) => m.isVisible)
-				.sort((a: Menu, b: Menu) => a.sortOrder - b.sortOrder);
+				.filter((m: MenuResponse) => m.isVisible)
+				.sort((a: MenuResponse, b: MenuResponse) => a.sortOrder - b.sortOrder);
 		} catch (e) {
 			console.error("菜单加载失败", e);
 		}

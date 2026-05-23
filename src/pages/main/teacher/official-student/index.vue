@@ -100,8 +100,8 @@
 	}
 
 	// --- 分页与状态变量 ---
-	const students = ref<Student[]>([]);
-	const currentStudent = ref<Student | null>(null);
+	const students = ref<StudentResponse[]>([]);
+	const currentStudent = ref<StudentResponse | null>(null);
 	const currentPage = ref(1);
 	const pageSize = 10;
 	const isFinished = ref(false); // 是否加载完全部
@@ -229,7 +229,7 @@
 	};
 
 	// --- 点击逻辑 ---
-	const handleClick = (item: Student) => {
+	const handleClick = (item: StudentResponse) => {
 		console.log("点击学员", item);
 		// 点击记录当前选中的学员
 		currentStudent.value = item;
@@ -241,7 +241,7 @@
 	};
 
 	// 处理长按反馈
-	const handleLongPress = (item: Student) => {
+	const handleLongPress = (item: StudentResponse) => {
 		// 震动反馈
 		uni.vibrateShort();
 
@@ -287,7 +287,7 @@
 		});
 	};
 
-	const confirmDelete = (item: Student) => {
+	const confirmDelete = (item: StudentResponse) => {
 		uni.showModal({
 			title: "提示",
 			content: `确定要移除学生 ${item.studentName} 吗？`,

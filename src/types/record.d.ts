@@ -1,4 +1,4 @@
-interface Record {
+interface RecordResponse {
 	courseRecordId: number;
 	createTimeStr: string;
 	id: number;
@@ -9,8 +9,7 @@ interface Record {
 	updateTimeStr: string;
 }
 
-type GetRecordResponse = {
-	records: Record[];
+type RecordListResponse = {
+	records: RecordResponse[];
     total: number;
 }
-

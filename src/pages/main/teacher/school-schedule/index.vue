@@ -86,7 +86,7 @@
 	import { onLoad } from "@dcloudio/uni-app";
 	import { getClassScheduleByInstitutionId } from "@/api/class-schedule";
 
-	const scheduleRules = ref<ClassSchedule[]>([
+	const scheduleRules = ref<ClassScheduleResponse[]>([
 		{
 			id: 1,
 			classId: 1,
@@ -211,7 +211,7 @@
 		});
 	});
 
-	const getClassStyle = (clazz: ClassSchedule) => {
+	const getClassStyle = (clazz: ClassScheduleResponse) => {
 		const [startH, startM] = clazz.startTimeStr.split(":").map(Number);
 		const [endH, endM] = clazz.endTimeStr.split(":").map(Number);
 		const startMinutesFromBase = (startH - START_HOUR) * 60 + startM;
@@ -246,7 +246,7 @@
 		}
 	};
 
-	const handleClassClick = (clazz: ClassSchedule) => {
+	const handleClassClick = (clazz: ClassScheduleResponse) => {
 		uni.showModal({
 			title: clazz.className,
 			content: `上课老师：${clazz.teachers.map((t) => t.username).join("、")}\n上课时段：${clazz.startTimeStr} - ${clazz.endTimeStr}`,

@@ -1,4 +1,4 @@
-interface ClassSchedule {
+interface ClassScheduleResponse {
 	id: number;
 	classId: number;
 	className: string;
@@ -15,7 +15,7 @@ interface ClassSchedule {
 	updateTimeStr: string;
 }
 
-type QueryClassScheduleForm = {
+type GetClassScheduleListRequest = {
 	currentPage: number;
 	pageSize: number;
 } & (
@@ -27,7 +27,7 @@ type QueryClassScheduleForm = {
 	  }
 );
 
-interface ClassScheduleResponse {
-	classSchedules: ClassSchedule[];
+interface ClassScheduleListResponse {
+	classSchedules: ClassScheduleResponse[];
 	total: number;
 }

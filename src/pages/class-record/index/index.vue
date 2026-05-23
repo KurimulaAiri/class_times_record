@@ -137,8 +137,8 @@
 			status: 2,
 		},
 	]);
-	const dataList = ref<CourseRecordList>([]);
-	const queryDataForm = ref<GetCourseRecordForm>({
+	const dataList = ref<CourseRecordResponse[]>([]);
+	const queryDataForm = ref<GetCourseRecordListRequest>({
 		studentId: 0,
 		stuName: "",
 		courseName: "",
@@ -162,7 +162,7 @@
 			loadStatus.value = "loading";
 		}
 
-		post<GetCourseRecordResponse>("/course_record/get", {
+		post<CourseRecordListResponse>("/course_record/get", {
 			...queryDataForm.value,
 		})
 			.then((res) => {

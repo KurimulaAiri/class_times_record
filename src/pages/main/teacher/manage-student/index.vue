@@ -72,7 +72,7 @@
 	import { getStudentListByParentId } from "@/api/student";
 
 	// 模拟数据列表
-	const studentList = ref<Student[]>([]);
+	const studentList = ref<StudentResponse[]>([]);
 	const isRefreshing = ref(false); // 控制下拉刷新状态
 	const userStore = useUserStore();
 	const studentStore = useStudentStore();

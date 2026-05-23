@@ -1,5 +1,4 @@
-// student.d.ts
-interface Student {
+interface StudentResponse {
 	id: number;
 	avatar: string;
 	studentName: string;
@@ -8,22 +7,22 @@ interface Student {
 	birthStr: string;
 	school: string;
 	address: string;
-	institutions: Institution[];
-	primaryParent: Parent;
-	secondaryParent: Parent;
+	institutions: InstitutionResponse[];
+	primaryParent: ParentResponse;
+	secondaryParent: ParentResponse;
 	courseTotalTime: number;
 	courseRestTime: number;
 	createTimeStr: string;
 	updateTimeStr: string;
 }
 
-interface StudentListByParentIdQueryForm {
+interface GetStudentListByParentIdRequest {
 	parentId: number;
 	currentPage: number;
 	pageSize: number;
 }
 
-interface StudentListByTeacherIdQueryForm {
+interface GetStudentListByTeacherIdRequest {
 	teacherId: number;
 	sex: number | null;
 	hasClass: boolean | null;
@@ -32,7 +31,7 @@ interface StudentListByTeacherIdQueryForm {
 	pageSize: number;
 }
 
-interface StudentListByInstitutionIdQueryForm {
+interface GetStudentListByInstitutionIdRequest {
 	institutionId: number;
 	sex: number | null;
 	hasClass: boolean | null;
@@ -41,8 +40,8 @@ interface StudentListByInstitutionIdQueryForm {
 	pageSize: number;
 }
 
-interface StudentListQueryForm {
-	scope: number; // 1 为查教师，2 为查机构
+interface GetStudentListRequest {
+	scope: number;
 	targetId: number;
 	sex: number | null;
 	hasClass: boolean | null;
@@ -51,48 +50,48 @@ interface StudentListQueryForm {
 	pageSize: number;
 }
 
-type EditStudentInfoForm = import("@/utils/common").FormModel<
-	Student,
+type UpdateStudentInfoRequest = import("@/utils/common").FormModel<
+	StudentResponse,
 	"id" | "avatar" | "birthStr" | "school" | "address"
 >;
 
-type SubmitEditStudentInfoForm = Omit<EditStudentInfoForm, "birthStr"> & {
+type SubmitUpdateStudentInfoRequest = Omit<UpdateStudentInfoRequest, "birthStr"> & {
 	birth: string;
 };
 
 interface StudentListResponse {
-	list: Student[];
+	list: StudentResponse[];
 	total: number;
 }
 
-interface StudentListByCourseIdQueryForm {
+interface GetStudentListByCourseIdRequest {
 	courseId: number;
 	currentPage: number;
 	pageSize: number;
 }
 
-interface StudentListByClassIdQueryForm {
+interface GetStudentListByClassIdRequest {
 	classId: number;
 	currentPage: number;
 	pageSize: number;
 }
 
-interface InsertStudentForm {
+interface InsertStudentRequest {
 	studentName: string;
 	institutionId: number;
 	sex: number;
 	birth: string;
 	school: string;
 	address: string;
-	primaryParent: Parent;
-	secondaryParent: Parent;
+	primaryParent: ParentResponse;
+	secondaryParent: ParentResponse;
 }
 
 interface InsertStudentResponse {
 	studentId: number;
 }
 
-interface UpdateStudentForm {
+interface UpdateStudentRequest {
 	id: number;
 	avatar: string;
 	studentName: string;
@@ -100,8 +99,8 @@ interface UpdateStudentForm {
 	birthStr: string;
 	school: string;
 	address: string;
-	primaryParent: Parent | null;
-	secondaryParent: Parent | null;
+	primaryParent: ParentResponse | null;
+	secondaryParent: ParentResponse | null;
 }
 
 interface UpdateStudentResponse {

@@ -1,4 +1,4 @@
-interface Institution {
+interface InstitutionResponse {
     id: number;
     institutionName: string;
     institutionAddress: string;

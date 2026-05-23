@@ -11,7 +11,7 @@ const getClassListByStudentId = async (
 };
 
 const getClassListByTeacherId = async (
-	QueryForm: ClassListQueryByTeacherIdForm,
+	QueryForm: GetClassListByTeacherIdRequest,
 ): Promise<ClassListResponse> => {
 	const res = await post<ClassListResponse>(
 		"/class/get_classes_by_teacher_id",
@@ -21,7 +21,7 @@ const getClassListByTeacherId = async (
 };
 
 const getClassListByInstitutionId = async (
-	QueryForm: ClassListQueryByInstitutionIdForm,
+	QueryForm: GetClassListByInstitutionIdRequest,
 ): Promise<ClassListResponse> => {
 	const res = await post<ClassListResponse>(
 		"/class/get_classes_by_institution_id",
@@ -31,7 +31,7 @@ const getClassListByInstitutionId = async (
 };
 
 const getClassList = async (
-	QueryForm: ClassListQueryForm,
+	QueryForm: GetClassListRequest,
 ): Promise<ClassListResponse> => {
 	if (QueryForm.scope === 1) {
 		return getClassListByTeacherId({
@@ -49,7 +49,7 @@ const getClassList = async (
 };
 
 const addStudentToClass = async (
-	form: AddStudentToClassQueryForm,
+	form: AddStudentToClassRequest,
 ): Promise<number> => {
 	let result = 0;
 	await post<AddStudentToClassResponse>(
@@ -65,7 +65,7 @@ const addStudentToClass = async (
 };
 
 const removeStudentFromClass = async (
-	form: RemoveStudentFromClassQueryForm,
+	form: RemoveStudentFromClassRequest,
 ): Promise<number> => {
 	let result = 0;
 	await post<RemoveStudentFromClassResponse>(
@@ -89,7 +89,7 @@ const getClassByClassId = async (
 	return res.data;
 };
 
-const insertClass = async (form: InsertClassQueryForm): Promise<number> => {
+const insertClass = async (form: InsertClassRequest): Promise<number> => {
 	let result = 0;
 	await post<InsertClassResponse>("/class/insert", form).then((res) => {
 		if (res.code === 200) {
@@ -100,7 +100,7 @@ const insertClass = async (form: InsertClassQueryForm): Promise<number> => {
 	return result;
 };
 
-const updateClassById = async (form: UpdateClassForm): Promise<number> => {
+const updateClassById = async (form: UpdateClassRequest): Promise<number> => {
 	let result = 0;
 	await post<UpdateClassResponse>("/class/update_by_id", form).then((res) => {
 		if (res.code === 200) {

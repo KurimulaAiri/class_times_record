@@ -117,8 +117,8 @@
 			updateTimeStr: "",
 		},
 	});
-	const students = ref<Student[]>([]);
-	const selectedMap = ref<Record<number, { detail: Student; count: number }>>(
+	const students = ref<StudentResponse[]>([]);
+	const selectedMap = ref<Record<number, { detail: StudentResponse; count: number }>>(
 		{},
 	);
 
@@ -154,7 +154,7 @@
 			selectedMap.value = {};
 		} else {
 			// 当前非全选，则把所有未选中的学员都加上，默认 1 课时
-			const tempMap: Record<number, { detail: Student; count: number }> = {};
+			const tempMap: Record<number, { detail: StudentResponse; count: number }> = {};
 			students.value.forEach((item) => {
 				// 如果原本就已经有输入的课时数量，保留原数量，否则赋初始值 1
 				const existCount = selectedMap.value[item.id]?.count;
@@ -167,7 +167,7 @@
 		}
 	};
 
-	const toggleStudent = (item: Student) => {
+	const toggleStudent = (item: StudentResponse) => {
 		if (selectedMap.value[item.id] !== undefined) {
 			const newMap = { ...selectedMap.value };
 			delete newMap[item.id];

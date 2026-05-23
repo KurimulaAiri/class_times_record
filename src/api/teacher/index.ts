@@ -1,19 +1,17 @@
 import { post } from "@/utils/request";
 
 const getTeacherById = async (id: number): Promise<TeacherResponse> => {
-	// 直接 await 获取 res
-	const res = await post<TeachersResponse>(`/teacher/get_by_id`, {
+	const res = await post<TeacherListResponse>(`/teacher/get_by_id`, {
 		teacherId: id,
 	});
 
 	console.log("加载老师数据:", res.data);
 
-	// 直接返回 res.data，它已经包含了嵌套的 institution 对象
 	return res.data.teachers[0];
 };
 
-const getTeachersByInstitutionId = async (form: GetTeachersByInstitutionIdForm): Promise<TeachersResponse> => {
-	const res = await post<TeachersResponse>(`/teacher/get_teacher_by_institution_id`, {
+const getTeachersByInstitutionId = async (form: GetTeachersByInstitutionIdRequest): Promise<TeacherListResponse> => {
+	const res = await post<TeacherListResponse>(`/teacher/get_teacher_by_institution_id`, {
 		institutionId: form.institutionId,
 		currentPage: form.currentPage,
 		pageSize: form.pageSize,

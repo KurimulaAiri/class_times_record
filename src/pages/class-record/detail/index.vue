@@ -113,10 +113,10 @@
 
 <script setup lang="ts">
 	import type {
-		SelectData,
-		RecordList,
-		GetCourseRecordResponse,
-		GetRecordResponse,
+		CourseRecordResponse,
+		RecordResponse,
+		CourseRecordListResponse,
+		RecordListResponse,
 	} from ".";
 	import { DATA_DETAIL_MAP } from "@/config/common";
 	import { onLoad, onShow, onShareAppMessage } from "@dcloudio/uni-app";
@@ -126,8 +126,8 @@
 	import { loginNoPwd } from "@/api/auth";
 	import { post } from "@/utils/request";
 
-	const selectData = ref<SelectData>({} as SelectData);
-	const recordList = ref<RecordList>([]);
+	const selectData = ref<CourseRecordResponse>({} as CourseRecordResponse);
+	const recordList = ref<RecordResponse[]>([]);
 	const bindForm = ref({
 		courseRecordId: 0,
 		permissionType: "",
@@ -175,7 +175,7 @@
 						// 绑定成功后，重新加载数据
 						queryForm.value.courseRecordId = shareId;
 
-						post<GetCourseRecordResponse>("/course_record/get", {
+						post<CourseRecordListResponse>("/course_record/get", {
 							id: shareId,
 							share: true,
 						}).then((res) => {
@@ -214,7 +214,7 @@
 
 	onShow(() => {
 		console.log("onShow");
-		post<GetCourseRecordResponse>("/course_record/get", {
+		post<CourseRecordListResponse>("/course_record/get", {
 			id: selectData.value.id,
 			isShare: true,
 		}).then((res) => {
@@ -237,7 +237,7 @@
 		} else {
 			loadStatus.value = "loading";
 		}
-		post<GetRecordResponse>("/record/get", queryForm.value)
+		post<RecordListResponse>("/record/get", queryForm.value)
 			.then((res) => {
 				console.log("获取记录响应:", res);
 

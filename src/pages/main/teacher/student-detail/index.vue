@@ -163,8 +163,8 @@
 
 	const studentStore = useStudentStore();
 	// 模拟接收到的数据
-	const student = ref<Student>();
-	const classList = ref<Class[]>([]);
+	const student = ref<StudentResponse>();
+	const classList = ref<ClassResponse[]>([]);
 
 	onLoad(async () => {
 		const classListIn = await getClassListByStudentId(student?.value?.id || 0);

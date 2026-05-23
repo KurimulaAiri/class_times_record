@@ -198,12 +198,12 @@
 	];
 
 	const themeColor = "#70a9a2";
-	const form = ref<InsertClassQueryForm>({
+	const form = ref<InsertClassRequest>({
 		className: "",
 		courseId: 0,
 		maxCount: 30,
 		teachers: [] as TeacherResponse[], // 选中的老师
-		schedules: [] as ClassSchedule[], // 动态追加的日程数组
+		schedules: [] as ClassScheduleResponse[], // 动态追加的日程数组
 	});
 
 	// 初始化或追加一组空的排班

@@ -1,9 +1,9 @@
 interface ClassListResponse {
-	classList: Class[];
+	classList: ClassResponse[];
 	total: number;
 }
 
-interface Class {
+interface ClassResponse {
 	id: number;
 	className: string;
 	studentCount: number;
@@ -11,41 +11,41 @@ interface Class {
 	courseId: number;
 	courseName: string;
 	teachers: TeacherResponse[];
-	courseRecord: CourseRecord;
-	scheduleList?: BackendScheduleItem[]; // 后端平铺的排课单表数据
+	courseRecord: CourseRecordResponse;
+	scheduleList?: BackendScheduleItem[];
 	courseType: number;
 	status: number;
 	createTimeStr: string;
 	updateTimeStr: string;
 }
 
-interface ClassListQueryForm {
+interface GetClassListRequest {
 	scope: number;
 	targetId: number;
 	keyword: string | undefined;
 }
 
-interface ClassListQueryByTeacherIdForm {
+interface GetClassListByTeacherIdRequest {
 	teacherId: number;
 	keyword: string | undefined;
 }
 
-interface ClassListQueryByInstitutionIdForm {
+interface GetClassListByInstitutionIdRequest {
 	institutionId: number;
 	keyword: string | undefined;
 }
 
-interface AddStudentToClassQueryForm {
+interface AddStudentToClassRequest {
 	classId: number;
-	students: Student[];
+	students: StudentResponse[];
 }
 interface AddStudentToClassResponse {
 	result: number;
 }
 
-interface RemoveStudentFromClassQueryForm {
+interface RemoveStudentFromClassRequest {
 	classId: number;
-	students: Student[];
+	students: StudentResponse[];
 }
 interface RemoveStudentFromClassResponse {
 	result: number;
@@ -61,22 +61,22 @@ type FastDeductRequest = {
 	remark: string;
 } & (
 	| {
-		mode: "student";
-		studentId: number;
-		classes: ClassDeductRequest[];
+			mode: "student";
+			studentId: number;
+			classes: ClassDeductRequest[];
 	}
 	| {
-		mode: "course";
-		courseId: number;
-		students: Student[];
+			mode: "course";
+			courseId: number;
+			students: StudentResponse[];
 	}
 )
 
-interface InsertClassQueryForm {
+interface InsertClassRequest {
 	className: string;
 	courseId: number;
 	maxCount: number;
-	schedules: ClassSchedule[];
+	schedules: ClassScheduleResponse[];
 	teachers: TeacherResponse[];
 }
 
@@ -85,12 +85,12 @@ interface InsertClassResponse {
 	className: string;
 }
 
-interface UpdateClassForm {
+interface UpdateClassRequest {
 	classId: number;
 	className: string;
 	courseId: number;
 	maxCount: number;
-	schedules: ClassSchedule[];
+	schedules: ClassScheduleResponse[];
 	teachers: TeacherResponse[];
 }
 

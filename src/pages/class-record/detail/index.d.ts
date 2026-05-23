@@ -1,8 +1,4 @@
-import { CourseRecord, GetCourseRecordResponse } from "@/types/course-record";
-import { Record, GetRecordResponse } from "@/types/record";
+import { CourseRecordResponse, CourseRecordListResponse } from "@/types/course-record";
+import { RecordResponse, RecordListResponse } from "@/types/record";
 
-type SelectData = CourseRecord;
-
-type RecordList = Record[];
-
-export { SelectData, RecordList, GetCourseRecordResponse, GetRecordResponse };
+export { CourseRecordResponse, CourseRecordListResponse, RecordResponse, RecordListResponse };

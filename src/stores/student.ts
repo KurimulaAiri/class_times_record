@@ -3,18 +3,18 @@ import { ref } from 'vue'
 
 export const useStudentStore = defineStore('student',() => {
 
-    const studentList = ref<Student[]>([]);
+    const studentList = ref<StudentResponse[]>([]);
 
-    const studentInfo = ref<Student | null>(null);
+    const studentInfo = ref<StudentResponse | null>(null);
 
-    const setStudentList = (studentListInput: Student[]) => {
+    const setStudentList = (studentListInput: StudentResponse[]) => {
         studentList.value = studentListInput;
     }
     const clearStudentList = () => {
         studentList.value = [];
     }
 
-    const setStudentInfo = (student: Student) => {
+    const setStudentInfo = (student: StudentResponse) => {
         studentInfo.value = student;
         console.log("setStudentInfo:", student);
     }

@@ -80,9 +80,9 @@
 
 	const userStore = useUserStore();
 
-	const classList = ref<Class[]>([]);
+	const classList = ref<ClassResponse[]>([]);
 
-	const queryForm = ref<ClassListQueryForm>({
+	const queryForm = ref<GetClassListRequest>({
 		scope: 0,
 		targetId: 0,
 		keyword: "",
@@ -124,13 +124,13 @@
 	};
 
 	// 处理点击事件（通常跳转到班级详情）
-	const handleCardClick = (item: Class) => {
+	const handleCardClick = (item: ClassResponse) => {
 		console.log("点击了班级:", item.className);
 		jump(ROUTES.CLASS_DETAIL, item);
 	};
 
 	// 处理长按事件
-	const handleCardLongPress = (item: Class) => {
+	const handleCardLongPress = (item: ClassResponse) => {
 		// 触发震动反馈（增强手感，仅 App/小程序支持）
 		uni.vibrateShort();
 
@@ -152,7 +152,7 @@
 	};
 
 	// 模拟删除逻辑
-	const handleDeleteClass = (item: Class) => {
+	const handleDeleteClass = (item: ClassResponse) => {
 		uni.showModal({
 			title: "确认删除",
 			content: `确定要删除班级【${item.className}】吗？`,

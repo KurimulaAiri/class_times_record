@@ -61,7 +61,7 @@
 	import { useStudentStore } from "@/stores/student";
 
 	const searchKeyword = ref("");
-	const dataList = ref<CourseRecord[]>([]);
+	const dataList = ref<CourseRecordResponse[]>([]);
 	const page = ref(1);
 	const loading = ref(false);
 	const noMore = ref(false);

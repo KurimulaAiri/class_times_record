@@ -1,4 +1,4 @@
-interface CoursesResponse {
+interface CourseListResponse {
 	courses: CourseResponse[];
     total: number;
 }
@@ -8,12 +8,10 @@ interface CourseResponse {
 	courseName: string;
     courseType: number;
     available: boolean;
-    institution: Institution;
+    institution: InstitutionResponse;
 }
 
-
-
-interface GetCourseByInstitutionIdForm {
+interface GetCourseByInstitutionIdRequest {
 	institutionId: number;
     keyword: string;
     currentPage: number;

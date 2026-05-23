@@ -1,4 +1,4 @@
-interface CourseRecord {
+interface CourseRecordResponse {
 	courseLastTimeStr: string;
 	courseName: string;
 	courseOwnerUserId: number;
@@ -14,14 +14,12 @@ interface CourseRecord {
 	updateTimeStr: string;
 }
 
-type GetCourseRecordResponse = {
-	courseRecords: CourseRecord[];
+type CourseRecordListResponse = {
+	courseRecords: CourseRecordResponse[];
     total: number;
 }
 
-type CourseRecordList = CourseRecord[];
-
-type GetCourseRecordForm = {
+type GetCourseRecordListRequest = {
 	studentId: number;
 	stuName: string;
 	courseName: string;

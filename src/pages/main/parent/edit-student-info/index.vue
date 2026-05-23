@@ -74,7 +74,7 @@
 
 	onLoad((options) => {
 		if (options) {
-			const data: Student | undefined = parseData(options.data);
+			const data: StudentResponse | undefined = parseData(options.data);
 			console.log("studentList:", data);
 
 			formData.value.id = data?.id || 0;
@@ -93,7 +93,7 @@
 		}
 	});
 
-	const formData = ref<EditStudentInfoForm>({
+	const formData = ref<UpdateStudentInfoRequest>({
 		id: 0,
 		avatar: "",
 		birthStr: "",
@@ -101,7 +101,7 @@
 		address: "",
 	});
 
-	const submitData = ref<SubmitEditStudentInfoForm>({
+	const submitData = ref<SubmitUpdateStudentInfoRequest>({
 		id: 0,
 		avatar: "",
 		birth: "",

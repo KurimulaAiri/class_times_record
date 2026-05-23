@@ -1,10 +1,10 @@
 import { post } from "@/utils/request";
 
 const getCourseRecordList = async (
-	data: GetCourseRecordForm,
-): Promise<CourseRecordList> => {
-	let courseList: CourseRecordList = [];
-	await post<GetCourseRecordResponse>("/course_record/new_get", data).then(
+	data: GetCourseRecordListRequest,
+): Promise<CourseRecordResponse[]> => {
+	let courseList: CourseRecordResponse[] = [];
+	await post<CourseRecordListResponse>("/course_record/new_get", data).then(
 		(res) => {
 			courseList = res.data.courseRecords;
 		},

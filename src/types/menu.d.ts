@@ -1,4 +1,4 @@
-interface Menu {
+interface MenuResponse {
     id: number;
     menuName: string;
     icon: string;
@@ -13,10 +13,10 @@ interface Menu {
 
 interface MenuListResponse {
     total: number;
-    menus: Menu[];
+    menus: MenuResponse[];
 }
 
-interface MenuListQueryForm {
+interface GetMenuListRequest {
     currentPage: number;
     pageSize: number;
 }

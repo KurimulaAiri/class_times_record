@@ -70,7 +70,7 @@
 		deductMode.value = mode;
 	};
 
-	const handleStudentDataUpdate = (data: Student) => {
+	const handleStudentDataUpdate = (data: StudentResponse) => {
 		studentPayload.value = data;
 	};
 

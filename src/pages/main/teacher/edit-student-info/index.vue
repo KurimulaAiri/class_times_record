@@ -165,7 +165,7 @@
 		{ name: "女", value: 0 },
 	];
 
-	const form = ref<Student>({
+	const form = ref<StudentResponse>({
 		id: 0,
 		avatar: "",
 		studentName: "",
@@ -222,7 +222,7 @@
 
 	// 初始化家长信息对象
 	const initParent = (type: "primary" | "secondary") => {
-		const emptyParent: Parent = {
+		const emptyParent: ParentResponse = {
 			studentId: form.value.id,
 			parentId: 0,
 			username: "",
@@ -279,7 +279,7 @@
 		}
 
 		// 构造提交数据
-		const submitData: UpdateStudentForm = { ...form.value };
+		const submitData: UpdateStudentRequest = { ...form.value };
 
 		if (!hasAny) {
 			submitData.secondaryParent = null;

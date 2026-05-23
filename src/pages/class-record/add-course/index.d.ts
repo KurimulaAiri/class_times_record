@@ -1,8 +1,8 @@
-import { CourseRecord } from "@/types/course-record";
+import { CourseRecordResponse } from "@/types/course-record";
 import { Overwrite, FormModel } from "@/utils/common";
 
 type AddCourseRequest = FormModel<
-	CourseRecord,
+	CourseRecordResponse,
 	| "stuName"
 	| "courseName"
 	| "courseTotalTime"

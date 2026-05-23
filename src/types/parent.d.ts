@@ -1,4 +1,4 @@
-interface Parent {
+interface ParentResponse {
     username: string;
 	studentId: number;
 	parentId: number;

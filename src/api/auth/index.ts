@@ -131,11 +131,6 @@ const refreshAccessToken = async (): Promise<boolean> => {
 	}
 };
 
-/**
- * 退出登录
- * @param targetRoute 退出后要跳转的目标页面（可选，默认去首页）
- * @param params 跳转时携带的参数（可选）
- */
 const logOut = (targetRoute: string = ROUTES.INDEX, params: any = null) => {
 	const userStore = useUserStore();
 	userStore.clearUserInfo();

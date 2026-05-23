@@ -140,7 +140,7 @@
 		{ name: "女", value: 0 },
 	];
 
-	const form = reactive<InsertStudentForm>({
+	const form = reactive<InsertStudentRequest>({
 		studentName: "",
 		institutionId: currentTeacher?.institutionId || 0,
 		sex: 1,

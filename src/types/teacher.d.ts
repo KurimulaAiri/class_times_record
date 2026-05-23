@@ -1,4 +1,4 @@
-interface TeachersResponse {
+interface TeacherListResponse {
 	teachers: TeacherResponse[];
 	total: number;
 }
@@ -6,10 +6,10 @@ interface TeachersResponse {
 interface TeacherResponse {
 	teacherId: number;
 	username: string;
-	institution: Institution;
+	institution: InstitutionResponse;
 }
 
-interface GetTeachersByInstitutionIdForm {
+interface GetTeachersByInstitutionIdRequest {
 	institutionId: number;
 	currentPage: number;
 	pageSize: number;

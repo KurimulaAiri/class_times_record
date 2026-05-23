@@ -120,20 +120,18 @@
 
 <script setup lang="ts">
 	import type {
-		CourseRecord,
-		AdjustList,
-		CourseRecordList,
-		GetRespDataCourseRecord,
-		addRecordForm,
+		CourseRecordResponse,
+		CourseRecordListResponse,
+		AddRecordRequest,
 	} from ".";
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { post } from "@/utils/request";
 	import { parseData } from "@/utils/common";
 
-	const adjustList = ref<AdjustList>([]);
+	const adjustList = ref<CourseRecordResponse[]>([]);
 
-	const courseRecordList = ref<CourseRecordList>([]);
+	const courseRecordList = ref<CourseRecordResponse[]>([]);
 
 	const showRightRef = ref<any>(null);
 
@@ -177,7 +175,7 @@
 
 		selectedIds.value = [...tempSelectIds.value]; // 复制临时选择的课程ID到选中的课程ID列表
 
-		let temp: CourseRecord | null = null;
+		let temp: CourseRecordResponse | null = null;
 
 		if (adjustList.value[0].courseStatus === 2) {
 			temp = adjustList.value[0];
@@ -223,7 +221,7 @@
 			loadStatus.value = "loading";
 		}
 
-		post<GetRespDataCourseRecord>("/course_record/get", queryForm.value)
+		post<CourseRecordListResponse>("/course_record/get", queryForm.value)
 			.then((res) => {
 				console.log("获取课程记录:", res);
 				total.value = res.data.total;
@@ -294,7 +292,7 @@
 		},
 	]);
 
-	const record = ref<addRecordForm>({
+	const record = ref<AddRecordRequest>({
 		courseRecordIdList: [],
 		recordTime: "",
 		recordType: 1,

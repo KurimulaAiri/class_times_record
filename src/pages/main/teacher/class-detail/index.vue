@@ -190,10 +190,10 @@
 	import { getClassScheduleByClassId } from "@/api/class-schedule";
 
 	const themeColor = ref("#70a9a2"); // 对应你的 $theme-color
-	const classDetail = ref<Class>();
+	const classDetail = ref<ClassResponse>();
 
-	const students = ref<Student[]>([]);
-	const currentStudent = ref<Student>();
+	const students = ref<StudentResponse[]>([]);
+	const currentStudent = ref<StudentResponse>();
 
 	// 3. 核心：通过计算属性，自动将平铺数据转为“日期段包裹时间段”的聚合结构
 	const aggregatedSchedule = computed(() => {
@@ -205,7 +205,7 @@
 			startDate: string;
 			endDate: string;
 			remark?: string;
-			timeSlots: ClassSchedule[];
+			timeSlots: ClassScheduleResponse[];
 		}[] = [];
 
 		list.forEach((item) => {
@@ -384,7 +384,7 @@
 	};
 
 	// 处理长按事件
-	const handleLongPress = async (item: Student) => {
+	const handleLongPress = async (item: StudentResponse) => {
 		uni.vibrateShort();
 
 		uni.showActionSheet({
@@ -480,7 +480,7 @@
 		uni.makePhoneCall({ phoneNumber: phone });
 	};
 
-	const goToStudentDetail = (item: Student) => {
+	const goToStudentDetail = (item: StudentResponse) => {
 		console.log("点击学员", item);
 		// 点击记录当前选中的学员
 		currentStudent.value = item;

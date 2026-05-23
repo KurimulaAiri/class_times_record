@@ -58,7 +58,7 @@
 	const userStore = useUserStore();
 
 	// 严格按照你的 Interface 结构组织数据
-	const menuList = ref<Menu[]>([]); // 根据 sortOrder 排序
+	const menuList = ref<MenuResponse[]>([]); // 根据 sortOrder 排序
 
 	onMounted(async () => {
 		// 1. 权限前置拦截
@@ -109,8 +109,8 @@
 
 			// 过滤并排序
 			menuList.value = res.data.menus
-				.filter((m: Menu) => m.isVisible)
-				.sort((a: Menu, b: Menu) => a.sortOrder - b.sortOrder);
+				.filter((m: MenuResponse) => m.isVisible)
+				.sort((a: MenuResponse, b: MenuResponse) => a.sortOrder - b.sortOrder);
 		} catch (e) {
 			console.error("菜单加载失败", e);
 		}

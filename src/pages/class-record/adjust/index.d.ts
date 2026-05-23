@@ -1,14 +1,6 @@
-import { CourseRecord } from "@/types/course-record";
+import { CourseRecordResponse, CourseRecordListResponse } from "@/types/course-record";
 
-type AdjustList = CourseRecord[];
-type CourseRecordList = CourseRecord[];
-
-type GetRespDataCourseRecord = {
-	courseRecords: CourseRecordList;
-	total: number;
-};
-
-type addRecordForm = {
+type AddRecordRequest = {
 	courseRecordIdList: number[];
     recordTime: string;
     recordType: number;
@@ -16,4 +8,4 @@ type addRecordForm = {
 	recordRemark: string;
 };
 
-export { AdjustList, CourseRecordList, GetRespDataCourseRecord, addRecordForm, CourseRecord };
+export { CourseRecordResponse, CourseRecordListResponse, AddRecordRequest };

@@ -140,8 +140,8 @@
 	}
 
 	// --- 分页与状态变量 ---
-	const students = ref<Student[]>([]);
-	const currentStudent = ref<Student | null>(null);
+	const students = ref<StudentResponse[]>([]);
+	const currentStudent = ref<StudentResponse | null>(null);
 	const currentPage = ref(1);
 	const pageSize = 10;
 	const isFinished = ref(false); // 是否加载完全部
@@ -149,7 +149,7 @@
 	const isMultiSelect = ref(false);
 
 	// --- 新增：多选列表状态 ---
-	const selectedList = ref<Student[]>([]);
+	const selectedList = ref<StudentResponse[]>([]);
 
 	const tempKeyword = ref("");
 	const searchKeyword = ref("");
@@ -289,7 +289,7 @@
 	};
 
 	// 重写点击逻辑
-	const handleClick = (item: Student) => {
+	const handleClick = (item: StudentResponse) => {
 		if (isMultiSelect.value) {
 			// 多选模式：切换选中状态
 			const index = selectedList.value.findIndex((s) => s.id === item.id);
@@ -306,7 +306,7 @@
 	};
 
 	// 处理长按反馈
-	const handleLongPress = (item: Student) => {
+	const handleLongPress = (item: StudentResponse) => {
 		// 震动反馈
 		uni.vibrateShort();
 

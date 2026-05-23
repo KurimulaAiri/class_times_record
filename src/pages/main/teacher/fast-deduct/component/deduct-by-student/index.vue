@@ -189,7 +189,7 @@
 	};
 
 	// 页面通信监听
-	uni.$on("updateStudent", async (data: Student) => {
+	uni.$on("updateStudent", async (data: StudentResponse) => {
 		student.value = data;
 		selectedMap.value = {};
 		await loadData();

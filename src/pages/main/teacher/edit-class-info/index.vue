@@ -200,13 +200,13 @@
 	const courseName = ref("");
 	const selectedTeachers = ref<TeacherResponse[]>([]);
 
-	const form = ref<UpdateClassForm>({
+	const form = ref<UpdateClassRequest>({
 		classId: 0,
 		className: "",
 		courseId: 0,
 		maxCount: 30,
 		teachers: [] as TeacherResponse[],
-		schedules: [] as ClassSchedule[],
+		schedules: [] as ClassScheduleResponse[],
 	});
 
 	// 1. 尽早同步注册跨页通信监听
@@ -225,7 +225,7 @@
 	});
 
 	// 💡 2. 核心改动：调用 usePageData 核心方法
-	const classInfo = usePageData<Class>();
+	const classInfo = usePageData<ClassResponse>();
 
 	// 💡 3. 终极修复：用 watch 盯着 classInfo.data。一旦 EventChannel 异步把数据送到了，立刻触发回显
 	watch(

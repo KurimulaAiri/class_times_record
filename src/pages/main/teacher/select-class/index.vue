@@ -137,8 +137,8 @@
 	}
 
 	// --- 分页与数据状态 ---
-	const classes = ref<Class[]>([]);
-	const currentClass = ref<Class | null>(null);
+	const classes = ref<ClassResponse[]>([]);
+	const currentClass = ref<ClassResponse | null>(null);
 	const currentPage = ref(1);
 	const pageSize = 10;
 	const isFinished = ref(false);
@@ -146,7 +146,7 @@
 	const isMultiSelect = ref(false);
 
 	// --- 多选状态 ---
-	const selectedList = ref<Class[]>([]);
+	const selectedList = ref<ClassResponse[]>([]);
 
 	const tempKeyword = ref("");
 	const searchKeyword = ref("");
@@ -260,7 +260,7 @@
 	};
 
 	// 选择与返回逻辑
-	const handleClick = (item: Class) => {
+	const handleClick = (item: ClassResponse) => {
 		if (isMultiSelect.value) {
 			const index = selectedList.value.findIndex((c) => c.id === item.id);
 			if (index > -1) {
@@ -276,7 +276,7 @@
 	};
 
 	// 长按菜单
-	const handleLongPress = (item: Class) => {
+	const handleLongPress = (item: ClassResponse) => {
 		uni.vibrateShort();
 		uni.showActionSheet({
 			itemList: ["编辑班级信息"],

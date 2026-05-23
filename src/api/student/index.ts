@@ -1,8 +1,8 @@
 import { post } from "@/utils/request";
 import { useStudentStore } from "@/stores/student";
 
-const getStudentByStudentId = async (studentId: number): Promise<Student> => {
-	let student: Student = {} as Student;
+const getStudentByStudentId = async (studentId: number): Promise<StudentResponse> => {
+	let student: StudentResponse = {} as StudentResponse;
 	await post<StudentListResponse>("/student/get_by_student_id", {
 		studentId,
 	}).then((res) => {
@@ -12,9 +12,9 @@ const getStudentByStudentId = async (studentId: number): Promise<Student> => {
 };
 
 const getStudentListByParentId = async (
-	query: StudentListByParentIdQueryForm,
-): Promise<Student[]> => {
-	let studentList: Student[] = [];
+	query: GetStudentListByParentIdRequest,
+): Promise<StudentResponse[]> => {
+	let studentList: StudentResponse[] = [];
 	if (query.parentId === 0) {
 		uni.showToast({
 			title: "身份错误",
@@ -31,9 +31,9 @@ const getStudentListByParentId = async (
 };
 
 const getStudentListByTeacherId = async (
-	query: StudentListByTeacherIdQueryForm,
-): Promise<Student[]> => {
-	let studentList: Student[] = [];
+	query: GetStudentListByTeacherIdRequest,
+): Promise<StudentResponse[]> => {
+	let studentList: StudentResponse[] = [];
 	if (query.teacherId === 0) {
 		uni.showToast({
 			title: "身份错误",
@@ -50,9 +50,9 @@ const getStudentListByTeacherId = async (
 };
 
 const getStudentListByClassId = async (
-	QueryForm: StudentListByClassIdQueryForm,
-): Promise<Student[]> => {
-	let studentList: Student[] = [];
+	QueryForm: GetStudentListByClassIdRequest,
+): Promise<StudentResponse[]> => {
+	let studentList: StudentResponse[] = [];
 	if (QueryForm.classId === 0) {
 		uni.showToast({
 			title: "身份错误",
@@ -69,9 +69,9 @@ const getStudentListByClassId = async (
 };
 
 const getStudentListByCourseId = async (
-	query: StudentListByCourseIdQueryForm,
-): Promise<Student[]> => {
-	let studentList: Student[] = [];
+	query: GetStudentListByCourseIdRequest,
+): Promise<StudentResponse[]> => {
+	let studentList: StudentResponse[] = [];
 	if (query.courseId === 0) {
 		uni.showToast({
 			title: "身份错误",
@@ -88,9 +88,9 @@ const getStudentListByCourseId = async (
 };
 
 const getStudentListByInstitutionId = async (
-	query: StudentListByInstitutionIdQueryForm,
-): Promise<Student[]> => {
-	let studentList: Student[] = [];
+	query: GetStudentListByInstitutionIdRequest,
+): Promise<StudentResponse[]> => {
+	let studentList: StudentResponse[] = [];
 	if (query.institutionId === 0) {
 		uni.showToast({
 			title: "身份错误",
@@ -106,7 +106,7 @@ const getStudentListByInstitutionId = async (
 	return studentList;
 };
 
-const getStudent = async (query: StudentListQueryForm): Promise<Student[]> => {
+const getStudent = async (query: GetStudentListRequest): Promise<StudentResponse[]> => {
 	const { targetId, sex, hasClass, keyword, currentPage, pageSize } = query;
 
 	if (query.scope === 1) {
@@ -131,11 +131,11 @@ const getStudent = async (query: StudentListQueryForm): Promise<Student[]> => {
 	return [];
 };
 
-const updateStudentInfo = (studentInfo: EditStudentInfoForm) => {
+const updateStudentInfo = (studentInfo: UpdateStudentInfoRequest) => {
 	return post<ApiResponse<any>>("/student/update", studentInfo);
 };
 
-const insertStudent = async (data: InsertStudentForm): Promise<number> => {
+const insertStudent = async (data: InsertStudentRequest): Promise<number> => {
 	let studentId = 0;
 	await post<InsertStudentResponse>("/student/insert", data).then((res) => {
 		console.log("插入学生响应:", res);
@@ -144,7 +144,7 @@ const insertStudent = async (data: InsertStudentForm): Promise<number> => {
 	return studentId;
 };
 
-const updateStudent = async (data: UpdateStudentForm): Promise<number> => {
+const updateStudent = async (data: UpdateStudentRequest): Promise<number> => {
 	let studentId = 0;
 	await post<UpdateStudentResponse>("/student/update", data).then((res) => {
 		console.log("更新学生响应:", res);
