@@ -63,7 +63,7 @@
 
 	type SearchFilterBarProps = {
 		/**
-		 * 搜索关键字
+		 * 搜索关键字，这里必须要使用 `v-model` 绑定父组件变量，否则会导致搜索框输入变化不生效
 		 * @type string
 		 * @default ""
 		 */
@@ -87,7 +87,9 @@
 		 * 你应该传进来一个键值对对象， key 为你在 filter 中传入的对象中的 key ，而 value 则是默认值
 		 * 当你选中对应的下拉框里的某个选项，那么会将那个选项的 value 传給这个参数传进来的对象中对应 key 的 value
 		 * 简单来说就这里是你用来承接下拉框不同选项的值的
- 		 * 
+		 * 
+		 * 注意：这里必须要使用 `v-model` 绑定父组件变量，否则会导致筛选条件变化不生效
+		 * 
 		 * @type ActiveFiltersType
 		 */
 		activeFilters?: ActiveFiltersType;

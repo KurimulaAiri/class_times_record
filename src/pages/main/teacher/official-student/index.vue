@@ -2,8 +2,8 @@
 	<view class="container">
 		<!-- ✅ 使用通用搜索筛选组件 -->
 		<SearchFilterBar
-			:keyword="tempKeyword"
-			v-model:activeFilters="activeFilters" 
+			v-model:keyword="tempKeyword"
+			v-model:activeFilters="activeFilters"
 			:filters="filterConfig"
 			placeholder="搜索姓名、学号或手机号"
 			@search="handleSearch"
@@ -68,7 +68,7 @@
 
 		<!-- 新增：右下角悬浮按钮 -->
 		<!-- 使用封装好的通用悬浮按钮 -->
-		<FloatingActionButton @click="goToAddStudent"/>
+		<FloatingActionButton @click="goToAddStudent" />
 	</view>
 </template>
 

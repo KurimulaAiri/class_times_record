@@ -2,7 +2,7 @@
 	<view class="container">
 		<!-- 搜索与筛选栏 -->
 		<SearchFilterBar
-			:keyword="tempKeyword"
+			v-model:keyword="tempKeyword"
 			v-model:activeFilters="activeFilters"
 			:filters="filterConfig"
 			placeholder="搜索班级名称、班主任或年级"

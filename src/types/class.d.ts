@@ -22,17 +22,17 @@ interface Class {
 interface ClassListQueryForm {
 	scope: number;
 	targetId: number;
-	keyword: string | null;
+	keyword: string | undefined;
 }
 
 interface ClassListQueryByTeacherIdForm {
 	teacherId: number;
-	keyword: string | null;
+	keyword: string | undefined;
 }
 
 interface ClassListQueryByInstitutionIdForm {
 	institutionId: number;
-	keyword: string | null;
+	keyword: string | undefined;
 }
 
 interface AddStudentToClassQueryForm {

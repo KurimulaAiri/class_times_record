@@ -74,21 +74,21 @@
 
 	onLoad((options) => {
 		if (options) {
-			const data: Student = parseData(options.data);
+			const data: Student | undefined = parseData(options.data);
 			console.log("studentList:", data);
 
-			formData.value.id = data.id;
-			formData.value.avatar = data.avatar;
-			formData.value.birthStr = data.birthStr;
-			formData.value.school = data.school;
-			formData.value.address = data.address;
+			formData.value.id = data?.id || 0;
+			formData.value.avatar = data?.avatar || "";
+			formData.value.birthStr = data?.birthStr || "";
+			formData.value.school = data?.school || "";
+			formData.value.address = data?.address || "";
 
 			submitData.value = {
-				id: data.id,
-				avatar: data.avatar,
-				birth: data.birthStr,
-				school: data.school,
-				address: data.address,
+				id: data?.id || 0,
+				avatar: data?.avatar || "",
+				birth: data?.birthStr || "",
+				school: data?.school || "",
+				address: data?.address || "",
 			};
 		}
 	});
@@ -126,19 +126,29 @@
 		uni.showLoading({ title: "保存中..." });
 		console.log("submitData:", submitData.value);
 
-		if (submitData.value.birth === "" || submitData.value.birth === undefined || submitData.value.birth === "暂无记录") {
+		if (
+			submitData.value.birth === "" ||
+			submitData.value.birth === undefined ||
+			submitData.value.birth === "暂无记录"
+		) {
 			uni.hideLoading();
 			uni.showToast({ title: "请选择出生日期", icon: "error" });
 			return;
 		}
 
-		if (submitData.value.school === "" || submitData.value.school === undefined) {
+		if (
+			submitData.value.school === "" ||
+			submitData.value.school === undefined
+		) {
 			uni.hideLoading();
 			uni.showToast({ title: "请输入就读学校", icon: "error" });
 			return;
 		}
 
-		if (submitData.value.address === "" || submitData.value.address === undefined) {
+		if (
+			submitData.value.address === "" ||
+			submitData.value.address === undefined
+		) {
 			uni.hideLoading();
 			uni.showToast({ title: "请输入家庭住址", icon: "error" });
 			return;

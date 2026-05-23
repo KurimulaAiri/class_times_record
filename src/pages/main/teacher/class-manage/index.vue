@@ -1,6 +1,7 @@
 <template>
 	<view class="container">
 		<SearchFilterBar
+			v-model:keyword="queryForm.keyword"
 			:filters="filterConfig"
 			v-model:active-filters="activeFilters"
 			placeholder="请输入班级名称"
@@ -84,7 +85,7 @@
 	const queryForm = ref<ClassListQueryForm>({
 		scope: 0,
 		targetId: 0,
-		keyword: null,
+		keyword: "",
 	});
 
 	// 页面加载时获取班级列表

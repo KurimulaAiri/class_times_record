@@ -1,7 +1,7 @@
 <template>
 	<view class="selector-page">
 		<SearchFilterBar
-			:keyword="keyword"
+			v-model:keyword="keyword"
 			placeholder="输入姓名查找老师"
 			@search="handleSearch"
 			class="search-filter-bar"

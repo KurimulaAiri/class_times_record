@@ -2,7 +2,7 @@
 	<view class="container">
 		<!-- 悬浮置顶的搜索框 -->
 		<SearchFilterBar
-			:keyword="keyword"
+			v-model:keyword="keyword"
 			placeholder="输入课程名称查找课程"
 			@search="handleSearch"
 			class="search-filter-bar"
