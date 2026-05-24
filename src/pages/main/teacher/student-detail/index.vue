@@ -1,9 +1,7 @@
 <template>
 	<view class="container">
-		<!-- 顶部背景装饰 -->
 		<view class="header-bg"></view>
 
-		<!-- 个人核心信息卡片 -->
 		<view class="main-card">
 			<view class="avatar-section">
 				<view :class="['avatar-big', student?.sex === 1 ? 'male' : 'female']">
@@ -24,123 +22,61 @@
 			<view class="id-badge">学号: {{ student?.id || "" }}</view>
 		</view>
 
-		<!-- 详细信息分组 -->
-		<view class="info-group">
-			<view class="group-title">基本信息</view>
-			<view class="info-item">
-				<text class="label">出生日期</text>
-				<text class="value">{{ student?.birthStr || "未填写" }}</text>
-			</view>
-			<view class="info-item">
-				<text class="label">就读学校</text>
-				<text class="value">{{ student?.school || "未填写" }}</text>
-			</view>
-			<view class="info-item">
-				<text class="label">家庭住址</text>
-				<text class="value">{{ student?.address || "未填写" }}</text>
-			</view>
-		</view>
-
-		<view class="info-group">
-			<view class="group-title">联系人信息</view>
-
-			<view class="info-item" v-if="student?.primaryParent">
-				<text class="label">主要联系人</text>
-
-				<view class="value contact-horizontal">
-					<view class="relation-tag">{{ student.primaryParent.relation }}</view>
-
-					<view
-						class="phone-wrapper-mini"
-						@tap="makePhoneCall(student.primaryParent.phone)"
-					>
-						<text class="phone">{{ student.primaryParent.phone }}</text>
-						<image
-							class="phone-icon"
-							src="/static/icon/phone.svg"
-							mode="aspectFit"
-						></image>
+		<FormPage :groups="groups" :modelValue="student">
+			<template #group-1>
+				<view class="info-item" v-if="student?.primaryParent">
+					<text class="label">主要联系人</text>
+					<view class="value contact-horizontal">
+						<view class="relation-tag">{{ student.primaryParent.relation }}</view>
+						<view class="phone-wrapper-mini" @tap="makePhoneCall(student.primaryParent.phone)">
+							<text class="phone">{{ student.primaryParent.phone }}</text>
+							<image class="phone-icon" src="/static/icon/phone.svg" mode="aspectFit"></image>
+						</view>
 					</view>
 				</view>
-			</view>
-
-			<view class="info-item" v-if="student?.secondaryParent">
-				<text class="label">备用联系人</text>
-				<view class="value contact-horizontal">
-					<view class="relation-tag">{{
-						student.secondaryParent.relation
-					}}</view>
-
-					<view
-						class="phone-wrapper-mini"
-						@tap="makePhoneCall(student.secondaryParent.phone)"
-					>
-						<text class="phone">{{ student.secondaryParent.phone }}</text>
-						<image
-							class="phone-icon"
-							src="/static/icon/phone.svg"
-							mode="aspectFit"
-						></image>
+				<view class="info-item" v-if="student?.secondaryParent">
+					<text class="label">备用联系人</text>
+					<view class="value contact-horizontal">
+						<view class="relation-tag">{{ student.secondaryParent.relation }}</view>
+						<view class="phone-wrapper-mini" @tap="makePhoneCall(student.secondaryParent.phone)">
+							<text class="phone">{{ student.secondaryParent.phone }}</text>
+							<image class="phone-icon" src="/static/icon/phone.svg" mode="aspectFit"></image>
+						</view>
 					</view>
 				</view>
-			</view>
-
-			<view
-				class="empty-state"
-				v-if="!student?.primaryParent && !student?.secondaryParent"
-			>
-				<uni-icons type="info" size="30" color="#999"></uni-icons>
-				<text class="empty-text">暂无联系人</text>
-			</view>
-		</view>
-
-		<view class="info-group">
-			<view class="group-title">报读班级</view>
-
-			<view class="class-list" v-if="classList && classList.length > 0">
-				<view
-					class="class-card"
-					v-for="(item, index) in classList"
-					:key="index"
-				>
-					<view class="info-item">
-						<text class="label">班级名称</text>
-						<text class="value">{{ item.className }}</text>
-					</view>
-					<view class="info-item">
-						<text class="label">课程名称</text>
-						<text class="value">{{ item.courseName }}</text>
-					</view>
-					<view class="info-item">
-						<text class="label">班级ID</text>
-						<text class="value">{{ item.id }}</text>
-					</view>
-					<view class="info-item small">
-						<text class="label">学生人数</text>
-						<text class="value">{{ item.studentCount }}人</text>
+				<view class="empty-state" v-if="!student?.primaryParent && !student?.secondaryParent">
+					<uni-icons type="info" size="30" color="#999"></uni-icons>
+					<text class="empty-text">暂无联系人</text>
+				</view>
+			</template>
+			<template #group-2>
+				<view class="class-list" v-if="classList && classList.length > 0">
+					<view class="class-card" v-for="(item, index) in classList" :key="index">
+						<view class="info-item">
+							<text class="label">班级名称</text>
+							<text class="value">{{ item.className }}</text>
+						</view>
+						<view class="info-item">
+							<text class="label">课程名称</text>
+							<text class="value">{{ item.courseName }}</text>
+						</view>
+						<view class="info-item">
+							<text class="label">班级ID</text>
+							<text class="value">{{ item.id }}</text>
+						</view>
+						<view class="info-item small">
+							<text class="label">学生人数</text>
+							<text class="value">{{ item.studentCount }}人</text>
+						</view>
 					</view>
 				</view>
-			</view>
+				<view class="empty-state" v-else>
+					<uni-icons type="info" size="30" color="#999"></uni-icons>
+					<text class="empty-text">暂无报读班级</text>
+				</view>
+			</template>
+		</FormPage>
 
-			<view class="empty-state" v-else>
-				<uni-icons type="info" size="30" color="#999"></uni-icons>
-				<text class="empty-text">暂无报读班级</text>
-			</view>
-		</view>
-
-		<view class="info-group">
-			<view class="group-title">系统记录</view>
-			<view class="info-item small">
-				<text class="label">创建时间</text>
-				<text class="value">{{ student?.createTimeStr || "未知" }}</text>
-			</view>
-			<view class="info-item small">
-				<text class="label">最后更新</text>
-				<text class="value">{{ student?.updateTimeStr || "未知" }}</text>
-			</view>
-		</view>
-
-		<!-- 底部操作按钮 -->
 		<view class="footer-btns">
 			<view
 				class="edit-btn"
@@ -160,11 +96,45 @@
 	import { onLoad, onShow } from "@dcloudio/uni-app";
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
+	import FormPage from "@/components/form-page/index.vue";
 
 	const studentStore = useStudentStore();
-	// 模拟接收到的数据
 	const student = ref<StudentResponse>();
 	const classList = ref<ClassResponse[]>([]);
+
+	const groups: FormGroupConfig[] = [
+		{
+			title: "基本信息",
+			titleStyle: "theme",
+			mode: "display",
+			items: [
+				{ key: "birthStr", label: "出生日期", type: "text", emptyText: "未填写" },
+				{ key: "school", label: "就读学校", type: "text", emptyText: "未填写" },
+				{ key: "address", label: "家庭住址", type: "text", emptyText: "未填写" },
+			],
+		},
+		{
+			title: "联系人信息",
+			titleStyle: "theme",
+			mode: "display",
+			items: [],
+		},
+		{
+			title: "报读班级",
+			titleStyle: "theme",
+			mode: "display",
+			items: [],
+		},
+		{
+			title: "系统记录",
+			titleStyle: "theme",
+			mode: "display",
+			items: [
+				{ key: "createTimeStr", label: "创建时间", type: "text", emptyText: "未知", small: true },
+				{ key: "updateTimeStr", label: "最后更新", type: "text", emptyText: "未知", small: true },
+			],
+		},
+	];
 
 	onLoad(async () => {
 		const classListIn = await getClassListByStudentId(student?.value?.id || 0);
@@ -178,13 +148,11 @@
 		}
 	});
 
-	// 头像文字处理：取名字最后两个字
 	const formatAvatarText = (name: string) => {
 		if (!name) return "无";
 		return name.length > 2 ? name.substring(name.length - 2) : name;
 	};
 
-	// 拨打联系人电话
 	const makePhoneCall = (phoneNumber: string) => {
 		uni.makePhoneCall({
 			phoneNumber: phoneNumber,
@@ -192,12 +160,9 @@
 				console.log("拨号成功");
 			},
 			fail: (err) => {
-				// 重点：判断是否是用户主动取消
 				if (err.errMsg.indexOf("cancel") !== -1) {
 					console.log("用户取消了拨打");
-					// 这里不需要抛出异常，也不需要给用户弹窗提示
 				} else {
-					// 如果是其他错误（比如号码格式不对），再进行提示
 					uni.showToast({ title: "拨号失败", icon: "none" });
 				}
 			},

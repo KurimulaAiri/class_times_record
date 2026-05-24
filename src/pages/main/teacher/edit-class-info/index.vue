@@ -1,178 +1,124 @@
 <template>
 	<view class="container">
-		<!-- 基础信息卡片 -->
-		<view class="form-group">
-			<view class="group-title">基础信息</view>
-
-			<view class="form-item">
-				<text class="label">班级名称<text class="required">*</text></text>
-				<input
-					class="input-value"
-					v-model="form.className"
-					placeholder="请输入班级名称"
-					placeholder-class="placeholder"
-				/>
-			</view>
-
-			<view class="form-item" @tap="toSelectCourse">
-				<text class="label">关联课程<text class="required">*</text></text>
-				<view class="picker-value-wrapper">
-					<text :class="['picker-value', !form.courseId && 'placeholder']">
-						{{ courseName || "请选择" }}
-					</text>
-					<uni-icons type="right" size="14" color="#ccc"></uni-icons>
-				</view>
-			</view>
-
-			<view class="form-item">
-				<text class="label">人数上限</text>
-				<view class="stepper">
-					<view class="step-btn" @tap="form.maxCount > 1 && form.maxCount--"
-						>-</view
-					>
-					<input class="step-input" type="number" v-model="form.maxCount" />
-					<view class="step-btn" @tap="form.maxCount++">+</view>
-				</view>
-			</view>
-
-			<view class="form-item no-border block-item">
-				<view class="label-row">
-					<text class="label">任课老师<text class="required">*</text></text>
-					<view class="add-teacher-btn" @tap="toSelectTeacher">
-						<uni-icons
-							type="staff-filled"
-							size="14"
-							:color="themeColor"
-						></uni-icons>
-						<text>选择老师</text>
+		<FormPage :groups="groups" :modelValue="form" @pickerTap="onPickerTap">
+			<template #group-0-teachers="{ model, item }">
+				<view class="form-item no-border block-item">
+					<view class="label-row">
+						<text class="label">任课老师<text class="required">*</text></text>
+						<view class="add-teacher-btn" @tap="toSelectTeacher">
+							<uni-icons type="staff-filled" size="14" :color="themeColor"></uni-icons>
+							<text>选择老师</text>
+						</view>
 					</view>
+					<view class="teacher-tags" v-if="selectedTeachers.length > 0">
+						<view class="tag" v-for="(t, i) in selectedTeachers" :key="t.teacherId">
+							<text>{{ t.username }}</text>
+							<text class="tag-close" @tap="removeTeacher(i)">×</text>
+						</view>
+					</view>
+					<view v-else class="empty-tip">未选择老师</view>
 				</view>
-
-				<view class="teacher-tags" v-if="selectedTeachers.length > 0">
+			</template>
+			<template #group-1>
+				<block v-if="form.schedules && form.schedules.length > 0">
 					<view
-						class="tag"
-						v-for="(t, i) in selectedTeachers"
-						:key="t.teacherId"
+						class="schedule-card-item"
+						v-for="(item, index) in form.schedules"
+						:key="index"
 					>
-						<text>{{ t.username }}</text>
-						<text class="tag-close" @tap="removeTeacher(i)">×</text>
-					</view>
-				</view>
-				<view v-else class="empty-tip">未选择老师</view>
-			</view>
-		</view>
+						<view class="card-header">
+							<text class="card-index">时段方案 {{ index + 1 }}</text>
+							<text class="card-delete" @tap="removeSchedule(index)">删除</text>
+						</view>
 
-		<!-- 上课日程安排部分 -->
-		<view class="form-group">
-			<view class="group-title"
-				>上课日程安排<text class="required">*</text></view
-			>
-
-			<!-- 已添加的排班日程列表 -->
-			<block v-if="form.schedules && form.schedules.length > 0">
-				<view
-					class="schedule-card-item"
-					v-for="(item, index) in form.schedules"
-					:key="index"
-				>
-					<view class="card-header">
-						<text class="card-index">时段方案 {{ index + 1 }}</text>
-						<text class="card-delete" @tap="removeSchedule(index)">删除</text>
-					</view>
-
-					<!-- 1. 周几单选 -->
-					<view class="form-item block-item no-padding-top">
-						<text class="label sub-label">上课周期</text>
-						<view class="week-days-container">
-							<view
-								v-for="day in weekOptions"
-								:key="day.value"
-								:class="['week-tag', item.dayOfWeek === day.value && 'active']"
-								@tap="toggleWeekDay(index, day.value)"
-							>
-								{{ day.label }}
+						<view class="form-item block-item no-padding-top">
+							<text class="label sub-label">上课周期</text>
+							<view class="week-days-container">
+								<view
+									v-for="day in weekOptions"
+									:key="day.value"
+									:class="['week-tag', item.dayOfWeek === day.value && 'active']"
+									@tap="toggleWeekDay(index, day.value)"
+								>
+									{{ day.label }}
+								</view>
 							</view>
 						</view>
-					</view>
 
-					<!-- 2. 有效日期段 -->
-					<view class="form-item">
-						<text class="label sub-label">有效日期</text>
-						<view class="range-picker-box">
-							<picker
-								mode="date"
-								:value="item.startDate"
-								@change="handleStartDateChange(index, $event)"
-							>
-								<view :class="['date-text', !item.startDate && 'placeholder']">
-									{{ item.startDate || "开始日期" }}
-								</view>
-							</picker>
-							<text class="range-split">至</text>
-							<picker
-								mode="date"
-								:value="item.endDate"
-								:start="item.startDate"
-								@change="item.endDate = $event.detail.value"
-							>
-								<view :class="['date-text', !item.endDate && 'placeholder']">
-									{{ item.endDate || "结束日期" }}
-								</view>
-							</picker>
+						<view class="form-item">
+							<text class="label sub-label">有效日期</text>
+							<view class="range-picker-box">
+								<picker
+									mode="date"
+									:value="item.startDate"
+									@change="handleStartDateChange(index, $event)"
+								>
+									<view :class="['date-text', !item.startDate && 'placeholder']">
+										{{ item.startDate || "开始日期" }}
+									</view>
+								</picker>
+								<text class="range-split">至</text>
+								<picker
+									mode="date"
+									:value="item.endDate"
+									:start="item.startDate"
+									@change="item.endDate = $event.detail.value"
+								>
+									<view :class="['date-text', !item.endDate && 'placeholder']">
+										{{ item.endDate || "结束日期" }}
+									</view>
+								</picker>
+							</view>
+						</view>
+
+						<view class="form-item no-border">
+							<text class="label sub-label">上课时间</text>
+							<view class="range-picker-box">
+								<picker
+									mode="time"
+									:value="item.startTime"
+									@change="item.startTime = $event.detail.value"
+								>
+									<view :class="['date-text', !item.startTime && 'placeholder']">
+										{{ item.startTime || "开始时间" }}
+									</view>
+								</picker>
+								<text class="range-split">至</text>
+								<picker
+									mode="time"
+									:value="item.endTime"
+									@change="item.endTime = $event.detail.value"
+								>
+									<view :class="['date-text', !item.endTime && 'placeholder']">
+										{{ item.endTime || "结束时间" }}
+									</view>
+								</picker>
+							</view>
+						</view>
+
+						<view class="form-item no-border block-item">
+							<text class="label sub-label">时段备注</text>
+							<textarea
+								class="remark-textarea"
+								v-model="item.remark"
+								placeholder="请输入该时段的备注信息"
+								placeholder-class="placeholder"
+								auto-height
+								:maxlength="200"
+							/>
 						</view>
 					</view>
+				</block>
 
-					<!-- 3. 上课时间段 -->
-					<view class="form-item no-border">
-						<text class="label sub-label">上课时间</text>
-						<view class="range-picker-box">
-							<picker
-								mode="time"
-								:value="item.startTime"
-								@change="item.startTime = $event.detail.value"
-							>
-								<view :class="['date-text', !item.startTime && 'placeholder']">
-									{{ item.startTime || "开始时间" }}
-								</view>
-							</picker>
-							<text class="range-split">至</text>
-							<picker
-								mode="time"
-								:value="item.endTime"
-								@change="item.endTime = $event.detail.value"
-							>
-								<view :class="['date-text', !item.endTime && 'placeholder']">
-									{{ item.endTime || "结束时间" }}
-								</view>
-							</picker>
-						</view>
-					</view>
-
-					<!-- 💡 新增：4. 日程备注输入框 -->
-					<view class="form-item no-border block-item">
-						<text class="label sub-label">时段备注</text>
-						<textarea
-							class="remark-textarea"
-							v-model="item.remark"
-							placeholder="请输入该时段的备注信息"
-							placeholder-class="placeholder"
-							auto-height
-							:maxlength="200"
-						/>
-					</view>
+				<view class="add-placeholder" @tap="addSchedule">
+					<text class="plus-icon">+</text>
+					<text>{{
+						form.schedules.length > 0 ? "追加一组上课时段" : "添加上课日程时段"
+					}}</text>
 				</view>
-			</block>
+			</template>
+		</FormPage>
 
-			<!-- 添加空位提示 -->
-			<view class="add-placeholder" @tap="addSchedule">
-				<text class="plus-icon">+</text>
-				<text>{{
-					form.schedules.length > 0 ? "追加一组上课时段" : "添加上课日程时段"
-				}}</text>
-			</view>
-		</view>
-
-		<!-- 底部固定的安全区域提交栏 -->
 		<view class="footer">
 			<button class="submit-btn" @tap="submitForm">保存修改</button>
 		</view>
@@ -180,11 +126,12 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, onUnmounted, watch } from "vue";
+	import { ref, computed, onUnmounted, watch } from "vue";
 	import { jump, usePageData } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
 	import { updateClassById } from "@/api/class";
 	import { getClassScheduleByClassId } from "@/api/class-schedule";
+	import FormPage from "@/components/form-page/index.vue";
 
 	const weekOptions = [
 		{ label: "周一", value: 1 },
@@ -209,7 +156,30 @@
 		schedules: [] as ClassScheduleRequest[],
 	});
 
-	// 1. 尽早同步注册跨页通信监听
+	const groups = computed<FormGroupConfig[]>(() => [
+		{
+			title: "基础信息",
+			titleStyle: "dark",
+			mode: "edit",
+			items: [
+				{ key: "className", label: "班级名称", type: "input", required: true, placeholder: "请输入班级名称", inputAlign: "right" },
+				{ key: "courseId", label: "关联课程", type: "picker", required: true, placeholder: "请选择", pickerText: courseName.value || "请选择" },
+				{ key: "maxCount", label: "人数上限", type: "stepper", min: 1 },
+				{ key: "teachers", label: "任课老师", type: "slot", required: true, block: true, noBorder: true },
+			],
+		},
+		{
+			title: "上课日程安排",
+			titleStyle: "dark",
+			required: true,
+			items: [],
+		},
+	]);
+
+	const onPickerTap = (key: string) => {
+		if (key === "courseId") toSelectCourse();
+	};
+
 	uni.$on("updateCourse", (res: CourseResponse) => {
 		form.value.courseId = res.id;
 		courseName.value = res.courseName;
@@ -224,10 +194,8 @@
 		uni.$off(["updateCourse", "updateTeachers"]);
 	});
 
-	// 💡 2. 核心改动：调用 usePageData 核心方法
 	const classInfo = usePageData<ClassResponse>();
 
-	// 💡 3. 终极修复：用 watch 盯着 classInfo.data。一旦 EventChannel 异步把数据送到了，立刻触发回显
 	watch(
 		() => classInfo.data.value,
 		async (rawClassData) => {
@@ -235,7 +203,6 @@
 
 			console.log("监听到核心班级数据真正送达:", rawClassData);
 
-			// 基础信息回显
 			form.value.classId = rawClassData.id || 0;
 			form.value.className = rawClassData.className || "";
 			form.value.maxCount = rawClassData.studentMaxCount || 30;
@@ -246,10 +213,9 @@
 			form.value.teachers = rawClassData.teachers || [];
 			selectedTeachers.value = JSON.parse(JSON.stringify(form.value.teachers));
 
-			// 💡 拿到了真正的班级 ID 后，再去查后端的排班日程
 			try {
 				const res = await getClassScheduleByClassId({
-					classId: rawClassData.id || 0, // 👈 此时的 id 绝对不是 0 了
+					classId: rawClassData.id || 0,
 					currentPage: 1,
 					pageSize: 10,
 				});
@@ -270,9 +236,8 @@
 			}
 		},
 		{ immediate: true },
-	); // immediate 确保如果数据先到也能被捕捉到
+	);
 
-	// --- 以下为原有表单交互与提交逻辑，保持不变 ---
 	const addSchedule = () => {
 		form.value.schedules.push({
 			classId: form.value.classId,
@@ -355,15 +320,13 @@
 				uni.showToast({
 					title: "班级修改成功",
 					icon: "success",
-					duration: 1500, // 提示持续 1.5 秒
-					mask: true, // 开启蒙层，防止用户在提示期间乱点
+					duration: 1500,
+					mask: true,
 				});
 			}, 1500);
 
-			// 发送刷新通知
 			uni.$emit("needRefresh");
 
-			// 💡 确保延迟时间与 duration 接近，让用户看清楚再后退
 			setTimeout(() => {
 				uni.$emit("backFromEditClass");
 				uni.navigateBack();

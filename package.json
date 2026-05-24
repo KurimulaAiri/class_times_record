@@ -55,7 +55,6 @@
 		"@dcloudio/uni-mp-weixin": "3.0.0-alpha-5000820260508001",
 		"@dcloudio/uni-mp-xhs": "3.0.0-alpha-5000820260508001",
 		"@dcloudio/uni-quickapp-webview": "3.0.0-alpha-5000820260508001",
-		"@dcloudio/uni-ui": "^1.5.12",
 		"@types/node": "^25.9.1",
 		"dayjs": "^1.11.20",
 		"jsbn": "^1.1.0",

@@ -1,113 +1,9 @@
 .container {
 	min-height: 100vh;
 	background: $default-background-color;
-	padding: 20rpx 0 180rpx; // 留足底部防遮挡空间
+	padding: 20rpx 0 180rpx;
 }
 
-// 统一的轻量白色卡片组
-.form-group {
-	background-color: #fff;
-	margin: 0 30rpx 24rpx;
-	border-radius: 20rpx;
-	padding: 10rpx 30rpx;
-	box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.02);
-
-	.group-title {
-		font-size: 28rpx;
-		font-weight: bold;
-		color: #333;
-		padding: 30rpx 0 10rpx;
-		display: flex;
-		align-items: center;
-
-		.required {
-			color: #ff4d4f;
-			margin-left: 4rpx;
-		}
-
-		&::before {
-			content: "";
-			width: 6rpx;
-			height: 26rpx;
-			background-color: $theme-color;
-			margin-right: 14rpx;
-			border-radius: 4rpx;
-		}
-	}
-}
-
-// 标准右对齐表单行
-.form-item {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 32rpx 0;
-	border-bottom: 1rpx solid #f6f8f8;
-
-	&.no-border {
-		border-bottom: none;
-	}
-
-	.label {
-		font-size: 28rpx;
-		color: #333;
-		min-width: 160rpx;
-
-		.required {
-			color: #ff4d4f;
-			margin-left: 4rpx;
-		}
-
-		&.sub-label {
-			font-size: 26rpx;
-			color: #666;
-		}
-	}
-
-	// 单行右对齐输入框
-	.input-value {
-		flex: 1;
-		text-align: right;
-		font-size: 28rpx;
-		color: #333;
-	}
-
-	// 带箭头的选择器右侧区域
-	.picker-value-wrapper {
-		display: flex;
-		align-items: center;
-
-		.picker-value {
-			font-size: 28rpx;
-			color: #333;
-			margin-right: 8rpx;
-		}
-	}
-
-	.placeholder {
-		color: #bbb;
-	}
-}
-
-// 变更为纵向延伸的块级条目（用于老师标签、周期多选）
-.block-item {
-	flex-direction: column;
-	align-items: flex-start;
-
-	&.no-padding-top {
-		padding-top: 10rpx;
-	}
-
-	.label-row {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		width: 100%;
-		margin-bottom: 20rpx;
-	}
-}
-
-// 精致小巧的步进器
 .stepper {
 	display: flex;
 	align-items: center;
@@ -140,7 +36,6 @@
 	}
 }
 
-// 选择老师按钮
 .add-teacher-btn {
 	color: $theme-color;
 	font-size: 26rpx;
@@ -149,7 +44,6 @@
 	gap: 6rpx;
 }
 
-// 老师已选标签外壳
 .teacher-tags {
 	display: flex;
 	flex-wrap: wrap;
@@ -180,7 +74,6 @@
 	margin-top: 10rpx;
 }
 
-// ================= 排班内页动态卡片样式 =================
 .schedule-card-item {
 	background-color: #f9fbfb;
 	border: 1rpx solid #edf2f2;
@@ -214,7 +107,6 @@
 	}
 }
 
-// 周几多选小胶囊
 .week-days-container {
 	display: flex;
 	flex-wrap: wrap;
@@ -239,7 +131,6 @@
 	}
 }
 
-// 日期、时间双段 Picker 框
 .range-picker-box {
 	display: flex;
 	align-items: center;
@@ -268,37 +159,6 @@
 	}
 }
 
-// 虚线框添加按钮
-.add-placeholder {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	padding: 36rpx 0;
-	border: 2rpx dashed #d2dad9;
-	border-radius: 16rpx;
-	margin: 20rpx 0;
-	color: #8a9695;
-	background-color: #fafbfc;
-
-	&:active {
-		background-color: rgba(112, 169, 162, 0.06);
-		border-color: #70a9a2;
-		color: #70a9a2;
-	}
-
-	.plus-icon {
-		font-size: 40rpx;
-		margin-bottom: 4rpx;
-		line-height: 1;
-	}
-
-	text {
-		font-size: 25rpx;
-	}
-}
-
-// 底部吸底吸附栏
 .footer {
 	position: fixed;
 	bottom: 0;
@@ -343,7 +203,6 @@
 	}
 }
 
-// 顺便移除了上课时间项的底边框，让备注承接在卡片底部
 .schedule-card-item {
 	.form-item {
 		&:nth-last-child(1) {

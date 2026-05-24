@@ -1,149 +1,19 @@
 <template>
 	<view class="container">
-		<!-- 基础信息部分 (逻辑与添加页一致) -->
-		<view class="form-group">
-			<view class="group-title">基础信息</view>
-			<view class="form-item">
-				<text class="label">学生姓名<text class="required">*</text></text>
-				<input
-					class="input"
-					v-model="form.studentName"
-					placeholder="请输入姓名"
-				/>
-			</view>
-
-			<view class="form-item">
-				<text class="label">性别</text>
-				<radio-group class="radio-group" @change="onGenderChange">
-					<label class="radio-item" v-for="item in genders" :key="item.value">
-						<radio
-							:value="item.value"
-							:checked="form.sex === item.value"
-							:color="themeColor"
-						/>
-						<text>{{ item.name }}</text>
-					</label>
-				</radio-group>
-			</view>
-
-			<view class="form-item">
-				<text class="label">出生日期</text>
-				<picker mode="date" @change="onDateChange">
-					<view :class="['picker-value', !form.birthStr && 'placeholder']">
-						{{ form.birthStr || "请选择日期" }}
-					</view>
-				</picker>
-			</view>
-
-			<view class="form-item">
-				<text class="label">在读学校</text>
-				<input
-					class="input"
-					v-model="form.school"
-					placeholder="请输入学校名称"
-				/>
-			</view>
-
-			<view class="form-item no-border">
-				<text class="label">家庭住址</text>
-				<textarea
-					class="textarea"
-					v-model="form.address"
-					placeholder="请输入详细地址"
-					auto-height
-				/>
-			</view>
-		</view>
-		<!-- 主要联系人部分 -->
-		<view class="form-group">
-			<view class="group-title">主要联系人</view>
-
-			<!-- 情况 A: 已经有信息或点击了添加 -->
-			<block
-				v-if="
-					form.primaryParent && form.primaryParent.hasOwnProperty('parentId')
-				"
-			>
-				<view class="form-item">
-					<text class="label">家长姓名<text class="required">*</text></text>
-					<input
-						class="input"
-						v-model="form.primaryParent.username"
-						placeholder="请输入家长姓名"
-					/>
+		<FormPage :groups="groups" :modelValue="form">
+			<template #group-1>
+				<view v-if="!form.primaryParent?.hasOwnProperty('parentId')" class="add-placeholder" @tap="initParent('primary')">
+					<text class="plus-icon">+</text>
+					<text>添加主要联系人</text>
 				</view>
-				<view class="form-item">
-					<text class="label">关系<text class="required">*</text></text>
-					<input
-						class="input"
-						v-model="form.primaryParent.relation"
-						placeholder="如：爸爸、妈妈"
-					/>
+			</template>
+			<template #group-2>
+				<view v-if="!form.secondaryParent?.hasOwnProperty('parentId')" class="add-placeholder" @tap="initParent('secondary')">
+					<text class="plus-icon">+</text>
+					<text>添加备用联系人</text>
 				</view>
-				<view class="form-item no-border">
-					<text class="label">联系电话<text class="required">*</text></text>
-					<input
-						class="input"
-						type="number"
-						v-model="form.primaryParent.phone"
-						placeholder="请输入手机号"
-						maxlength="11"
-					/>
-				</view>
-			</block>
-
-			<!-- 情况 B: 信息为空，显示添加按钮 -->
-			<view v-else class="add-placeholder" @tap="initParent('primary')">
-				<text class="plus-icon">+</text>
-				<text>添加主要联系人</text>
-			</view>
-		</view>
-
-		<!-- 备用联系人部分 -->
-		<view class="form-group">
-			<view class="group-title">备用联系人 (可选)</view>
-
-			<!-- 情况 A: 已经有信息或点击了添加 -->
-			<block
-				v-if="
-					form.secondaryParent &&
-					form.secondaryParent.hasOwnProperty('parentId')
-				"
-			>
-				<view class="form-item">
-					<text class="label">家长姓名</text>
-					<input
-						class="input"
-						v-model="form.secondaryParent.username"
-						placeholder="请输入家长姓名"
-					/>
-				</view>
-				<view class="form-item">
-					<text class="label">关系</text>
-					<input
-						class="input"
-						v-model="form.secondaryParent.relation"
-						placeholder="如：爷爷、奶奶"
-					/>
-				</view>
-				<view class="form-item no-border">
-					<text class="label">联系电话</text>
-					<input
-						class="input"
-						type="number"
-						v-model="form.secondaryParent.phone"
-						placeholder="请输入手机号"
-						maxlength="11"
-					/>
-				</view>
-			</block>
-
-			<!-- 情况 B: 信息为空，显示添加按钮 -->
-			<view v-else class="add-placeholder" @tap="initParent('secondary')">
-				<text class="plus-icon">+</text>
-				<text>添加备用联系人</text>
-			</view>
-		</view>
+			</template>
+		</FormPage>
 
 		<view class="footer">
 			<button class="submit-btn" @tap="submitForm">保存修改</button>
@@ -152,12 +22,12 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { ref, computed } from "vue";
 	import { onLoad } from "@dcloudio/uni-app";
 	import { useStudentStore } from "@/stores/student";
 	import { updateStudent } from "@/api/student";
+	import FormPage from "@/components/form-page/index.vue";
 
-	const themeColor = ref("#70a9a2");
 	const studentStore = useStudentStore();
 
 	const genders = [
@@ -197,21 +67,55 @@
 		updateTimeStr: "",
 	});
 
-	// 1. 页面加载时获取 ID 并查询详情
+	const groups = computed<FormGroupConfig[]>(() => [
+		{
+			title: "基础信息",
+			titleStyle: "theme",
+			mode: "edit",
+			items: [
+				{ key: "studentName", label: "学生姓名", type: "input", required: true, placeholder: "请输入姓名" },
+				{ key: "sex", label: "性别", type: "radio", options: genders },
+				{ key: "birthStr", label: "出生日期", type: "date", placeholder: "请选择日期" },
+				{ key: "school", label: "在读学校", type: "input", placeholder: "请输入学校名称" },
+				{ key: "address", label: "家庭住址", type: "textarea", placeholder: "请输入详细地址", noBorder: true },
+			],
+		},
+		{
+			title: "主要联系人",
+			titleStyle: "theme",
+			mode: "edit",
+			items: form.value.primaryParent?.hasOwnProperty("parentId")
+				? [
+					{ key: "primaryParent.username", label: "家长姓名", type: "input", required: true, placeholder: "请输入家长姓名" },
+					{ key: "primaryParent.relation", label: "关系", type: "input", required: true, placeholder: "如：爸爸、妈妈" },
+					{ key: "primaryParent.phone", label: "联系电话", type: "number", required: true, placeholder: "请输入手机号", noBorder: true, maxlength: 11 },
+				]
+				: [],
+		},
+		{
+			title: "备用联系人 (可选)",
+			titleStyle: "theme",
+			mode: "edit",
+			items: form.value.secondaryParent?.hasOwnProperty("parentId")
+				? [
+					{ key: "secondaryParent.username", label: "家长姓名", type: "input", placeholder: "请输入家长姓名" },
+					{ key: "secondaryParent.relation", label: "关系", type: "input", placeholder: "如：爷爷、奶奶" },
+					{ key: "secondaryParent.phone", label: "联系电话", type: "number", placeholder: "请输入手机号", noBorder: true, maxlength: 11 },
+				]
+				: [],
+		},
+	]);
+
 	onLoad(() => {
 		fetchStudentDetail();
 	});
 
-	// 修改 fetchStudentDetail 中的逻辑，确保如果后端返回的是 null，则不自动回显表单
 	const fetchStudentDetail = async () => {
 		if (!studentStore.studentInfo) return;
 		uni.showLoading({ title: "加载中..." });
 		try {
-			const res = JSON.parse(JSON.stringify(studentStore.studentInfo)); // 深拷贝一份
-
-			// 如果后端返回的 parent 为 null，这里不要合并，或者合并后删掉，以便触发 v-else
+			const res = JSON.parse(JSON.stringify(studentStore.studentInfo));
 			Object.assign(form.value, res);
-
 			console.log("回显后的数据：", form.value);
 		} catch (error) {
 			console.error("获取详情失败", error);
@@ -220,7 +124,6 @@
 		}
 	};
 
-	// 初始化家长信息对象
 	const initParent = (type: "primary" | "secondary") => {
 		const emptyParent: ParentResponse = {
 			studentId: form.value.id,
@@ -244,16 +147,7 @@
 		}
 	};
 
-	const onGenderChange = (e: any) => {
-		form.value.sex = Number(e.detail.value);
-	};
-
-	const onDateChange = (e: any) => {
-		form.value.birthStr = e.detail.value;
-	};
-
 	const submitForm = async () => {
-		// 校验逻辑与添加页面一致
 		if (!form.value.studentName)
 			return uni.showToast({ title: "姓名不能为空", icon: "none" });
 
@@ -278,7 +172,6 @@
 			}
 		}
 
-		// 构造提交数据
 		const submitData: UpdateStudentRequest = { ...form.value };
 
 		if (!hasAny) {
@@ -287,14 +180,13 @@
 
 		try {
 			uni.showLoading({ title: "保存中..." });
-			const res = await updateStudent(submitData); // 调用更新接口
+			const res = await updateStudent(submitData);
 			uni.showToast({ title: "修改成功", icon: "success" });
 			setTimeout(() => {
 				uni.navigateBack()
 				uni.$emit("needRefresh");
 			}, 1500);
 		} catch (error) {
-			// 错误由拦截器处理
 		} finally {
 		}
 	};

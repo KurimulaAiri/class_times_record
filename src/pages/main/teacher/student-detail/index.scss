@@ -84,117 +84,75 @@ $text-grey: #95a5a6;
 	}
 }
 
-.info-group {
-	background: #fff;
-	margin: 0 30rpx 30rpx;
-	border-radius: 24rpx;
-	padding: 30rpx;
+.class-list {
+	display: flex;
+	flex-direction: column;
 
-	.class-list {
-		display: flex;
-		flex-direction: column;
+	.class-card {
+		padding: 10rpx 0;
+		position: relative;
 
-		.class-card {
-			padding: 10rpx 0;
-			position: relative;
+		&:not(:last-child) {
+			margin-bottom: 20rpx;
+			padding-bottom: 20rpx;
+			border-bottom: 2rpx dashed #eee;
+		}
 
-			// 在班级卡片之间添加分割线，最后一个除外
-			&:not(:last-child) {
-				margin-bottom: 20rpx;
-				padding-bottom: 20rpx;
-				border-bottom: 2rpx dashed #eee; // 使用虚线区分不同班级
+		.info-item {
+			border-bottom: none;
+			padding: 12rpx 0;
+
+			.label {
+				flex-shrink: 0;
 			}
-
-			// 内部的 info-item 沿用你原本的样式
-			.info-item {
-				border-bottom: none; // 卡片内部的项建议取消实线，靠虚线区分大块
-				padding: 12rpx 0;
-
-				// 确保对齐
-				.label {
-					flex-shrink: 0;
-				}
-				.value {
-					text-align: right;
-				}
+			.value {
+				text-align: right;
 			}
 		}
 	}
+}
 
-	.group-title {
-		font-size: 28rpx;
-		font-weight: bold;
-		color: $theme-color;
-		margin-bottom: 30rpx;
-		padding-left: 16rpx;
-		border-left: 8rpx solid $theme-color;
-	}
+.contact-horizontal {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-end;
 
-	.info-item {
+	.relation-tag {
+		font-size: 24rpx;
+		color: #666;
+		background: #f0f4f3;
+		padding: 4rpx 12rpx;
+		border-radius: 8rpx;
+		margin-right: 16rpx;
 		display: flex;
-		justify-content: space-between;
-		align-items: center; // 确保左边的 label 和右边的内容中心对齐
-		padding: 24rpx 0;
-
-		.contact-horizontal {
-			display: flex;
-			flex-direction: row; // 横向排列
-			align-items: center; // 垂直方向同高居中
-			justify-content: flex-end; // 整体靠右对齐
-
-			.relation-tag {
-				font-size: 24rpx;
-				color: #666;
-				background: #f0f4f3;
-				padding: 4rpx 12rpx;
-				border-radius: 8rpx;
-				margin-right: 16rpx; // 标签与手机号的间距
-				// 确保高度与手机号容器接近
-				display: flex;
-				align-items: center;
-				height: 44rpx;
-			}
-
-			.phone-wrapper-mini {
-				display: flex;
-				align-items: center;
-				padding: 6rpx 16rpx;
-				background-color: rgba($theme-color, 0.08);
-				border-radius: 40rpx;
-				height: 44rpx; // 强制与标签同高
-
-				&:active {
-					transform: scale(0.95);
-					background-color: rgba($theme-color, 0.15);
-				}
-
-				.phone {
-					color: $theme-color;
-					font-size: 28rpx;
-					font-weight: 500;
-					margin-right: 8rpx;
-				}
-
-				.phone-icon {
-					width: 28rpx;
-					height: 28rpx;
-				}
-			}
-		}
-	}
-
-	.empty-state {
-		padding: 80rpx 0;
-		display: flex;
-		flex-direction: column; // 图标和文字垂直排列
-		justify-content: center;
 		align-items: center;
+		height: 44rpx;
+	}
 
-		.empty-text {
-			margin-top: 16rpx; // 图标和文字的间距
-			font-size: 26rpx;
-			color: #999;
-			letter-spacing: 2rpx;
+	.phone-wrapper-mini {
+		display: flex;
+		align-items: center;
+		padding: 6rpx 16rpx;
+		background-color: rgba($theme-color, 0.08);
+		border-radius: 40rpx;
+		height: 44rpx;
+
+		&:active {
+			transform: scale(0.95);
+			background-color: rgba($theme-color, 0.15);
+		}
+
+		.phone {
+			color: $theme-color;
+			font-size: 28rpx;
+			font-weight: 500;
+			margin-right: 8rpx;
+		}
+
+		.phone-icon {
+			width: 28rpx;
+			height: 28rpx;
 		}
 	}
 }
