@@ -17,7 +17,7 @@
 			<slot
 				v-if="item.type === 'slot'"
 				:name="item.key"
-				:model="modelValue"
+				:modelValue="modelValue"
 				:item="item"
 			></slot>
 
@@ -31,7 +31,7 @@
 			</view>
 
 			<view
-				v-else-if="item.type === 'input'"
+				v-else-if="item.type === 'input' || item.type === 'number'"
 				class="form-item"
 				:class="[item.itemClass, getItemClass(item)]"
 			>
@@ -39,57 +39,23 @@
 					>{{ item.label
 					}}<text v-if="item.required" class="required">*</text></text
 				>
-				<view v-if="item.column" class="input-box">
-					<input
-						class="input"
-						:value="getValue(item.key)"
-						@input="onInput(item, $event)"
-						:placeholder="item.placeholder"
-						placeholder-class="placeholder"
-						:maxlength="item.maxlength"
-					/>
-				</view>
-				<input
-					v-else
-					:class="['input', item.inputAlign === 'right' && 'input-right']"
-					:value="getValue(item.key)"
-					@input="onInput(item, $event)"
-					:placeholder="item.placeholder"
-					placeholder-class="placeholder"
-					:maxlength="item.maxlength"
-				/>
-			</view>
-
-			<view
-				v-else-if="item.type === 'number'"
-				class="form-item"
-				:class="[item.itemClass, getItemClass(item)]"
-			>
-				<text class="label"
-					>{{ item.label
-					}}<text v-if="item.required" class="required">*</text></text
+				<view
+					:class="[item.column ? 'input-box' : 'input-wrapper-flat']"
+					style="flex: 1; display: flex; align-items: center"
 				>
-				<view v-if="item.column" class="input-box">
 					<input
-						class="input"
-						type="number"
+						:class="[
+							'input',
+							!item.column && item.inputAlign === 'right' && 'input-right',
+						]"
+						:type="item.type === 'number' ? 'number' : 'text'"
 						:value="getValue(item.key)"
 						@input="onInput(item, $event)"
 						:placeholder="item.placeholder"
 						placeholder-class="placeholder"
-						:maxlength="item.maxlength"
+						:maxlength="item.maxlength !== undefined ? item.maxlength : 140"
 					/>
 				</view>
-				<input
-					v-else
-					class="input"
-					type="number"
-					:value="getValue(item.key)"
-					@input="onInput(item, $event)"
-					:placeholder="item.placeholder"
-					placeholder-class="placeholder"
-					:maxlength="item.maxlength"
-				/>
 			</view>
 
 			<view
@@ -121,10 +87,7 @@
 					>{{ item.label
 					}}<text v-if="item.required" class="required">*</text></text
 				>
-				<radio-group
-					class="radio-group"
-					@change="onRadioChange(item, $event)"
-				>
+				<radio-group class="radio-group" @change="onRadioChange(item, $event)">
 					<label
 						class="radio-item"
 						v-for="opt in item.options"
@@ -161,18 +124,13 @@
 							color="#999"
 							class="icon"
 						></uni-icons>
-						<text
-							:class="['text', !getValue(item.key) && 'placeholder']"
-						>
+						<text :class="['text', !getValue(item.key) && 'placeholder']">
 							{{ getValue(item.key) || item.placeholder || "请选择日期" }}
 						</text>
 					</view>
 					<view
 						v-else
-						:class="[
-							'picker-value',
-							!getValue(item.key) && 'placeholder',
-						]"
+						:class="['picker-value', !getValue(item.key) && 'placeholder']"
 					>
 						{{ getValue(item.key) || item.placeholder || "请选择日期" }}
 					</view>
@@ -193,12 +151,7 @@
 					:value="getValue(item.key)"
 					@change="onPickerChange(item, $event)"
 				>
-					<view
-						:class="[
-							'picker-value',
-							!getValue(item.key) && 'placeholder',
-						]"
-					>
+					<view :class="['picker-value', !getValue(item.key) && 'placeholder']">
 						{{ getValue(item.key) || item.placeholder || "请选择时间" }}
 					</view>
 				</picker>
@@ -215,12 +168,7 @@
 					}}<text v-if="item.required" class="required">*</text></text
 				>
 				<view class="picker-value-wrapper">
-					<text
-						:class="[
-							'picker-value',
-							!getValue(item.key) && 'placeholder',
-						]"
-					>
+					<text :class="['picker-value', !getValue(item.key) && 'placeholder']">
 						{{ item.pickerText || item.placeholder || "请选择" }}
 					</text>
 					<uni-icons type="right" size="14" color="#ccc"></uni-icons>
@@ -237,18 +185,14 @@
 					}}<text v-if="item.required" class="required">*</text></text
 				>
 				<view class="stepper">
-					<view class="step-btn" @tap="onStepperChange(item, -1)"
-						>-</view
-					>
+					<view class="step-btn" @tap="onStepperChange(item, -1)">-</view>
 					<input
 						class="step-input"
 						type="number"
 						:value="getValue(item.key)"
 						@input="onInput(item, $event)"
 					/>
-					<view class="step-btn" @tap="onStepperChange(item, 1)"
-						>+</view
-					>
+					<view class="step-btn" @tap="onStepperChange(item, 1)">+</view>
 				</view>
 			</view>
 
@@ -266,12 +210,7 @@
 							mode="aspectFill"
 							class="avatar-img"
 						></image>
-						<uni-icons
-							v-else
-							type="camera"
-							size="30"
-							color="#999"
-						></uni-icons>
+						<uni-icons v-else type="camera" size="30" color="#999"></uni-icons>
 					</view>
 					<uni-icons type="right" size="18" color="#ccc"></uni-icons>
 				</view>
@@ -283,6 +222,8 @@
 </template>
 
 <script setup lang="ts">
+	import { ref, watch } from "vue";
+
 	type FormGroupProps = {
 		title?: string;
 		mode?: "edit" | "display";
@@ -306,28 +247,64 @@
 	const emit = defineEmits<{
 		(e: "change", payload: { key: string; value: any }): void;
 		(e: "pickerTap", key: string): void;
+		(e: "update:modelValue", value: Record<string, any>): void;
 	}>();
 
+	// 💡 核心改良点 1：在组件内部维护一个属于自己的表单影子对象
+	// 这样用户打字时，我们直接修改这个局部对象，绝不触发外层引用重构，彻底避开微信小程序的 Diff 锁
+	const localForm = ref<Record<string, any>>({});
+
+	// 监听外层传入的初始数据或外部异步重置
+	watch(
+		() => props.modelValue,
+		(newVal) => {
+			if (newVal) {
+				// 采用浅拷贝防止子组件和父组件直接共享一个内存地址导致通知错乱
+				localForm.value = { ...newVal };
+			}
+		},
+		{ immediate: true, deep: false }, // 注意：千万不要开启 deep 监听，否则打字时又会反复触发
+	);
+
+	// 💡 核心改良点 2：读取和写入全部转为操作内部局部变量
 	const getValue = (key: string): any => {
-		if (!props.modelValue) return "";
 		return (
-			key.split(".").reduce((obj: any, k) => obj?.[k], props.modelValue) ??
-			""
+			key.split(".").reduce((obj: any, k) => obj?.[k], localForm.value) ?? ""
 		);
 	};
 
 	const setValue = (key: string, value: any): void => {
-		if (!props.modelValue) return;
 		const keys = key.split(".");
 		const lastKey = keys.pop()!;
-		const target = keys.reduce(
-			(obj: any, k) => obj?.[k],
-			props.modelValue,
-		);
-		if (target) {
-			target[lastKey] = value;
+
+		let current = localForm.value;
+
+		// 在局部影子对象中安全钻取并赋值
+		for (let i = 0; i < keys.length; i++) {
+			const k = keys[i];
+			if (!current[k] || typeof current[k] !== "object") {
+				current[k] = {};
+			}
+			current = current[k];
+		}
+
+		if (current) {
+			current[lastKey] = value;
+
+			// 💡 核心改良点 3：抛出给父组件时，为了应对深层嵌套，打包一个干净的副本抛上去
+			// 此时父组件的数据更新了，但由于 watch 没开 deep，它不会反向冲刷子组件的 localForm，打字流非常丝滑！
+			const outData = JSON.parse(JSON.stringify(localForm.value));
+			emit("update:modelValue", outData);
 			emit("change", { key, value });
 		}
+	};
+
+	const onInput = (item: FormItemConfig, e: any): void => {
+		let val = e.detail.value;
+		if (item.type === "number" || item.type === "stepper") {
+			val = val === "" ? "" : isNaN(Number(val)) ? val : Number(val);
+		}
+		setValue(item.key, val);
 	};
 
 	const getItemClass = (item: FormItemConfig): Record<string, boolean> => ({
@@ -342,10 +319,6 @@
 			return item.emptyText || "未填写";
 		}
 		return String(val);
-	};
-
-	const onInput = (item: FormItemConfig, e: any): void => {
-		setValue(item.key, e.detail.value);
 	};
 
 	const onRadioChange = (item: FormItemConfig, e: any): void => {

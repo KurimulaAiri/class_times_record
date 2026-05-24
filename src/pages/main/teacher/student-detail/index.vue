@@ -27,31 +27,56 @@
 				<view class="info-item" v-if="student?.primaryParent">
 					<text class="label">主要联系人</text>
 					<view class="value contact-horizontal">
-						<view class="relation-tag">{{ student.primaryParent.relation }}</view>
-						<view class="phone-wrapper-mini" @tap="makePhoneCall(student.primaryParent.phone)">
+						<view class="relation-tag">{{
+							student.primaryParent.relation
+						}}</view>
+						<view
+							class="phone-wrapper-mini"
+							@tap="makePhoneCall(student.primaryParent.phone)"
+						>
 							<text class="phone">{{ student.primaryParent.phone }}</text>
-							<image class="phone-icon" src="/static/icon/phone.svg" mode="aspectFit"></image>
+							<image
+								class="phone-icon"
+								src="/static/icon/phone.svg"
+								mode="aspectFit"
+							></image>
 						</view>
 					</view>
 				</view>
 				<view class="info-item" v-if="student?.secondaryParent">
 					<text class="label">备用联系人</text>
 					<view class="value contact-horizontal">
-						<view class="relation-tag">{{ student.secondaryParent.relation }}</view>
-						<view class="phone-wrapper-mini" @tap="makePhoneCall(student.secondaryParent.phone)">
+						<view class="relation-tag">{{
+							student.secondaryParent.relation
+						}}</view>
+						<view
+							class="phone-wrapper-mini"
+							@tap="makePhoneCall(student.secondaryParent.phone)"
+						>
 							<text class="phone">{{ student.secondaryParent.phone }}</text>
-							<image class="phone-icon" src="/static/icon/phone.svg" mode="aspectFit"></image>
+							<image
+								class="phone-icon"
+								src="/static/icon/phone.svg"
+								mode="aspectFit"
+							></image>
 						</view>
 					</view>
 				</view>
-				<view class="empty-state" v-if="!student?.primaryParent && !student?.secondaryParent">
+				<view
+					class="empty-state"
+					v-if="!student?.primaryParent && !student?.secondaryParent"
+				>
 					<uni-icons type="info" size="30" color="#999"></uni-icons>
 					<text class="empty-text">暂无联系人</text>
 				</view>
 			</template>
 			<template #group-2>
 				<view class="class-list" v-if="classList && classList.length > 0">
-					<view class="class-card" v-for="(item, index) in classList" :key="index">
+					<view
+						class="class-card"
+						v-for="(item, index) in classList"
+						:key="index"
+					>
 						<view class="info-item">
 							<text class="label">班级名称</text>
 							<text class="value">{{ item.className }}</text>
@@ -108,9 +133,19 @@
 			titleStyle: "theme",
 			mode: "display",
 			items: [
-				{ key: "birthStr", label: "出生日期", type: "text", emptyText: "未填写" },
+				{
+					key: "birthStr",
+					label: "出生日期",
+					type: "text",
+					emptyText: "未填写",
+				},
 				{ key: "school", label: "就读学校", type: "text", emptyText: "未填写" },
-				{ key: "address", label: "家庭住址", type: "text", emptyText: "未填写" },
+				{
+					key: "address",
+					label: "家庭住址",
+					type: "text",
+					emptyText: "未填写",
+				},
 			],
 		},
 		{
@@ -130,8 +165,20 @@
 			titleStyle: "theme",
 			mode: "display",
 			items: [
-				{ key: "createTimeStr", label: "创建时间", type: "text", emptyText: "未知", small: true },
-				{ key: "updateTimeStr", label: "最后更新", type: "text", emptyText: "未知", small: true },
+				{
+					key: "createTimeStr",
+					label: "创建时间",
+					type: "text",
+					emptyText: "未知",
+					small: true,
+				},
+				{
+					key: "updateTimeStr",
+					label: "最后更新",
+					type: "text",
+					emptyText: "未知",
+					small: true,
+				},
 			],
 		},
 	];

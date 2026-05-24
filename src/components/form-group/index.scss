@@ -52,6 +52,8 @@
 
 .form-item {
 	display: flex;
+	justify-content: space-between;
+	align-content: center;
 	align-items: center;
 	padding: 30rpx 0;
 	border-bottom: 1rpx solid #f1f3f5;
@@ -74,6 +76,12 @@
 			align-items: center;
 			width: 100%;
 			margin-bottom: 20rpx;
+		}
+		// 关键：强行让微信小程序自动包装的组件影子节点撑满 100%
+		& > uni-slot,
+		& > slot,
+		& > view {
+			width: 100%;
 		}
 	}
 
@@ -125,7 +133,7 @@
 		flex: 1;
 		font-size: 28rpx;
 		padding: 0;
-		min-height: 60rpx;
+		min-height: 28rpx;
 	}
 
 	.placeholder {
@@ -240,6 +248,7 @@
 
 .info-item {
 	display: flex;
+	align-content: center;
 	justify-content: space-between;
 	align-items: center;
 	padding: 24rpx 0;
@@ -284,6 +293,10 @@
 		margin-bottom: 8rpx;
 		line-height: 1;
 	}
+
+	// .add-text { // 💡 改用类名选择器
+	//     font-size: 26rpx;
+	// }
 
 	text {
 		font-size: 26rpx;

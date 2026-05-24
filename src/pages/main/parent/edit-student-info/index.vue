@@ -1,6 +1,10 @@
 <template>
 	<view class="container">
-		<FormGroup mode="edit" :items="formItems" :modelValue="submitData"></FormGroup>
+		<FormGroup
+			mode="edit"
+			:items="formItems"
+			v-model:modelValue="submitData"
+		></FormGroup>
 
 		<view class="button-wrapper">
 			<button class="save-btn" @tap="submitForm">保存</button>
@@ -17,9 +21,27 @@
 
 	const formItems: FormItemConfig[] = [
 		{ key: "avatar", label: "学员头像", type: "avatar" },
-		{ key: "birth", label: "出生日期", type: "date", column: true, placeholder: "选择日期" },
-		{ key: "school", label: "就读学校", type: "input", column: true, placeholder: "请输入" },
-		{ key: "address", label: "家庭住址", type: "input", column: true, placeholder: "请输入" },
+		{
+			key: "birth",
+			label: "出生日期",
+			type: "date",
+			column: true,
+			placeholder: "选择日期",
+		},
+		{
+			key: "school",
+			label: "就读学校",
+			type: "input",
+			column: true,
+			placeholder: "请输入",
+		},
+		{
+			key: "address",
+			label: "家庭住址",
+			type: "input",
+			column: true,
+			placeholder: "请输入",
+		},
 	];
 
 	onLoad((options) => {

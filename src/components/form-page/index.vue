@@ -9,6 +9,12 @@
 			:required="group.required || false"
 			:items="group.items || []"
 			:modelValue="modelValue"
+			@update:modelValue="
+				(val) => {
+					console.log('update:modelValue', val);
+					emit('update:modelValue', val);
+				}
+			"
 			:themeColor="themeColor"
 			@change="(payload) => emit('change', payload)"
 			@pickerTap="(key) => emit('pickerTap', key)"
@@ -44,6 +50,8 @@
 	const emit = defineEmits<{
 		(e: "change", payload: { key: string; value: any }): void;
 		(e: "pickerTap", key: string): void;
+		// 💡 新增这一行，允许外层页面 v-model 绑定 FormPage
+		(e: "update:modelValue", value: Record<string, any>): void;
 	}>();
 
 	const getSlotItems = (group: FormGroupConfig): FormItemConfig[] => {

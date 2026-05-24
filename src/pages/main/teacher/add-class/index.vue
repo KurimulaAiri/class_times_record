@@ -1,17 +1,25 @@
 <template>
 	<view class="container">
 		<FormPage :groups="groups" :modelValue="form" @pickerTap="onPickerTap">
-			<template #group-0-teachers="{ model, item }">
+			<template #group-0-teachers>
 				<view class="form-item no-border block-item">
 					<view class="label-row">
 						<text class="label">任课老师<text class="required">*</text></text>
 						<view class="add-teacher-btn" @tap="toSelectTeacher">
-							<uni-icons type="staff-filled" size="14" :color="themeColor"></uni-icons>
+							<uni-icons
+								type="staff-filled"
+								size="14"
+								:color="themeColor"
+							></uni-icons>
 							<text>选择老师</text>
 						</view>
 					</view>
 					<view class="teacher-tags" v-if="selectedTeachers.length > 0">
-						<view class="tag" v-for="(t, i) in selectedTeachers" :key="t.teacherId">
+						<view
+							class="tag"
+							v-for="(t, i) in selectedTeachers"
+							:key="t.teacherId"
+						>
 							<text>{{ t.username }}</text>
 							<text class="tag-close" @tap="removeTeacher(i)">×</text>
 						</view>
@@ -37,7 +45,10 @@
 								<view
 									v-for="day in weekOptions"
 									:key="day.value"
-									:class="['week-tag', item.dayOfWeek === day.value && 'active']"
+									:class="[
+										'week-tag',
+										item.dayOfWeek === day.value && 'active',
+									]"
 									@tap="toggleWeekDay(index, day.value)"
 								>
 									{{ day.label }}
@@ -53,7 +64,9 @@
 									:value="item.startDate"
 									@change="handleStartDateChange(index, $event)"
 								>
-									<view :class="['date-text', !item.startDate && 'placeholder']">
+									<view
+										:class="['date-text', !item.startDate && 'placeholder']"
+									>
 										{{ item.startDate || "开始日期" }}
 									</view>
 								</picker>
@@ -79,7 +92,9 @@
 									:value="item.startTime"
 									@change="item.startTime = $event.detail.value"
 								>
-									<view :class="['date-text', !item.startTime && 'placeholder']">
+									<view
+										:class="['date-text', !item.startTime && 'placeholder']"
+									>
 										{{ item.startTime || "开始时间" }}
 									</view>
 								</picker>
@@ -158,10 +173,31 @@
 			titleStyle: "dark",
 			mode: "edit",
 			items: [
-				{ key: "className", label: "班级名称", type: "input", required: true, placeholder: "请输入班级名称", inputAlign: "right" },
-				{ key: "courseId", label: "关联课程", type: "picker", required: true, placeholder: "请选择", pickerText: courseName.value || "请选择" },
+				{
+					key: "className",
+					label: "班级名称",
+					type: "input",
+					required: true,
+					placeholder: "请输入班级名称",
+					inputAlign: "right",
+				},
+				{
+					key: "courseId",
+					label: "关联课程",
+					type: "picker",
+					required: true,
+					placeholder: "请选择",
+					pickerText: courseName.value || "请选择",
+				},
 				{ key: "maxCount", label: "人数上限", type: "stepper", min: 1 },
-				{ key: "teachers", label: "任课老师", type: "slot", required: true, block: true, noBorder: true },
+				{
+					key: "teachers",
+					label: "任课老师",
+					type: "slot",
+					required: true,
+					block: true,
+					noBorder: true,
+				},
 			],
 		},
 		{

@@ -4,158 +4,213 @@
 	padding: 20rpx 0 180rpx;
 }
 
-.stepper {
-	display: flex;
-	align-items: center;
-	background: #f7f8fa;
-	border-radius: 8rpx;
-	padding: 4rpx;
-
-	.step-btn {
-		width: 56rpx;
-		height: 56rpx;
-		text-align: center;
-		line-height: 52rpx;
-		font-size: 32rpx;
-		color: #555;
-		font-weight: 500;
-
-		&:active {
-			background-color: #eef0f2;
-			border-radius: 6rpx;
-		}
-	}
-
-	.step-input {
-		width: 70rpx;
-		height: 56rpx;
-		text-align: center;
-		font-size: 26rpx;
-		font-weight: bold;
-		color: #333;
-	}
-}
-
-.add-teacher-btn {
-	color: $theme-color;
-	font-size: 26rpx;
-	display: flex;
-	align-items: center;
-	gap: 6rpx;
-}
-
-.teacher-tags {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 14rpx;
-	width: 100%;
-	margin-top: 10rpx;
-
-	.tag {
-		background: rgba($theme-color, 0.08);
-		color: $theme-color;
-		padding: 8rpx 20rpx;
-		border-radius: 30rpx;
-		font-size: 24rpx;
+:deep() {
+	.stepper {
 		display: flex;
 		align-items: center;
+		background: #f7f8fa;
+		border-radius: 8rpx;
+		padding: 4rpx;
 
-		.tag-close {
-			margin-left: 10rpx;
-			font-size: 28rpx;
-			line-height: 1;
-		}
-	}
-}
-
-.empty-tip {
-	color: #ccc;
-	font-size: 26rpx;
-	margin-top: 10rpx;
-}
-
-.schedule-card-item {
-	background-color: #f9fbfb;
-	border: 1rpx solid #edf2f2;
-	border-radius: 16rpx;
-	padding: 10rpx 24rpx;
-	margin-bottom: 24rpx;
-	width: 100%;
-	box-sizing: border-box;
-
-	.card-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 20rpx 0 16rpx;
-		border-bottom: 2rpx dashed #eef2f2;
-
-		.card-index {
-			font-size: 25rpx;
-			font-weight: bold;
-			color: #777;
-		}
-
-		.card-delete {
-			font-size: 24rpx;
-			color: #ff4d4f;
+		.step-btn {
+			width: 56rpx;
+			height: 56rpx;
+			text-align: center;
+			line-height: 52rpx;
+			font-size: 32rpx;
+			color: #555;
+			font-weight: 500;
 
 			&:active {
-				opacity: 0.6;
+				background-color: #eef0f2;
+				border-radius: 6rpx;
+			}
+		}
+
+		.step-input {
+			width: 70rpx;
+			height: 56rpx;
+			text-align: center;
+			font-size: 26rpx;
+			font-weight: bold;
+			color: #333;
+		}
+	}
+
+	.add-teacher-btn {
+		color: $theme-color;
+		font-size: 26rpx;
+		display: flex;
+		align-items: center;
+		gap: 6rpx;
+	}
+
+	.teacher-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 14rpx;
+		width: 100%;
+		margin-top: 10rpx;
+
+		.tag {
+			background: rgba($theme-color, 0.08);
+			color: $theme-color;
+			padding: 8rpx 20rpx;
+			border-radius: 30rpx;
+			font-size: 24rpx;
+			display: flex;
+			align-items: center;
+
+			.tag-close {
+				margin-left: 10rpx;
+				font-size: 28rpx;
+				line-height: 1;
 			}
 		}
 	}
-}
 
-.week-days-container {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 12rpx;
-	width: 100%;
-	margin-top: 8rpx;
+	// 变更为纵向延伸的块级条目（用于老师标签、周期多选）
+	.block-item {
+		padding: 30rpx 0;
+		flex-direction: column;
+		align-items: flex-start;
 
-	.week-tag {
-		padding: 8rpx 20rpx;
-		background-color: #fff;
-		border: 1rpx solid #e5e8e8;
-		border-radius: 30rpx;
-		font-size: 24rpx;
-		color: #666;
-		transition: all 0.15s ease;
+		&.no-padding-top {
+			padding-top: 10rpx;
+		}
 
-		&.active {
-			background-color: $theme-color;
-			color: #fff;
-			border-color: $theme-color;
+		.label-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+			margin-bottom: 20rpx;
 		}
 	}
-}
 
-.range-picker-box {
-	display: flex;
-	align-items: center;
-	flex: 1;
-	justify-content: flex-end;
+	.add-placeholder {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 40rpx 0;
+		border: 2rpx dashed #d9d9d9;
+		border-radius: 12rpx;
+		margin: 20rpx 0;
+		color: #8c8c8c;
+		transition: all 0.3s;
 
-	.date-text {
+		&:active {
+			background-color: rgba(112, 169, 162, 0.1);
+			border-color: #70a9a2;
+			color: #70a9a2;
+		}
+
+		.plus-icon {
+			font-size: 48rpx;
+			font-weight: 300;
+			margin-bottom: 8rpx;
+			line-height: 1;
+		}
+
+		// .add-text { // 💡 改用类名选择器
+		//     font-size: 26rpx;
+		// }
+
+		text {
+			font-size: 26rpx;
+		}
+	}
+
+	.empty-tip {
+		color: #ccc;
 		font-size: 26rpx;
-		color: #333;
-		padding: 10rpx 16rpx;
-		background-color: #fff;
-		border: 1rpx solid #edf1f1;
-		border-radius: 8rpx;
-		text-align: center;
-		min-width: 150rpx;
+		margin-top: 10rpx;
+	}
 
-		&.placeholder {
-			color: #ccc;
+	.schedule-card-item {
+		background-color: #f9fbfb;
+		border: 1rpx solid #edf2f2;
+		border-radius: 16rpx;
+		padding: 10rpx 24rpx;
+		margin-bottom: 24rpx;
+		width: 100%;
+		box-sizing: border-box;
+
+		.card-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 20rpx 0 16rpx;
+			border-bottom: 2rpx dashed #eef2f2;
+
+			.card-index {
+				font-size: 25rpx;
+				font-weight: bold;
+				color: #777;
+			}
+
+			.card-delete {
+				font-size: 24rpx;
+				color: #ff4d4f;
+
+				&:active {
+					opacity: 0.6;
+				}
+			}
 		}
 	}
 
-	.range-split {
-		margin: 0 12rpx;
-		font-size: 24rpx;
-		color: #999;
+	.week-days-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12rpx;
+		width: 100%;
+		margin-top: 8rpx;
+
+		.week-tag {
+			padding: 8rpx 20rpx;
+			background-color: #fff;
+			border: 1rpx solid #e5e8e8;
+			border-radius: 30rpx;
+			font-size: 24rpx;
+			color: #666;
+			transition: all 0.15s ease;
+
+			&.active {
+				background-color: $theme-color;
+				color: #fff;
+				border-color: $theme-color;
+			}
+		}
+	}
+
+	.range-picker-box {
+		display: flex;
+		align-items: center;
+		flex: 1;
+		justify-content: flex-end;
+
+		.date-text {
+			font-size: 26rpx;
+			color: #333;
+			padding: 10rpx 16rpx;
+			background-color: #fff;
+			border: 1rpx solid #edf1f1;
+			border-radius: 8rpx;
+			text-align: center;
+			min-width: 150rpx;
+
+			&.placeholder {
+				color: #ccc;
+			}
+		}
+
+		.range-split {
+			margin: 0 12rpx;
+			font-size: 24rpx;
+			color: #999;
+		}
 	}
 }
 
