@@ -15,6 +15,18 @@ interface ClassScheduleResponse {
 	updateTimeStr: string;
 }
 
+interface ClassScheduleRequest {
+	classId: number;
+	dayOfWeek: number;
+	startDate: string;
+	endDate: string;
+	startTime: string;
+	endTime: string;
+	teachers?: TeacherRequest[];
+	remark?: string;
+	color?: string;
+}
+
 type GetClassScheduleListRequest = {
 	currentPage: number;
 	pageSize: number;

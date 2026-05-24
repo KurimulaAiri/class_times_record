@@ -205,8 +205,8 @@
 		className: "",
 		courseId: 0,
 		maxCount: 30,
-		teachers: [] as TeacherResponse[],
-		schedules: [] as ClassScheduleResponse[],
+		teachers: [] as TeacherRequest[],
+		schedules: [] as ClassScheduleRequest[],
 	});
 
 	// 1. 尽早同步注册跨页通信监听

@@ -63,7 +63,7 @@
 			if (options.data) {
 				try {
 					// 3. 先解码（对应发送端的 encodeURIComponent），再解析
-					const navItem = parseData(options.data);
+					const navItem: any = parseData(options.data);
 
 					console.log("navItem:", navItem);
 

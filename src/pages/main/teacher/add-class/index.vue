@@ -202,14 +202,14 @@
 		className: "",
 		courseId: 0,
 		maxCount: 30,
-		teachers: [] as TeacherResponse[], // 选中的老师
-		schedules: [] as ClassScheduleResponse[], // 动态追加的日程数组
+		teachers: [] as TeacherRequest[], // 选中的老师
+		schedules: [] as ClassScheduleRequest[], // 动态追加的日程数组
 	});
 
 	// 初始化或追加一组空的排班
 	const addSchedule = () => {
 		form.value.schedules.push({
-            classId: null,
+			classId: 0,
 			dayOfWeek: 0,
 			startDate: "",
 			endDate: "",

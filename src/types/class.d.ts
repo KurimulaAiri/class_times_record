@@ -76,8 +76,8 @@ interface InsertClassRequest {
 	className: string;
 	courseId: number;
 	maxCount: number;
-	schedules: ClassScheduleResponse[];
-	teachers: TeacherResponse[];
+	schedules: ClassScheduleRequest[];
+	teachers: TeacherRequest[];
 }
 
 interface InsertClassResponse {
@@ -90,8 +90,8 @@ interface UpdateClassRequest {
 	className: string;
 	courseId: number;
 	maxCount: number;
-	schedules: ClassScheduleResponse[];
-	teachers: TeacherResponse[];
+	schedules: ClassScheduleRequest[];
+	teachers: TeacherRequest[];
 }
 
 interface UpdateClassResponse {
