@@ -289,11 +289,6 @@ $gray-light: #fdfdfd;
 	filter: brightness(0.9);
 }
 
-/* 列表底部避让 (当有底部确认栏时) */
-.has-footer {
-	padding-bottom: 120rpx;
-}
-
 /* 选中后的卡片微调 (比如增加边框色或浅背景) */
 .selected-card {
 	background-color: rgba($theme-color, 0.05) !important;
@@ -321,45 +316,4 @@ $gray-light: #fdfdfd;
 	}
 }
 
-/* 底部操作栏 */
-.multi-footer {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	height: 110rpx;
-	background: #fff;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 0 40rpx;
-	box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
-	z-index: 99;
 
-	.footer-info {
-		font-size: 28rpx;
-		color: #666;
-		.count {
-			color: $theme-color;
-			font-weight: bold;
-			margin: 0 8rpx;
-			font-size: 34rpx;
-		}
-	}
-
-	.confirm-btn {
-		margin: 0;
-		width: 240rpx;
-		height: 76rpx;
-		line-height: 76rpx;
-		background: $theme-color;
-		color: #fff;
-		border-radius: 38rpx;
-		font-size: 28rpx;
-
-		&[disabled] {
-			background: #ccc;
-			color: #eee;
-		}
-	}
-}

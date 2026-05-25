@@ -107,7 +107,7 @@
 		id: 0,
 		courseName: "",
 		courseType: 0,
-		available: false,
+		isAvailable: false,
 		institution: {
 			id: 0,
 			institutionName: "",
@@ -122,7 +122,7 @@
 		{},
 	);
 
-	// 💡 计算属性：动态判断当前学员是否处于全选状态
+	// 计算属性：动态判断当前学员是否处于全选状态
 	const isAllSelected = computed(() => {
 		if (students.value.length === 0) return false;
 		return students.value.every(

@@ -2,9 +2,10 @@
 	<view class="container">
 		<FormPage :groups="groups" v-model:modelValue="form"></FormPage>
 
-		<view class="footer">
-			<button class="submit-btn" @tap="submitForm">保存学生信息</button>
-		</view>
+		<PageFooter
+			:buttons="[{ text: '保存学生信息', type: 'primary' }]"
+			@btnClick="submitForm"
+		></PageFooter>
 	</view>
 </template>
 
@@ -13,6 +14,7 @@
 	import { insertStudent } from "@/api/student";
 	import { useUserStore } from "@/stores/user";
 	import FormPage from "@/components/form-page/index.vue";
+	import PageFooter from "@/components/page-footer/index.vue";
 
 	const userStore = useUserStore();
 
@@ -111,7 +113,7 @@
 					required: true,
 					placeholder: "请输入手机号",
 					noBorder: true,
-					maxlength: 11,
+					maxLength: 11,
 				},
 			],
 		},
@@ -138,7 +140,7 @@
 					type: "number",
 					placeholder: "请输入手机号",
 					noBorder: true,
-					maxlength: 11,
+					maxLength: 11,
 				},
 			],
 		},

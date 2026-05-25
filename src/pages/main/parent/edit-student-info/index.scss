@@ -1,5 +1,6 @@
 .container {
 	padding: 30rpx;
+	padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
 	background-color: #f5f7fa;
 	min-height: 100vh;
 }
@@ -35,25 +36,3 @@
 	}
 }
 
-.button-wrapper {
-	margin-top: 100rpx;
-	padding: 0 20rpx;
-
-	.save-btn {
-		background-color: #67b85d;
-		color: #ffffff;
-		height: 90rpx;
-		line-height: 90rpx;
-		border-radius: 12rpx;
-		font-size: 34rpx;
-		border: none;
-
-		&:active {
-			opacity: 0.8;
-		}
-
-		&::after {
-			border: none;
-		}
-	}
-}

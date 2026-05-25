@@ -84,28 +84,6 @@ $text-grey: #95a5a6;
 	}
 }
 
-// 按钮布局留在外层即可，因为它是父页面的原生标签节点
-.footer-btns {
-	padding: 40rpx 30rpx;
-	.edit-btn {
-		height: 90rpx;
-		line-height: 90rpx;
-		text-align: center;
-		background: $theme-color;
-		color: #fff;
-		border-radius: 45rpx;
-		font-size: 32rpx;
-		box-shadow: 0 10rpx 20rpx rgba($theme-color, 0.2);
-		transition: all 0.1s ease;
-	}
-}
-.btn-hover {
-	opacity: 0.7;
-	background-color: color.adjust($theme-color, $lightness: -10%) !important;
-	transform: translateY(4rpx);
-	box-shadow: 0 4rpx 10rpx rgba($theme-color, 0.3);
-}
-
 // =========================================================
 // 💡 核心修复：把所有属于插槽节点的样式，全部打包进 :deep() 穿透壁垒
 // =========================================================

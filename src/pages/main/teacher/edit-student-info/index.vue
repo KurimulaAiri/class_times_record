@@ -23,9 +23,7 @@
 			</template>
 		</FormPage>
 
-		<view class="footer">
-			<button class="submit-btn" @tap="submitForm">保存修改</button>
-		</view>
+		<PageFooter :buttons="[{ text: '保存修改', type: 'primary' }]" @btnClick="submitForm"></PageFooter>
 	</view>
 </template>
 
@@ -35,6 +33,7 @@
 	import { useStudentStore } from "@/stores/student";
 	import { updateStudent } from "@/api/student";
 	import FormPage from "@/components/form-page/index.vue";
+	import PageFooter from "@/components/page-footer/index.vue";
 
 	const studentStore = useStudentStore();
 
@@ -61,7 +60,7 @@
 			parentId: 0,
 			relation: "",
 			phone: "",
-		}, // 💡 初始化为空对象，配合 template 中的展示
+		}, // 初始化为空对象，配合 template 中的展示
 		secondaryParent: {
 			isPrimary: false,
 			username: "",
@@ -78,7 +77,7 @@
 
 	const form = ref<StudentResponse>(createEmptyForm());
 
-	// 💡 核心修复：配置项 items 不要使用条件动态销毁！
+	// 核心修复：配置项 items 不要使用条件动态销毁！
 	// 让输入配置永久驻留，控制面板的开启关闭由模板插槽里的 `add-placeholder` 来决定
 	const groups = computed<FormGroupConfig[]>(() => [
 		{
@@ -190,7 +189,7 @@
 			// 从 pinia 深度克隆数据
 			const res = JSON.parse(JSON.stringify(studentStore.studentInfo));
 
-			// 💡 核心修复：直接大对象赋值，全量触发 Vue 的响应式追踪与 computed 重新计算
+			// 核心修复：直接大对象赋值，全量触发 Vue 的响应式追踪与 computed 重新计算
 			form.value = res;
 
 			console.log("回显后的数据：", form.value);

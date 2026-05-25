@@ -1,19 +1,30 @@
 interface CourseListResponse {
 	courses: CourseResponse[];
-    total: number;
+	total: number;
 }
 
 interface CourseResponse {
 	id: number;
 	courseName: string;
-    courseType: number;
-    available: boolean;
-    institution: InstitutionResponse;
+	courseType: number;
+	isAvailable: boolean;
+	institution: InstitutionResponse;
+}
+
+interface InsertCourseResponse {
+	courseId: number;
+}
+
+interface InsertCourseRequest {
+	courseName: string;
+	courseType: number;
+	isAvailable: boolean;
+	institutionId: number;
 }
 
 interface GetCourseByInstitutionIdRequest {
 	institutionId: number;
-    keyword: string;
-    currentPage: number;
-    pageSize: number;
+	keyword: string;
+	currentPage: number;
+	pageSize: number;
 }

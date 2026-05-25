@@ -33,6 +33,7 @@ export const ROUTES = {
 	SELECT_CLASS: "/pages/main/teacher/select-class/index", // 教师端选择班级
 	LEAVE_MANAGE: "/pages/main/teacher/leave-manage/index", // 教师端请假管理
 	ADJUST_CLASS_SCHEDULE: "/pages/main/teacher/adjust-class-schedule/index", // 教师端调整排课
+	EDIT_COURSE_INFO: "/pages/main/teacher/edit-course-info/index", // 教师端编辑课程信息
 } as const;
 
 export type PagePath = (typeof ROUTES)[keyof typeof ROUTES];

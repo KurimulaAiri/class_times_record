@@ -5,4 +5,10 @@ const getCourseByInstitutionId = async (query: GetCourseByInstitutionIdRequest) 
 	return res.data;
 };
 
-export { getCourseByInstitutionId };
+const insertCourse = async (query: InsertCourseRequest) => {
+	const res = await post<InsertCourseResponse>(`/course/add_course`, query);
+	return res.data;
+};
+
+
+export { getCourseByInstitutionId, insertCourse };

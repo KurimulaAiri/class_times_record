@@ -95,7 +95,7 @@ interface FormItemConfig {
 	options?: FormItemOption[];
 
 	/** 输入框最大字符长度限制 */
-	maxlength?: number;
+	maxLength?: number;
 
 	/**
 	 * 输入框文本对齐方式
@@ -122,6 +122,14 @@ interface FormItemConfig {
 	 * 默认为 "未填写"
 	 */
 	emptyText?: string;
+
+	/**
+	 * 自定义格式化函数，用于在 display 模式下对字段值进行格式化
+	 * 例如，将日期字符串转换为 "yyyy-MM-dd" 格式
+	 */
+	format?: (value: any) => string;
+	/** 格式化函数的参数，用于自定义格式化 */
+	formatParams?: any;
 }
 
 /**

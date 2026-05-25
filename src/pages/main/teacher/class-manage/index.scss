@@ -81,10 +81,16 @@
 
 			.status-tag {
 				font-size: 22rpx;
-				background-color: #e3f2fd;
-				color: #2196f3;
 				padding: 4rpx 12rpx;
 				border-radius: 6rpx;
+				&.status-tag-danger {
+					background-color: #fddcdd;
+					color: #f53b5b;
+				}
+				&.status-tag-success {
+					background-color: $theme-color;
+					color: $theme-color-lighter;
+				}
 			}
 		}
 

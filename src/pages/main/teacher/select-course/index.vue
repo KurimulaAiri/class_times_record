@@ -18,7 +18,9 @@
 				</view>
 				<view class="course-info">
 					<text class="name">{{ item.courseName }}</text>
-					<text class="desc">{{ item.courseType }}</text>
+					<text class="desc">{{
+						`${item.courseType === 1 ? "按次" : "按天"}扣费`
+					}}</text>
 				</view>
 				<uni-icons type="right" size="14" color="#eee"></uni-icons>
 			</view>
@@ -54,7 +56,7 @@
 		});
 		list.value = res.courses;
 	};
-	
+
 	const select = (item: CourseResponse) => {
 		uni.$emit("updateCourse", item);
 		uni.navigateBack();

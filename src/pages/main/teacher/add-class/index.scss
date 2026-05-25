@@ -1,7 +1,7 @@
 .container {
 	min-height: 100vh;
 	background: $default-background-color;
-	padding: 20rpx 0 180rpx;
+	padding: 20rpx 0 160rpx;
 }
 
 :deep() {
@@ -85,6 +85,16 @@
 			align-items: center;
 			width: 100%;
 			margin-bottom: 20rpx;
+
+			.label {
+				font-size: 26rpx;
+				color: #333;
+			}
+
+			.required {
+				color: #ff4d4f;
+				margin-left: 4rpx;
+			}
 		}
 	}
 
@@ -211,32 +221,6 @@
 			font-size: 24rpx;
 			color: #999;
 		}
-	}
-}
-
-.footer {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	padding: 30rpx 40rpx calc(30rpx + env(safe-area-inset-bottom));
-	background: #fff;
-	box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.04);
-	z-index: 99;
-}
-
-.submit-btn {
-	background: $theme-color;
-	color: #fff;
-	border-radius: 46rpx;
-	font-size: 30rpx;
-	font-weight: bold;
-	height: 88rpx;
-	line-height: 88rpx;
-	border: none;
-
-	&::after {
-		border: none;
 	}
 }
 

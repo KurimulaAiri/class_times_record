@@ -7,7 +7,6 @@
 <template>
 	<!-- 根容器：白色卡片，display 模式下追加 display-mode 类以调整内边距和圆角 -->
 	<view :class="['form-group', mode === 'display' && 'display-mode']">
-
 		<!-- 分组标题栏：仅在 title 非空时渲染 -->
 		<!-- titleStyle 控制标题颜色和装饰条宽度：theme=绿色+8rpx，dark=深色+6rpx -->
 		<view
@@ -27,7 +26,6 @@
 
 		<!-- 遍历 items 配置数组，根据 type 渲染不同的表单控件 -->
 		<template v-for="(item, index) in items" :key="item.key || index">
-
 			<!-- ========== type: slot — 具名插槽 ==========
 			     当 type 为 slot 时，渲染名为 item.key 的具名插槽
 			     父组件可通过 <template #slotKey> 传入完全自定义的内容
@@ -70,16 +68,13 @@
 					style="flex: 1; display: flex; align-items: center"
 				>
 					<input
-						:class="[
-							'input',
-							!item.column && item.inputAlign === 'right' && 'input-right',
-						]"
+						:class="['input']"
 						:type="item.type === 'number' ? 'number' : 'text'"
 						:value="getValue(item.key)"
 						@input="onInput(item, $event)"
 						:placeholder="item.placeholder"
 						placeholder-class="placeholder"
-						:maxlength="item.maxlength !== undefined ? item.maxlength : 140"
+						:maxlength="item.maxLength !== undefined ? item.maxLength : 140"
 					/>
 				</view>
 			</view>
@@ -102,7 +97,7 @@
 					:placeholder="item.placeholder"
 					placeholder-class="placeholder"
 					auto-height
-					:maxlength="item.maxlength"
+					:maxlength="item.maxLength"
 				/>
 			</view>
 
@@ -427,6 +422,7 @@
 		"no-border": item.noBorder ?? false,
 		"block-item": item.block ?? false,
 		column: item.column ?? false,
+		"align-right": item.inputAlign === "right",
 	});
 
 	/**
@@ -439,6 +435,11 @@
 		const val = getValue(item.key);
 		if (val === "" || val === null || val === undefined) {
 			return item.emptyText || "未填写";
+		}
+
+		// 核心改动：如果配置项里有自定义的 format 转换函数，则用它格式化
+		if (typeof item.format === "function") {
+			return item.format(val);
 		}
 		return String(val);
 	};

@@ -1,6 +1,10 @@
 <template>
 	<view class="container">
-		<FormPage :groups="groups" :modelValue="form" @pickerTap="onPickerTap">
+		<FormPage
+			:groups="groups"
+			v-model:modelValue="form"
+			@pickerTap="onPickerTap"
+		>
 			<template #group-0-teachers>
 				<view class="form-item no-border block-item">
 					<view class="label-row">
@@ -128,15 +132,18 @@
 				<view class="add-placeholder" @tap="addSchedule">
 					<text class="plus-icon">+</text>
 					<text>{{
-						form.schedules.length > 0 ? "追加一组上课时段" : "添加上课日程时段"
+						form.schedules && form.schedules.length > 0
+							? "追加一组上课时段"
+							: "添加上课日程时段"
 					}}</text>
 				</view>
 			</template>
 		</FormPage>
 
-		<view class="footer">
-			<button class="submit-btn" @tap="submitForm">保存修改</button>
-		</view>
+		<PageFooter
+			:buttons="[{ text: '保存修改', type: 'primary' }]"
+			@btnClick="submitForm"
+		></PageFooter>
 	</view>
 </template>
 
@@ -147,6 +154,7 @@
 	import { updateClassById } from "@/api/class";
 	import { getClassScheduleByClassId } from "@/api/class-schedule";
 	import FormPage from "@/components/form-page/index.vue";
+	import PageFooter from "@/components/page-footer/index.vue";
 
 	const weekOptions = [
 		{ label: "周一", value: 1 },
@@ -167,6 +175,8 @@
 		className: "",
 		courseId: 0,
 		maxCount: 30,
+		status: -1,
+		onlyUpdateClassOwn: false,
 		teachers: [] as TeacherRequest[],
 		schedules: [] as ClassScheduleRequest[],
 	});
@@ -183,17 +193,33 @@
 					type: "input",
 					required: true,
 					placeholder: "请输入班级名称",
+				},
+				{
+					key: "status",
+					label: "班级状态",
+					type: "radio",
 					inputAlign: "right",
+					options: [
+						{ label: "进行中", value: 1 },
+						{ label: "已结束", value: 0 },
+					],
 				},
 				{
 					key: "courseId",
 					label: "关联课程",
 					type: "picker",
 					required: true,
+					inputAlign: "right",
 					placeholder: "请选择",
 					pickerText: courseName.value || "请选择",
 				},
-				{ key: "maxCount", label: "人数上限", type: "stepper", min: 1 },
+				{
+					key: "maxCount",
+					label: "人数上限",
+					type: "stepper",
+					min: 1,
+					inputAlign: "right",
+				},
 				{
 					key: "teachers",
 					label: "任课老师",
@@ -243,6 +269,7 @@
 			form.value.className = rawClassData.className || "";
 			form.value.maxCount = rawClassData.studentMaxCount || 30;
 			form.value.courseId = rawClassData.courseId || 0;
+			form.value.status = rawClassData.status || -1;
 
 			courseName.value = rawClassData.courseName || "已关联课程";
 
@@ -270,12 +297,13 @@
 			} catch (error) {
 				console.error("获取班级排班失败", error);
 			}
+			form.value = { ...form.value }; // 触发响应式更新，使基本信息有值
 		},
 		{ immediate: true },
 	);
 
 	const addSchedule = () => {
-		form.value.schedules.push({
+		form.value.schedules?.push({
 			classId: form.value.classId,
 			dayOfWeek: 0,
 			startDate: "",
@@ -290,18 +318,20 @@
 			title: "提示",
 			content: "确定要删除这一组上课时段吗？",
 			success: (res) => {
-				if (res.confirm) form.value.schedules.splice(index, 1);
+				if (res.confirm) form.value.schedules?.splice(index, 1);
 			},
 		});
 	};
 
 	const toggleWeekDay = (scheduleIndex: number, dayValue: number) => {
+		if (!form.value.schedules) return;
 		const target = form.value.schedules[scheduleIndex];
 		target.dayOfWeek = target.dayOfWeek === dayValue ? 0 : dayValue;
 	};
 
 	const handleStartDateChange = (index: number, e: any) => {
-		const item = form.value.schedules[index];
+		if (!form.value.schedules) return;
+		const item = form.value.schedules?.[index];
 		item.startDate = e.detail.value;
 		if (item.endDate && item.endDate < item.startDate) item.endDate = "";
 	};
@@ -315,13 +345,13 @@
 	};
 	const removeTeacher = (index: number) => {
 		selectedTeachers.value.splice(index, 1);
-		form.value.teachers.splice(index, 1);
+		form.value.teachers?.splice(index, 1);
 	};
 
 	const submitForm = async () => {
 		if (!form.value.className) return showToast("请输入班级名称");
 		if (!form.value.courseId) return showToast("请关联课程");
-		if (form.value.schedules.length === 0)
+		if (!form.value.schedules || form.value.schedules.length === 0)
 			return showToast("请至少添加一组上课日程");
 		if (selectedTeachers.value.length === 0)
 			return showToast("请至少选择一位班级教师");

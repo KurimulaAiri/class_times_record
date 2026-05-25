@@ -45,14 +45,13 @@
 		</view>
 
 		<!-- 底部操作栏 -->
-		<view class="footer">
-			<button class="submit-btn" @tap="handleSubmit">确认扣课</button>
-		</view>
+		<PageFooter :buttons="[{ text: '确认扣课', type: 'primary' }]" @btnClick="handleSubmit"></PageFooter>
 	</view>
 </template>
 
 <script setup lang="ts">
 	import { ref } from "vue";
+	import PageFooter from "@/components/page-footer/index.vue";
 	import DeductByStudent from "./component/deduct-by-student/index.vue";
 	import DeductByCourse from "./component/deduct-by-course/index.vue";
 	// 💡 引入你对应的扣课 API

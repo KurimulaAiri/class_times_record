@@ -87,25 +87,4 @@ $primary-color: $theme-color; // 定义主题色
 	}
 }
 
-.footer {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	padding: 20rpx 40rpx;
-	background-color: #fff;
-	box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
 
-	.submit-btn {
-		background-color: $primary-color;
-		color: white;
-		border-radius: 44rpx;
-		font-size: 32rpx;
-		height: 88rpx;
-		line-height: 88rpx;
-
-		&:active {
-			opacity: 0.8;
-		}
-	}
-}

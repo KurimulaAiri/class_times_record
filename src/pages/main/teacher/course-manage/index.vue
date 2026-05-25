@@ -45,7 +45,7 @@
 	import { ref } from "vue";
 	import { useUserStore } from "@/stores/user";
 	import { getCourseByInstitutionId } from "@/api/course";
-	import { onLoad } from "@dcloudio/uni-app";
+	import { onShow } from "@dcloudio/uni-app";
 	import { ROUTES } from "@/config/routes";
 
 	import SearchFilterBar from "@/components/search-filter-bar/index.vue";
@@ -83,7 +83,7 @@
 		jump(ROUTES.ADD_COURSE);
 	};
 
-	onLoad(() => {
+	onShow(() => {
 		loadData();
 	});
 

@@ -64,13 +64,13 @@ type FastDeductRequest = {
 			mode: "student";
 			studentId: number;
 			classes: ClassDeductRequest[];
-	}
+	  }
 	| {
 			mode: "course";
 			courseId: number;
 			students: StudentResponse[];
-	}
-)
+	  }
+);
 
 interface InsertClassRequest {
 	className: string;
@@ -85,14 +85,29 @@ interface InsertClassResponse {
 	className: string;
 }
 
-interface UpdateClassRequest {
+type UpdateClassRequest = {
 	classId: number;
-	className: string;
-	courseId: number;
-	maxCount: number;
-	schedules: ClassScheduleRequest[];
-	teachers: TeacherRequest[];
-}
+	onlyUpdateClassOwn: boolean;
+} & (
+	| {
+			className?: string;
+			courseId?: number;
+			maxCount?: number;
+			status?: number;
+			onlyUpdateClassOwn: true;
+			schedules?: ClassScheduleRequest[] | null;
+			teachers?: TeacherRequest[] | null;
+	  }
+	| {
+			className: string;
+			courseId: number;
+			maxCount: number;
+			status: number;
+			onlyUpdateClassOwn: false;
+			schedules: ClassScheduleRequest[];
+			teachers: TeacherRequest[];
+	  }
+);
 
 interface UpdateClassResponse {
 	result: number;

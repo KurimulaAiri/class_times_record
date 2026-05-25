@@ -5,7 +5,15 @@
 				<text class="class-title">{{
 					classDetail?.className || "班级详情"
 				}}</text>
-				<view class="status-badge">进行中</view>
+				<view
+					:class="[
+						'status-badge',
+						classDetail?.status === 0
+							? 'status-badge-danger'
+							: 'status-badge-success',
+					]"
+					>{{ classDetail?.status === 0 ? "已结束" : "进行中" }}</view
+				>
 			</view>
 		</view>
 

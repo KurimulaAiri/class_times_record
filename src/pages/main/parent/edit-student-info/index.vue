@@ -6,9 +6,7 @@
 			v-model:modelValue="submitData"
 		></FormGroup>
 
-		<view class="button-wrapper">
-			<button class="save-btn" @tap="submitForm">保存</button>
-		</view>
+		<PageFooter :buttons="[{ text: '保存', type: 'primary' }]" @btnClick="submitForm"></PageFooter>
 	</view>
 </template>
 
@@ -18,6 +16,7 @@
 	import { updateStudentInfo } from "@/api/student";
 	import { parseData } from "@/utils/common";
 	import FormGroup from "@/components/form-group/index.vue";
+	import PageFooter from "@/components/page-footer/index.vue";
 
 	const formItems: FormItemConfig[] = [
 		{ key: "avatar", label: "学员头像", type: "avatar" },

@@ -128,24 +128,31 @@
 		switch (type) {
 			case "switch":
 				// 切换账号逻辑
-				uni
-					.showModal({
-						title: "切换账号",
-						content: "确定切换账号吗？",
-					})
-					.then(() => {
-						switchUser(4);
-					});
+				uni.showModal({
+					title: "切换账号",
+					content: "确定切换账号吗？",
+					success({ confirm, cancel }) {
+						if (confirm) {
+							switchUser(4);
+						} else if (cancel) {
+							return;
+						}
+					},
+				});
 				break;
 			case "logout":
-				uni
-					.showModal({
-						title: "退出登录",
-						content: "确定退出登录吗？",
-					})
-					.then(() => {
-						logOut();
-					});
+				uni.showModal({
+					title: "退出登录",
+					content: "确定退出登录吗？",
+					confirmColor: "#ff5252",
+					success({ confirm, cancel }) {
+						if (confirm) {
+							logOut();
+						} else if (cancel) {
+							return;
+						}
+					},
+				});
 				break;
 			default:
 				break;

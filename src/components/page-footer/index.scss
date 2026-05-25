@@ -1,0 +1,152 @@
+/* ============================================================
+   PageFooter 组件样式
+   包含：固定定位容器、信息区域、按钮区域、按钮样式
+   ============================================================ */
+
+/* ---- 根容器 ----
+   默认为普通文档流布局 */
+.page-footer {
+	padding: 20rpx 40rpx;
+	background-color: #fff;
+
+	/* fixed 定位模式：固定在页面底部，带顶部阴影和安全区适配 */
+	&.page-footer-fixed {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 20rpx 40rpx calc(20rpx + env(safe-area-inset-bottom));
+		box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+		z-index: 100;
+	}
+
+	/* 当同时存在信息区域和按钮区域时，使用 flex 横向布局 */
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24rpx;
+}
+
+/* ---- 左侧信息区域 ----
+   用于多选场景，显示"已选 N 人"等提示文本 */
+.footer-info {
+	display: flex;
+	align-items: center;
+	font-size: 28rpx;
+	color: #666;
+	flex-shrink: 0;
+
+	/* 普通文本 */
+	.info-text {
+		color: #666;
+	}
+
+	/* 高亮数字：主题色 + 加粗 + 较大字号 */
+	.info-count {
+		color: $theme-color;
+		font-weight: bold;
+		margin: 0 4rpx;
+		font-size: 34rpx;
+	}
+}
+
+/* ---- 按钮区域 ----
+   根据按钮数量自动调整布局 */
+.footer-buttons {
+	display: flex;
+	align-items: center;
+	gap: 20rpx;
+	width: 100%;
+
+	/* 单按钮：占满宽度 */
+	&.buttons-1 {
+		.footer-btn {
+			flex: 1;
+		}
+	}
+
+	/* 双按钮：主按钮占更大比例 */
+	&.buttons-2 {
+		.footer-btn {
+			flex: 1;
+
+			/* 主按钮占更大比例 */
+			&:last-child {
+				flex: 1.5;
+			}
+		}
+	}
+
+	/* 三+按钮：等宽排列 */
+	&.buttons-3,
+	&.buttons-4 {
+		.footer-btn {
+			flex: 1;
+		}
+	}
+}
+
+/* 当存在信息区域时，按钮区域不占满宽度 */
+.page-footer:has(.footer-info) .footer-buttons {
+	width: auto;
+	flex-shrink: 0;
+
+	&.buttons-1 .footer-btn {
+		flex: none;
+		min-width: 240rpx;
+	}
+}
+
+/* ---- 按钮基础样式 ----
+   圆角胶囊按钮，带按压反馈 */
+.footer-btn {
+	height: 88rpx;
+	line-height: 88rpx;
+	text-align: center;
+	border-radius: 44rpx;
+	font-size: 30rpx;
+	font-weight: bold;
+	transition: all 0.1s ease;
+	box-sizing: border-box;
+
+	/* 按压反馈 */
+	&.btn-hover {
+		opacity: 0.8;
+		transform: translateY(2rpx);
+	}
+
+	/* 禁用状态 */
+	&.btn-disabled {
+		background-color: #ccc !important;
+		color: #eee !important;
+		border-color: #ccc !important;
+		pointer-events: none;
+	}
+}
+
+/* ---- 按钮类型样式 ---- */
+
+/* 主按钮：主题色背景 + 白色文字 */
+.btn-primary {
+	background: $theme-color;
+	color: #fff;
+	box-shadow: 0 8rpx 16rpx rgba($theme-color, 0.2);
+}
+
+/* 次要按钮：白色背景 + 深色文字 + 边框 */
+.btn-secondary {
+	background: #fff;
+	color: #555;
+	border: 2rpx solid #ddd;
+
+	&.btn-hover {
+		background: #f7f8fa;
+	}
+}
+
+/* 危险按钮：红色背景 + 白色文字 */
+.btn-danger {
+	background: #ff5a5f;
+	color: #fff;
+	box-shadow: 0 8rpx 16rpx rgba(255, 90, 95, 0.2);
+}

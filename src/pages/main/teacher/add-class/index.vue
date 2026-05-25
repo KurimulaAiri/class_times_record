@@ -1,6 +1,10 @@
 <template>
 	<view class="container">
-		<FormPage :groups="groups" :modelValue="form" @pickerTap="onPickerTap">
+		<FormPage
+			:groups="groups"
+			v-model:modelValue="form"
+			@pickerTap="onPickerTap"
+		>
 			<template #group-0-teachers>
 				<view class="form-item no-border block-item">
 					<view class="label-row">
@@ -134,9 +138,10 @@
 			</template>
 		</FormPage>
 
-		<view class="footer">
-			<button class="submit-btn" @tap="submitForm">创建班级</button>
-		</view>
+		<PageFooter
+			:buttons="[{ text: '创建班级', type: 'primary' }]"
+			@btnClick="submitForm"
+		></PageFooter>
 	</view>
 </template>
 
@@ -147,6 +152,7 @@
 	import { ROUTES } from "@/config/routes";
 	import { insertClass } from "@/api/class";
 	import FormPage from "@/components/form-page/index.vue";
+	import PageFooter from "@/components/page-footer/index.vue";
 
 	const weekOptions = [
 		{ label: "周一", value: 1 },
@@ -187,9 +193,16 @@
 					type: "picker",
 					required: true,
 					placeholder: "请选择",
+					inputAlign: "right",
 					pickerText: courseName.value || "请选择",
 				},
-				{ key: "maxCount", label: "人数上限", type: "stepper", min: 1 },
+				{
+					key: "maxCount",
+					label: "人数上限",
+					type: "stepper",
+					inputAlign: "right",
+					min: 1,
+				},
 				{
 					key: "teachers",
 					label: "任课老师",
@@ -292,12 +305,12 @@
 		if (!form.value.className) return showToast("请输入班级名称");
 		if (!form.value.courseId) return showToast("请关联课程");
 
-		if (form.value.schedules.length === 0) {
-			return showToast("请至少添加一组上课日程");
-		}
-
 		if (form.value.teachers.length === 0) {
 			return showToast("请至少选择一位班级教师");
+		}
+
+		if (form.value.schedules.length === 0) {
+			return showToast("请至少添加一组上课日程");
 		}
 
 		for (let i = 0; i < form.value.schedules.length; i++) {

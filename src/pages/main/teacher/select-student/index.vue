@@ -83,18 +83,13 @@
 			</view>
 
 			<!-- 多选模式下的底部确认栏 -->
-			<view v-if="selectedList.length > 0" class="multi-footer">
-				<view class="footer-info">
-					已选 <text class="count">{{ selectedList.length }}</text> 人
-				</view>
-				<button
-					class="confirm-btn"
-					:disabled="selectedList.length === 0"
-					@tap="handleMultiConfirm"
-				>
-					确认选择
-				</button>
-			</view>
+			<PageFooter
+				v-if="selectedList.length > 0"
+				info="已选 {{count}} 人"
+				:count="selectedList.length"
+				:buttons="[{ text: '确认选择', type: 'primary', disabled: selectedList.length === 0 }]"
+				@btnClick="handleMultiConfirm"
+			></PageFooter>
 
 			<view v-if="students.length === 0 && !isLoading" class="empty">
 				<view class="empty-icon">🔍</view>
@@ -119,6 +114,7 @@
 	import { getStudent } from "@/api/student";
 	import { useUserStore } from "@/stores/user";
 	import { useStudentStore } from "@/stores/student";
+	import PageFooter from "@/components/page-footer/index.vue";
 	import {
 		onLoad,
 		onReachBottom,

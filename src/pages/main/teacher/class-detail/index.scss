@@ -24,12 +24,37 @@
 		}
 
 		.status-badge {
-			background: rgba(255, 255, 255, 0.2);
-			color: #ffffff;
 			font-size: 22rpx;
 			padding: 4rpx 16rpx;
 			border-radius: 30rpx;
-			border: 1rpx solid rgba(255, 255, 255, 0.4);
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			border: 1rpx solid transparent; // 预留边框位
+
+			// 默认/未知状态（白色半透明，在深色底上极其显高级）
+			background: rgba(255, 255, 255, 0.15);
+			color: rgba(255, 255, 255, 0.9);
+			border-color: rgba(255, 255, 255, 0.25);
+
+			// 危险/已结束状态
+			&.status-badge-danger {
+				// 💡 调高亮度和透明度（30%），确保红底在深色上能跳出来
+				background-color: rgba(243, 175, 188, 0.5);
+				// 💡 文字改用纯白或极淡粉，深底上绝对不能用暗红字，否则看不清
+				color: #ff4747;
+				border-color: rgba(255, 77, 109, 0.45);
+			}
+
+			// 成功/进行中状态
+			&.status-badge-success {
+				// 💡 针对深色背景，绿色底需要提亮。如果是 $theme-color，可以用 mix 混一点白，或者直接写高亮绿的 rgba
+				// 这里用 30% 透明度的明亮薄荷绿/主题绿
+				background-color: rgba(140, 210, 201, 0.3);
+				// 💡 文字同样使用纯白或接近纯白，靠背景色来区分状态
+				color: #ffffff;
+				border-color: rgba(140, 210, 201, 0.5);
+			}
 		}
 	}
 }

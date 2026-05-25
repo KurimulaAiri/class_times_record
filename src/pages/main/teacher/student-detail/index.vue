@@ -102,15 +102,7 @@
 			</template>
 		</FormPage>
 
-		<view class="footer-btns">
-			<view
-				class="edit-btn"
-				hover-class="btn-hover"
-				hover-stay-time="50"
-				@tap="handleEdit"
-				>编辑档案</view
-			>
-		</view>
+		<PageFooter :buttons="[{ text: '编辑档案', type: 'primary' }]" @btnClick="handleEdit" :fixed="false"></PageFooter>
 	</view>
 </template>
 
@@ -122,6 +114,7 @@
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
 	import FormPage from "@/components/form-page/index.vue";
+	import PageFooter from "@/components/page-footer/index.vue";
 
 	const studentStore = useStudentStore();
 	const student = ref<StudentResponse>();

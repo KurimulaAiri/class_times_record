@@ -192,6 +192,12 @@
 					"style": {
 						"navigationBarTitleText": "调整排课"
 					}
+				},
+				{
+					"path": "teacher/edit-course-info/index",
+					"style": {
+						"navigationBarTitleText": "编辑课程信息"
+					}
 				}
 			]
 		},
