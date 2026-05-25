@@ -8,7 +8,7 @@ interface CourseRecordResponse {
 	courseTotalTime: number;
 	createTimeStr: string;
 	id: number;
-	isDelete: string;
+	isDelete: boolean;
 	permissionType: number;
 	stuName: string;
 	updateTimeStr: string;
