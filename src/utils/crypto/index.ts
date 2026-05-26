@@ -1,3 +1,4 @@
+/** @description 国密加密工具库，提供 SM2 加密和 SM3 签名生成能力，用于接口请求的密码加密和参数签名 */
 import { sm2, sm3 } from "sm-crypto";
 
 // 后端提供的公钥 (通常是一串很长的 Hex 字符串)
@@ -20,6 +21,8 @@ export const encryptPassword = (data: string): string => {
 /**
  * 递归排序 key 并剔除 null/undefined/""
  * 模拟后端 Jackson 的 SORT_PROPERTIES_ALPHABETICALLY + NON_NULL 行为
+ * @param obj 待序列化的对象
+ * @returns 排序并过滤后的 JSON 字符串
  */
 function stableStringify(obj: any): string {
     // 基本类型直接返回
@@ -49,6 +52,11 @@ function stableStringify(obj: any): string {
     return '{' + keyValuePairs.join(',') + '}';
 }
 
+/**
+ * 生成接口请求签名，基于 SM3 算法对请求参数进行签名，防止参数篡改
+ * @param params 请求参数对象
+ * @returns 包含 sign（签名）、timestamp（时间戳）、nonce（随机串）的对象
+ */
 export function generateSign(params: any) {
     const timestamp = Date.now();
     const nonce = Math.random().toString(36).slice(-8);

@@ -1,5 +1,11 @@
+/** @description 班级 API 接口模块，提供班级信息的增删改查及学生管理接口 */
 import { post } from "@/utils/request";
 
+/**
+ * 根据学生 ID 获取该学生所在的班级列表
+ * @param studentId - 学生 ID
+ * @returns 返回班级列表响应数据
+ */
 const getClassListByStudentId = async (
 	studentId: number,
 ): Promise<ClassListResponse> => {
@@ -10,6 +16,11 @@ const getClassListByStudentId = async (
 	return res.data;
 };
 
+/**
+ * 根据教师 ID 获取该教师关联的班级列表
+ * @param QueryForm - 查询参数，包含 teacherId 及筛选条件
+ * @returns 返回班级列表响应数据
+ */
 const getClassListByTeacherId = async (
 	QueryForm: GetClassListByTeacherIdRequest,
 ): Promise<ClassListResponse> => {
@@ -20,6 +31,11 @@ const getClassListByTeacherId = async (
 	return res.data;
 };
 
+/**
+ * 根据机构 ID 获取该机构下的班级列表
+ * @param QueryForm - 查询参数，包含 institutionId 及筛选条件
+ * @returns 返回班级列表响应数据
+ */
 const getClassListByInstitutionId = async (
 	QueryForm: GetClassListByInstitutionIdRequest,
 ): Promise<ClassListResponse> => {
@@ -30,6 +46,11 @@ const getClassListByInstitutionId = async (
 	return res.data;
 };
 
+/**
+ * 根据作用域获取班级列表，scope 为 1 按教师查询，scope 为 2 按机构查询
+ * @param QueryForm - 通用查询参数，包含 scope、targetId 及筛选条件
+ * @returns 返回班级列表响应数据
+ */
 const getClassList = async (
 	QueryForm: GetClassListRequest,
 ): Promise<ClassListResponse> => {
@@ -48,6 +69,11 @@ const getClassList = async (
 	}
 };
 
+/**
+ * 将学生添加到指定班级
+ * @param form - 添加学生到班级的请求参数
+ * @returns 返回操作结果，成功返回非零值
+ */
 const addStudentToClass = async (
 	form: AddStudentToClassRequest,
 ): Promise<number> => {
@@ -64,6 +90,11 @@ const addStudentToClass = async (
 	return result;
 };
 
+/**
+ * 将学生从指定班级中移除
+ * @param form - 移除学生出班级的请求参数
+ * @returns 返回操作结果，成功返回非零值
+ */
 const removeStudentFromClass = async (
 	form: RemoveStudentFromClassRequest,
 ): Promise<number> => {
@@ -80,6 +111,11 @@ const removeStudentFromClass = async (
 	return result;
 };
 
+/**
+ * 根据班级 ID 获取单个班级详情
+ * @param classId - 班级 ID
+ * @returns 返回班级详情响应数据
+ */
 const getClassByClassId = async (
 	classId: number,
 ): Promise<ClassListResponse> => {
@@ -89,6 +125,11 @@ const getClassByClassId = async (
 	return res.data;
 };
 
+/**
+ * 新增班级
+ * @param form - 新增班级请求参数
+ * @returns 返回新增班级的 ID
+ */
 const insertClass = async (form: InsertClassRequest): Promise<number> => {
 	let result = 0;
 	await post<InsertClassResponse>("/class/insert", form).then((res) => {
@@ -100,6 +141,11 @@ const insertClass = async (form: InsertClassRequest): Promise<number> => {
 	return result;
 };
 
+/**
+ * 根据班级 ID 更新班级信息
+ * @param form - 更新班级请求参数
+ * @returns 返回操作结果，成功返回非零值
+ */
 const updateClassById = async (form: UpdateClassRequest): Promise<number> => {
 	let result = 0;
 	await post<UpdateClassResponse>("/class/update_by_id", form).then((res) => {

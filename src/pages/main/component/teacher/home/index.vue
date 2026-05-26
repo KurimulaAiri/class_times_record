@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 	import { getMenuList } from "@/api/menu";
-	import { jump } from "@/utils/common";
+	import { jump, showToast } from "@/utils/common";
 	import { getTeacherById } from "@/api/teacher";
 	import { useUserStore } from "@/stores/user";
 	import { ref, onMounted } from "vue";
@@ -63,7 +63,7 @@
 	onMounted(async () => {
 		// 1. 权限前置拦截
 		if (userStore.userInfo?.roleId !== 4) {
-			uni.showToast({ title: "您不是教师，非法访问", icon: "none" });
+			showToast("您不是教师，非法访问");
 			return jump(ROUTES.LOGIN);
 		}
 
@@ -94,10 +94,11 @@
 			await fetchMenus();
 		} catch (error) {
 			console.error("获取教师信息失败", error);
-			uni.showToast({ title: "信息加载失败", icon: "none" });
+			showToast("信息加载失败");
 		}
 	});
 
+	/** 获取菜单列表数据 */
 	const fetchMenus = async () => {
 		try {
 			const res = await getMenuList({

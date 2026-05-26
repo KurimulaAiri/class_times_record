@@ -51,43 +51,47 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
+	import { showToast } from "@/utils/common";
 	import PageFooter from "@/components/page-footer/index.vue";
 	import DeductByStudent from "./component/deduct-by-student/index.vue";
 	import DeductByCourse from "./component/deduct-by-course/index.vue";
 	// 💡 引入你对应的扣课 API
 	import { deductByStudentId, deductByCourseId } from "@/api/course-record";
 
+	/** 扣课模式：student 按学生扣课，course 按课程扣课 */
 	const deductMode = ref<"student" | "course">("student");
+	/** 扣课备注 */
 	const remark = ref("");
 
-	// 接收子组件组装好的数据
+	/** 按学生扣课时的负载数据 */
 	const studentPayload = ref<any>(null);
+	/** 按课程扣课时的负载数据 */
 	const coursePayload = ref<any>(null);
 
+	/** 切换扣课模式 */
 	const switchMode = (mode: "student" | "course") => {
 		if (deductMode.value === mode) return;
 		deductMode.value = mode;
 	};
 
+	/** 处理按学生扣课模式的数据更新 */
 	const handleStudentDataUpdate = (data: StudentResponse) => {
 		studentPayload.value = data;
 	};
 
+	/** 处理按课程扣课模式的数据更新 */
 	const handleCourseDataUpdate = (data: CourseResponse) => {
 		coursePayload.value = data;
 	};
 
-	// 统一提交口
+	/** 提交扣课请求 */
 	const handleSubmit = async () => {
 		uni.showLoading({ title: "处理中...", mask: true });
 
 		try {
 			if (deductMode.value === "student") {
 				if (!studentPayload.value?.isValid) {
-					return uni.showToast({
-						title: "请选择学生并至少勾选一个班级",
-						icon: "none",
-					});
+					return showToast("请选择学生并至少勾选一个班级");
 				}
 
 				// 拼接最终请求体
@@ -100,10 +104,7 @@
 				await deductByStudentId(finalData);
 			} else {
 				if (!coursePayload.value?.isValid) {
-					return uni.showToast({
-						title: "请选择课程并至少勾选一名学生",
-						icon: "none",
-					});
+					return showToast("请选择课程并至少勾选一名学生");
 				}
 
 				// 拼接按课程扣课的请求体
@@ -117,7 +118,7 @@
 			}
 
 			uni.hideLoading();
-			uni.showToast({ title: "扣课成功", icon: "success" });
+			showToast("扣课成功", "success");
 			remark.value = "";
 
 			// 成功后可以通过 uni.$emit 通知子组件刷新列表数据

@@ -14,10 +14,11 @@
 	import { ref } from "vue";
 	import { onLoad } from "@dcloudio/uni-app";
 	import { updateStudentInfo } from "@/api/student";
-	import { parseData } from "@/utils/common";
+	import { parseData, showToast } from "@/utils/common";
 	import FormGroup from "@/components/form-group/index.vue";
 	import PageFooter from "@/components/page-footer/index.vue";
 
+	/** 表单项配置列表 */
 	const formItems: FormItemConfig[] = [
 		{ key: "avatar", label: "学员头像", type: "avatar" },
 		{
@@ -58,6 +59,7 @@
 		}
 	});
 
+	/** 提交用的学生数据 */
 	const submitData = ref<SubmitUpdateStudentInfoRequest>({
 		id: 0,
 		avatar: "",
@@ -66,6 +68,7 @@
 		address: "",
 	});
 
+	/** 提交修改后的学生信息 */
 	const submitForm = () => {
 		uni.showLoading({ title: "保存中..." });
 		console.log("submitData:", submitData.value);
@@ -76,7 +79,7 @@
 			submitData.value.birth === "暂无记录"
 		) {
 			uni.hideLoading();
-			uni.showToast({ title: "请选择出生日期", icon: "error" });
+			showToast("请选择出生日期", "error");
 			return;
 		}
 
@@ -85,7 +88,7 @@
 			submitData.value.school === undefined
 		) {
 			uni.hideLoading();
-			uni.showToast({ title: "请输入就读学校", icon: "error" });
+			showToast("请输入就读学校", "error");
 			return;
 		}
 
@@ -94,20 +97,20 @@
 			submitData.value.address === undefined
 		) {
 			uni.hideLoading();
-			uni.showToast({ title: "请输入家庭住址", icon: "error" });
+			showToast("请输入家庭住址", "error");
 			return;
 		}
 
 		updateStudentInfo(submitData.value).then((res) => {
 			if (res.code === 200) {
 				uni.hideLoading();
-				uni.showToast({ title: "保存成功", icon: "success" });
+				showToast("保存成功", "success");
 				setTimeout(() => {
 					uni.navigateBack();
 				}, 1000);
 			} else {
 				uni.hideLoading();
-				uni.showToast({ title: res.message || "保存失败", icon: "error" });
+				showToast(res.message || "保存失败", "error");
 			}
 		});
 	};

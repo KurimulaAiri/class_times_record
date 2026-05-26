@@ -83,7 +83,7 @@
 		onPullDownRefresh,
 		onShow,
 	} from "@dcloudio/uni-app";
-	import { jump } from "@/utils/common/index";
+	import { jump, showToast } from "@/utils/common/index";
 	import { ROUTES } from "@/config/routes";
 
 	// 引入组件
@@ -110,7 +110,7 @@
 	const tempKeyword = ref("");
 	const searchKeyword = ref("");
 
-	// ✅ 新的筛选配置结构（合并了 labels 和 options）
+	/** 筛选器配置 */
 	const filterConfig = ref<FilterType>({
 		scope: {
 			label: "范围",
@@ -143,18 +143,18 @@
 		classStatus: -1,
 	});
 
-	// ✅ 搜索触发
+	/** 处理搜索关键词变更 */
 	const handleSearch = () => {
 		searchKeyword.value = tempKeyword.value.trim();
 		loadData(true);
 	};
 
-	// ✅ 筛选变更触发
+	/** 处理筛选条件变更 */
 	const handleFilterChange = () => {
 		loadData(true);
 	};
 
-	// --- 核心请求逻辑 ---
+	/** 加载学生列表数据 */
 	const loadData = async (reset = false) => {
 		if (isLoading.value) return;
 		if (reset) {
@@ -220,15 +220,14 @@
 		loadData();
 	});
 
-	// 1. 在 config/routes 中确保有 ADD_STUDENT
-	// 2. 增加跳转方法
+	/** 跳转到添加学生页面 */
 	const goToAddStudent = () => {
 		// 假设你的路由配置文件里定义了 ADD_STUDENT
 		jump(ROUTES.ADD_STUDENT);
 		// 或者直接使用 uni.navigateTo({ url: '/pages/student/add' })
 	};
 
-	// --- 点击逻辑 ---
+	/** 点击学生卡片 */
 	const handleClick = (item: StudentResponse) => {
 		console.log("点击学员", item);
 		// 点击记录当前选中的学员
@@ -240,7 +239,7 @@
 		jump(ROUTES.STUDENT_DETAIL);
 	};
 
-	// 处理长按反馈
+	/** 长按学生卡片，弹出删除确认 */
 	const handleLongPress = (item: StudentResponse) => {
 		// 震动反馈
 		uni.vibrateShort();
@@ -272,12 +271,12 @@
 									// 这里不需要抛出异常，也不需要给用户弹窗提示
 								} else {
 									// 如果是其他错误（比如号码格式不对），再进行提示
-									uni.showToast({ title: "拨号失败", icon: "none" });
+									showToast("拨号失败");
 								}
 							},
 						});
 					} else {
-						uni.showToast({ title: "暂无联系电话", icon: "none" });
+						showToast("暂无联系电话");
 					}
 				} else if (res.tapIndex === 2) {
 					// 删除
@@ -287,6 +286,7 @@
 		});
 	};
 
+	/** 确认删除学生 */
 	const confirmDelete = (item: StudentResponse) => {
 		uni.showModal({
 			title: "提示",
@@ -300,6 +300,7 @@
 		});
 	};
 
+	/** 格式化头像文字（取姓名首字） */
 	const formatAvatarText = (name: string) => {
 		if (!name) return "";
 		return name.length > 2 ? name.substring(name.length - 2) : name;

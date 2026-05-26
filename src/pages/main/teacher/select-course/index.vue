@@ -34,6 +34,7 @@
 	import { onLoad } from "@dcloudio/uni-app";
 	import SearchFilterBar from "@/components/search-filter-bar/index.vue";
 
+	/** 搜索关键词 */
 	const keyword = ref("");
 
 	const list = ref<CourseResponse[]>([]);
@@ -57,6 +58,7 @@
 		list.value = res.courses;
 	};
 
+	/** 选择课程并返回上一页 */
 	const select = (item: CourseResponse) => {
 		uni.$emit("updateCourse", item);
 		uni.navigateBack();

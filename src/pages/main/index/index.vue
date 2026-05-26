@@ -44,6 +44,7 @@
   import TeacherHome from "../component/teacher/home/index.vue";
   import TeacherUser from "../component/teacher/user/index.vue";
 
+  /** 当前登录角色 */
   const role = ref(0);
 
   onLoad((options) => {
@@ -71,6 +72,7 @@
 		},
 	];
 
+	/** 切换标签页 */
 	const switchTab = (index: number) => {
 		activeTab.value = index;
 		// 进阶点：切换时可以触发震动反馈

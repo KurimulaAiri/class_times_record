@@ -63,7 +63,7 @@
 
 	const keyword = ref("");
 
-	// ✅ 新增：模拟课程数据源（实际业务中可通过 API 获取）
+	/** 全部课程数据 */
 	const allCourses = ref<Course[]>([
 		{ id: 1, courseName: "创意少儿美术基础班" },
 		{ id: 2, courseName: "硬笔书法进阶速成课" },
@@ -72,10 +72,10 @@
 		{ id: 5, courseName: "架子鼓一对一私教课" },
 	]);
 
-	// 用于界面展示的响应式数组
+	/** 过滤后的课程数据 */
 	const courses = ref<Course[]>([...allCourses.value]);
 
-	// 新增：添加课程的回调
+	/** 跳转到添加课程页面 */
 	const goToAddCourse = () => {
 		console.log("点击了添加课程按钮");
 		// 这里可以写跳转逻辑，例如：
@@ -95,6 +95,7 @@
 		// ✅ 前端简单筛选逻辑（等对接后端 API 时可以替换为请求接口）
 	};
 
+	/** 加载课程列表数据 */
 	const loadData = async () => {
 		const res = await getCourseByInstitutionId({
 			institutionId:
@@ -109,7 +110,7 @@
 		console.log("课程列表:", courses.value);
 	};
 
-	// ✅ 新增：点击课程卡片的回调
+	/** 点击课程卡片，跳转到课程详情 */
 	const handleCourseClick = (item: Course) => {
 		console.log("点击了课程：", item);
 		// 这里可以写跳转逻辑，例如：

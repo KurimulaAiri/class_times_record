@@ -148,12 +148,13 @@
 <script setup lang="ts">
 	import { ref, computed, onUnmounted } from "vue";
 	import { onLoad } from "@dcloudio/uni-app";
-	import { jump } from "@/utils/common";
+	import { jump, showToast } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
 	import { insertClass } from "@/api/class";
 	import FormPage from "@/components/form-page/index.vue";
 	import PageFooter from "@/components/page-footer/index.vue";
 
+	/** 星期选项列表 */
 	const weekOptions = [
 		{ label: "周一", value: 1 },
 		{ label: "周二", value: 2 },
@@ -173,6 +174,7 @@
 		schedules: [] as ClassScheduleRequest[],
 	});
 
+	/** 表单分组配置 */
 	const groups = computed<FormGroupConfig[]>(() => [
 		{
 			title: "基础信息",
@@ -225,6 +227,7 @@
 		if (key === "courseId") toSelectCourse();
 	};
 
+	/** 添加一组上课日程时段 */
 	const addSchedule = () => {
 		form.value.schedules.push({
 			classId: 0,
@@ -238,6 +241,7 @@
 
 	const courseName = ref("");
 
+	/** 已选择的教师列表 */
 	const selectedTeachers = ref<TeacherResponse[]>([]);
 
 	onLoad(() => {
@@ -257,7 +261,8 @@
 	onUnmounted(() => {
 		uni.$off(["updateCourse", "updateTeachers"]);
 	});
-
+/** 删除指定索引的上课日程时段 */
+	
 	const removeSchedule = (index: number) => {
 		uni.showModal({
 			title: "提示",
@@ -280,6 +285,7 @@
 		}
 	};
 
+	/** 处理日程开始日期变更，自动设置结束日期 */
 	const handleStartDateChange = (index: number, e: any) => {
 		const item = form.value.schedules[index];
 		item.startDate = e.detail.value;
@@ -290,6 +296,7 @@
 
 	const toSelectCourse = () => jump(ROUTES.SELECT_COURSE);
 
+	/** 跳转到教师选择页面 */
 	const toSelectTeacher = () => {
 		const ids = selectedTeachers.value
 			.map((t) => t.teacherId.toString())
@@ -301,6 +308,7 @@
 	const removeTeacher = (index: number) =>
 		selectedTeachers.value.splice(index, 1);
 
+	/** 提交创建班级表单，校验后调用 insertClass 接口 */
 	const submitForm = async () => {
 		if (!form.value.className) return showToast("请输入班级名称");
 		if (!form.value.courseId) return showToast("请关联课程");
@@ -338,15 +346,11 @@
 		console.log("最终提交的完整报文:", JSON.parse(JSON.stringify(form.value)));
 		const res = await insertClass(form.value);
 		if (res) {
-			showToast("班级创建成功");
+			showToast("班级创建成功", "success");
 		} else {
-			showToast("班级创建失败");
+			showToast("班级创建失败", "error");
 		}
 		uni.navigateBack();
-	};
-
-	const showToast = (title: string) => {
-		uni.showToast({ title, icon: "none" });
 	};
 </script>
 

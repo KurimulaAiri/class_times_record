@@ -70,6 +70,7 @@
 	import SearchFilterBar from "@/components/search-filter-bar/index.vue";
 	import FloatingActionButton from "@/components/floating-action-button/index.vue";
 
+	/** 筛选器配置 */
 	const filterConfig = ref<FilterType>({
 		scope: {
 			label: "范围",
@@ -80,6 +81,7 @@
 		},
 	});
 
+	/** 当前激活的筛选条件 */
 	const activeFilters = ref<ActiveFiltersType>({
 		scope: 2,
 	});
@@ -113,6 +115,7 @@
 		}
 	});
 
+	/** 处理搜索关键词变更 */
 	const handleSearch = async () => {
 		console.log("搜索关键字：", queryForm.value.keyword);
 		// 如果是后端搜索，这里可以发起网络请求
@@ -120,6 +123,7 @@
 		loadData();
 	};
 
+	/** 加载班级列表数据 */
 	const loadData = async () => {
 		const res = await getClassList({
 			scope: activeFilters.value.scope,
@@ -129,13 +133,13 @@
 		classList.value = res.classList || [];
 	};
 
-	// 处理点击事件（通常跳转到班级详情）
+	/** 点击班级卡片，跳转到班级详情 */
 	const handleCardClick = (item: ClassResponse) => {
 		console.log("点击了班级:", item.className);
 		jump(ROUTES.CLASS_DETAIL, item);
 	};
 
-	// 处理长按事件
+	/** 长按班级卡片，弹出删除确认 */
 	const handleCardLongPress = (item: ClassResponse) => {
 		// 触发震动反馈（增强手感，仅 App/小程序支持）
 		uni.vibrateShort();
@@ -166,7 +170,7 @@
 		});
 	};
 
-	// 模拟删除逻辑
+	/** 删除班级 */
 	const handleDeleteClass = (item: ClassResponse) => {
 		uni.showModal({
 			title: "确认删除",
@@ -181,12 +185,12 @@
 		});
 	};
 
-	// 处理筛选变化
+	/** 处理筛选条件变更 */
 	const handleFilterChange = () => {
 		loadData();
 	};
 
-	// 模拟结束课程逻辑
+	/** 切换班级状态（启用/停用） */
 	const adjustClassStatus = (item: ClassResponse, status: number) => {
 		console.log(
 			`调整班级状态为${status === 0 ? "已结课/毕业" : "进行中"}的班级`,
@@ -215,7 +219,7 @@
 		// 执行结束班级逻辑
 	};
 
-	// 新增：点击添加班级按钮
+	/** 跳转到创建班级页面 */
 	const goToAddClass = () => {
 		jump(ROUTES.ADD_CLASS);
 	};

@@ -90,7 +90,7 @@
 
 	const userStore = useUserStore();
 
-	// 按照你的 Menu 接口格式定义的子菜单
+	/** 子菜单列表 */
 	const subMenuList = ref([
 		{
 			id: 101,
@@ -122,6 +122,7 @@
 		if (path) uni.navigateTo({ url: path });
 	};
 
+	/** 处理用户操作（切换账号/退出登录） */
 	const handleAction = (type: string) => {
 		console.log("点击了操作:", type);
 		// 实现具体的切换账号或退出逻辑

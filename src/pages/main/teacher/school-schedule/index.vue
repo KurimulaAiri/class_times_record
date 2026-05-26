@@ -86,6 +86,7 @@
 	import { onLoad } from "@dcloudio/uni-app";
 	import { getClassScheduleByInstitutionId } from "@/api/class-schedule";
 
+	/** 课程表配色规则 */
 	const scheduleRules = ref<ClassScheduleResponse[]>([
 		{
 			id: 1,
@@ -149,13 +150,16 @@
 		"17:00",
 		"18:00",
 	];
+	/** 课程表起始小时 */
 	const START_HOUR = 8;
+	/** 每小时高度（rpx） */
 	const HOUR_HEIGHT = 70;
 
 	onLoad(() => {
 		loadData();
 	});
 
+	/** 加载课程表数据 */
 	const loadData = async () => {
 		const res = await getClassScheduleByInstitutionId({
 			institutionId: 1,
@@ -211,6 +215,7 @@
 		});
 	});
 
+	/** 根据课程名称获取对应的样式类名 */
 	const getClassStyle = (clazz: ClassScheduleResponse) => {
 		const [startH, startM] = clazz.startTimeStr.split(":").map(Number);
 		const [endH, endM] = clazz.endTimeStr.split(":").map(Number);
@@ -227,11 +232,12 @@
 		};
 	};
 
+	/** 处理日期选择变更 */
 	const handleDateSelect = (dateStr: string) => {
 		selectedDate.value = dateStr;
 	};
 
-	// 💡 新增：翻上/下周的核心切周函数
+	/** 切换周次（上一周/下一周） */
 	const changeWeek = (type: "prev" | "next") => {
 		if (type === "prev") {
 			// 当前选中日期减去 7 天，自动进入上周的同一天
@@ -246,6 +252,7 @@
 		}
 	};
 
+	/** 点击课程时段 */
 	const handleClassClick = (clazz: ClassScheduleResponse) => {
 		uni.showModal({
 			title: clazz.className,

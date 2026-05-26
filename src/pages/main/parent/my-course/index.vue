@@ -60,15 +60,20 @@
 	import { getCourseRecordList } from "@/api/course-record";
 	import { useStudentStore } from "@/stores/student";
 
+	/** 搜索关键词 */
 	const searchKeyword = ref("");
+	/** 课程列表数据 */
 	const dataList = ref<CourseRecordResponse[]>([]);
+	/** 当前页码 */
 	const page = ref(1);
+	/** 是否正在加载 */
 	const loading = ref(false);
+	/** 是否没有更多数据 */
 	const noMore = ref(false);
 
 	const studentStore = useStudentStore();
 
-	// 模拟 API 请求
+	/** 获取课程列表数据 */
 	const fetchList = async (pageNum: number) => {
 		if (loading.value) return;
 		loading.value = true;
@@ -138,6 +143,7 @@
 		}
 	});
 
+	/** 处理搜索关键词变更 */
 	const onSearch = () => {
 		loadData(true);
 	};

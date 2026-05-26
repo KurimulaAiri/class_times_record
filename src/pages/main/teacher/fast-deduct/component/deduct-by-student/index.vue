@@ -156,6 +156,7 @@
 		}
 	};
 
+	/** 切换班级选中状态 */
 	const toggleClass = (item: any) => {
 		if (selectedMap.value[item.id] !== undefined) {
 			const newMap = { ...selectedMap.value };
@@ -177,10 +178,12 @@
 		}
 	};
 
+	/** 跳转到选择学生页面 */
 	const navigateToSelect = () => {
 		jump(ROUTES.SELECT_STUDENT);
 	};
 
+	/** 加载学生关联的班级列表 */
 	const loadData = async () => {
 		if (student.value.id !== 0) {
 			const classesInfo = await getClassListByStudentId(student.value.id);

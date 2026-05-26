@@ -49,9 +49,11 @@
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { post } from "@/utils/request";
-	import { parseData } from "@/utils/common";
+	import { parseData, showToast } from "@/utils/common";
 
+	/** 当前编辑的课卡记录数据 */
 	const selectData = ref({});
+	/** 临时编辑数据 */
 	const tempData = ref({});
 
 	onLoad((options) => {
@@ -81,32 +83,25 @@
 		}
 	});
 
+	/** 返回上一页 */
 	const back = () => {
 		uni.navigateBack();
 	};
-
+/** 确认编辑结果 */
+	
 	const confirm = () => {
 		post("/course_record/update", tempData.value)
 			.then((res) => {
 				console.log("更新响应:", res);
 				if (res.code === 200) {
-					uni.showToast({
-						title: "更新成功",
-						icon: "success",
-					});
+					showToast("更新成功", "success");
 					uni.navigateBack();
 				} else {
-					uni.showToast({
-						title: res.message || "更新失败",
-						icon: "none",
-					});
+					showToast(res.message || "更新失败");
 				}
 			})
 			.catch(() => {
-				uni.showToast({
-					title: "更新失败",
-					icon: "none",
-				});
+				showToast("更新失败");
 			})
 			.finally(() => {
 				uni.hideLoading();

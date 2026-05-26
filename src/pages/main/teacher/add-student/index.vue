@@ -12,6 +12,7 @@
 <script setup lang="ts">
 	import { ref } from "vue";
 	import { insertStudent } from "@/api/student";
+	import { showToast } from "@/utils/common";
 	import { useUserStore } from "@/stores/user";
 	import FormPage from "@/components/form-page/index.vue";
 	import PageFooter from "@/components/page-footer/index.vue";
@@ -146,16 +147,17 @@
 		},
 	];
 
+	/** 提交学生信息表单，校验后调用 insertStudent 接口 */
 	const submitForm = async () => {
 		// 💡 所有表单校验记得加上 .value
 		if (!form.value.studentName)
-			return uni.showToast({ title: "姓名不能为空", icon: "none" });
+			return showToast("姓名不能为空");
 		if (
 			!form.value.primaryParent.username ||
 			!form.value.primaryParent.phone ||
 			!form.value.primaryParent.relation
 		) {
-			return uni.showToast({ title: "请完善主要联系人信息", icon: "none" });
+			return showToast("请完善主要联系人信息");
 		}
 
 		const sp = form.value.secondaryParent;
@@ -163,7 +165,7 @@
 		const isComplete = Boolean(sp.username && sp.phone && sp.relation);
 
 		if (hasAny && !isComplete) {
-			return uni.showToast({ title: "请完善备用联系人信息", icon: "none" });
+			return showToast("请完善备用联系人信息");
 		}
 
 		// 💡 修复点：必须解构 form.value 才能拿到干净的表单后端数据对象
@@ -180,7 +182,7 @@
 			const studentId = await insertStudent(submitData);
 			console.log("插入学生ID:", studentId);
 			if (studentId) {
-				uni.showToast({ title: "添加成功", icon: "success" });
+				showToast("添加成功", "success");
 				setTimeout(() => uni.navigateBack(), 1500);
 			}
 		} catch (error) {}

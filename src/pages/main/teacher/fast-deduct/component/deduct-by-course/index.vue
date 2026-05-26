@@ -103,6 +103,7 @@
 
 	const emit = defineEmits(["updateData"]);
 
+	/** 当前选择的课程数据 */
 	const course = ref<CourseResponse>({
 		id: 0,
 		courseName: "",
@@ -167,6 +168,7 @@
 		}
 	};
 
+	/** 切换学生选中状态 */
 	const toggleStudent = (item: StudentResponse) => {
 		if (selectedMap.value[item.id] !== undefined) {
 			const newMap = { ...selectedMap.value };
@@ -188,10 +190,12 @@
 		}
 	};
 
+	/** 跳转到选择课程页面 */
 	const navigateToSelectCourse = () => {
 		jump(ROUTES.SELECT_COURSE);
 	};
 
+	/** 加载课程下的学生列表 */
 	const loadStudents = async () => {
 		if (course.value.id !== 0) {
 			const res = await getStudentListByCourseId({

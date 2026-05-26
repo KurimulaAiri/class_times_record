@@ -1,8 +1,14 @@
+/** @description 认证 API 接口模块，提供登录、登出、Token 刷新等认证相关接口 */
 import { post } from "@/utils/request";
 import { useUserStore } from "@/stores/user";
 import { ROUTES } from "@/config/routes";
-import { jump } from "@/utils/common";
+import { jump, showToast } from "@/utils/common";
 
+/**
+ * 将登录响应中的 Token 存储到本地缓存
+ * @param res - 登录接口的响应数据，包含 accessToken 和 refreshToken
+ * @returns 无返回值
+ */
 const storeTokens = (res: ApiResponse<LoginResponse>) => {
 	if (res.data.accessToken) {
 		uni.setStorageSync("accessToken", res.data.accessToken);
@@ -12,6 +18,10 @@ const storeTokens = (res: ApiResponse<LoginResponse>) => {
 	}
 };
 
+/**
+ * 获取微信 OpenID，通过微信登录获取 code 后调用后端接口换取 openId
+ * @returns 返回包含 openId 的登录响应
+ */
 const getOpenId = (): Promise<ApiResponse<LoginResponse>> => {
 	console.log("获取 OpenID");
 	return new Promise((resolve, reject) => {
@@ -38,6 +48,11 @@ const getOpenId = (): Promise<ApiResponse<LoginResponse>> => {
 	});
 };
 
+/**
+ * 通过账号密码登录，先获取 OpenID 再调用密码登录接口
+ * @param data - 登录请求参数，包含账号和密码
+ * @returns 返回登录响应数据，包含 Token 信息
+ */
 const loginByPwd = async (
 	data: LoginRequest,
 ): Promise<ApiResponse<LoginResponse>> => {
@@ -62,6 +77,10 @@ const loginByPwd = async (
 	}
 };
 
+/**
+ * 免密登录，通过微信 code 和用户角色自动登录并缓存 Token
+ * @returns 无返回值
+ */
 const loginNoPwd = () => {
 	const userInfo = useUserStore().userInfo;
 	if (userInfo !== null && userInfo !== undefined) {
@@ -83,6 +102,11 @@ const loginNoPwd = () => {
 	}
 };
 
+/**
+ * 通过 Token 登录，先获取 OpenID 再使用已有 Token 进行认证登录
+ * @param token - 已有的认证 Token
+ * @returns 返回登录响应数据，包含新的 Token 信息
+ */
 const loginByToken = async (
 	token: string,
 ): Promise<ApiResponse<LoginResponse>> => {
@@ -107,6 +131,10 @@ const loginByToken = async (
 	}
 };
 
+/**
+ * 使用 refreshToken 刷新 accessToken，成功后更新本地缓存
+ * @returns 刷新成功返回 true，否则返回 false
+ */
 const refreshAccessToken = async (): Promise<boolean> => {
 	const refreshToken = uni.getStorageSync("refreshToken");
 	if (!refreshToken) {
@@ -131,6 +159,12 @@ const refreshAccessToken = async (): Promise<boolean> => {
 	}
 };
 
+/**
+ * 退出登录，清除本地用户信息和 Token 缓存，通知后端登出，并跳转到指定页面
+ * @param targetRoute - 退出后跳转的目标路由，默认为首页
+ * @param params - 跳转时携带的参数，默认为 null
+ * @returns 无返回值
+ */
 const logOut = (targetRoute: string = ROUTES.INDEX, params: any = null) => {
 	const userStore = useUserStore();
 	userStore.clearUserInfo();
@@ -149,12 +183,7 @@ const logOut = (targetRoute: string = ROUTES.INDEX, params: any = null) => {
 	uni.removeStorageSync("refreshToken");
 	uni.removeStorageSync("openId");
 
-	uni.showToast({
-		title: "正在退出...",
-		icon: "loading",
-		duration: 800,
-		mask: true,
-	});
+	showToast("正在退出...", "loading", 800, true);
 
 	setTimeout(() => {
 		const jumpType = targetRoute === ROUTES.INDEX ? "relaunch" : "navigate";
@@ -163,4 +192,11 @@ const logOut = (targetRoute: string = ROUTES.INDEX, params: any = null) => {
 	}, 800);
 };
 
-export { loginNoPwd, loginByPwd, getOpenId, loginByToken, refreshAccessToken, logOut };
+export {
+	loginNoPwd,
+	loginByPwd,
+	getOpenId,
+	loginByToken,
+	refreshAccessToken,
+	logOut,
+};

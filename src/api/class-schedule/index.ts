@@ -1,5 +1,11 @@
+/** @description 课程表 API 接口模块，提供课程表信息的查询接口 */
 import { post } from "@/utils/request";
 
+/**
+ * 根据班级 ID 获取课程表列表
+ * @param query - 查询参数，包含班级 ID 及分页条件
+ * @returns 返回课程表数组
+ */
 const getClassScheduleByClassId = async (
 	query: GetClassScheduleListRequest,
 ): Promise<ClassScheduleResponse[]> => {
@@ -13,6 +19,11 @@ const getClassScheduleByClassId = async (
 	return res;
 };
 
+/**
+ * 根据机构 ID 获取课程表列表
+ * @param query - 查询参数，包含机构 ID 及分页条件
+ * @returns 返回课程表数组
+ */
 const getClassScheduleByInstitutionId = async (
 	query: GetClassScheduleListRequest,
 ): Promise<ClassScheduleResponse[]> => {

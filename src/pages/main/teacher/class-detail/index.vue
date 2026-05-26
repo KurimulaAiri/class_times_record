@@ -185,10 +185,9 @@
 <script setup lang="ts">
 	import { onUnmounted, ref, computed } from "vue";
 	import { onLoad, onShow } from "@dcloudio/uni-app";
-	import { parseData } from "@/utils/common";
+	import { parseData, jump, showToast } from "@/utils/common";
 	import { getStudentListByClassId } from "@/api/student";
 	import { useStudentStore } from "@/stores/student";
-	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
 	import {
 		addStudentToClass,
@@ -241,7 +240,7 @@
 		return groups;
 	});
 
-	// 数字周转换辅助函数
+	/** 将星期数字转换为中文文本 */
 	const getDayOfWeekText = (day: number): string => {
 		const weekMap: Record<number, string> = {
 			1: "周一",
@@ -255,6 +254,7 @@
 		return weekMap[day] || `周${day}`;
 	};
 
+	/** 跳转到编辑课程表页面 */
 	const handleEditSchedule = () => {
 		console.log("点击调整排课");
 		jump(ROUTES.ADJUST_CLASS_SCHEDULE);
@@ -324,10 +324,7 @@
 									students: studentList,
 								});
 								if (result !== 0) {
-									uni.showToast({
-										title: "添加成功",
-										icon: "success",
-									});
+									showToast("添加成功", "success");
 									if (classDetail.value?.id) {
 										const res = await getClassByClassId(
 											classDetail.value?.id || 0,
@@ -340,10 +337,7 @@
 										};
 									}
 								} else {
-									uni.showToast({
-										title: "添加失败",
-										icon: "none",
-									});
+									showToast("添加失败");
 								}
 								await loadStudentList();
 							} else if (res.cancel) {
@@ -365,6 +359,7 @@
 	// 页面显示时获取班级详情
 	onShow(async () => {});
 
+	/** 加载课程表列表 */
 	const loadClassScheduleList = async () => {
 		const res = await getClassScheduleByClassId({
 			classId: classDetail.value?.id || 0,
@@ -382,6 +377,7 @@
 		}
 	};
 
+	/** 加载班级学生列表 */
 	const loadStudentList = async () => {
 		const res = await getStudentListByClassId({
 			classId: classDetail.value?.id || 0,
@@ -391,7 +387,7 @@
 		students.value = res;
 	};
 
-	// 处理长按事件
+	/** 长按学生卡片，弹出操作菜单 */
 	const handleLongPress = async (item: StudentResponse) => {
 		uni.vibrateShort();
 
@@ -430,11 +426,7 @@
 									});
 									if (result !== 0) {
 										setTimeout(() => {
-											uni.showToast({
-												title: "移除成功",
-												icon: "success",
-												duration: 2000,
-											});
+											showToast("移除成功", "success", 2000);
 										}, 200);
 										if (classDetail.value?.id) {
 											const res = await getClassByClassId(
@@ -451,10 +443,7 @@
 										await loadStudentList();
 									} else {
 										setTimeout(() => {
-											uni.showToast({
-												title: "移除失败",
-												icon: "none",
-											});
+											showToast("移除失败");
 										}, 200);
 									}
 								} else if (res.cancel) {
@@ -471,23 +460,28 @@
 		console.log("长按学员", item);
 	};
 
+	/** 跳转到添加学生页面 */
 	const handleAddStudent = () => {
 		jump(ROUTES.SELECT_STUDENT, { type: "multi" });
 	};
 
+	/** 跳转到编辑班级信息页面 */
 	const handleEdit = () => {
 		jump(ROUTES.EDIT_CLASS_INFO, classDetail.value, "navigate", true);
 	};
 
+	/** 跳转到课卡记录页面 */
 	const handleAttendance = () => {
 		uni.navigateTo({ url: "/pages/attendance/index" });
 	};
 
+	/** 拨打电话 */
 	const makePhoneCall = (phone: string) => {
 		if (!phone) return;
 		uni.makePhoneCall({ phoneNumber: phone });
 	};
 
+	/** 跳转到学生详情页面 */
 	const goToStudentDetail = (item: StudentResponse) => {
 		console.log("点击学员", item);
 		// 点击记录当前选中的学员
@@ -499,7 +493,7 @@
 		jump(ROUTES.STUDENT_DETAIL);
 	};
 
-	// 点击整个排课日期周期大卡片
+	/** 点击课程时段 */
 	const handlePeriodTap = (period: any) => {
 		console.log("点击了排课周期:", period);
 		// 示例：点击大卡片可以跳转到该周期的修改页面，并把日期区间等参数带过去
@@ -511,7 +505,7 @@
     */
 	};
 
-	// 长按整个排课日期周期大卡片
+	/** 长按课程时段 */
 	const handlePeriodLongPress = (period: any) => {
 		// 触发震动反馈
 		uni.vibrateShort();

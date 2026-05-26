@@ -111,7 +111,7 @@
 	import { useStudentStore } from "@/stores/student";
 	import { getClassListByStudentId } from "@/api/class";
 	import { onLoad, onShow } from "@dcloudio/uni-app";
-	import { jump } from "@/utils/common";
+	import { jump, showToast } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
 	import FormPage from "@/components/form-page/index.vue";
 	import PageFooter from "@/components/page-footer/index.vue";
@@ -120,6 +120,7 @@
 	const student = ref<StudentResponse>();
 	const classList = ref<ClassResponse[]>([]);
 
+	/** 信息展示分组配置 */
 	const groups: FormGroupConfig[] = [
 		{
 			title: "基本信息",
@@ -188,11 +189,13 @@
 		}
 	});
 
+	/** 格式化头像文字（取姓名首字） */
 	const formatAvatarText = (name: string) => {
 		if (!name) return "无";
 		return name.length > 2 ? name.substring(name.length - 2) : name;
 	};
 
+	/** 拨打电话 */
 	const makePhoneCall = (phoneNumber: string) => {
 		uni.makePhoneCall({
 			phoneNumber: phoneNumber,
@@ -203,12 +206,13 @@
 				if (err.errMsg.indexOf("cancel") !== -1) {
 					console.log("用户取消了拨打");
 				} else {
-					uni.showToast({ title: "拨号失败", icon: "none" });
+					showToast("拨号失败");
 				}
 			},
 		});
 	};
 
+	/** 跳转到编辑学生信息页面 */
 	const handleEdit = () => {
 		console.log("跳转编辑页");
 		jump(ROUTES.EDIT_STUDENT_INFO_TEACHER);

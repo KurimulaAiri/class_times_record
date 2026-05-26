@@ -66,7 +66,7 @@
 <script setup lang="ts">
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
-	import { jump, parseData } from "@/utils/common";
+	import { jump, parseData, showToast } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
 	import { loginByPwd } from "@/api/auth";
 	import { useUserStore } from "@/stores/user";
@@ -77,16 +77,16 @@
 	const account = ref("");
 	const password = ref("");
 
-	// 新增：隐私条款勾选状态
+	/** 是否同意用户协议 */
 	const isAgree = ref(false);
 
-	// 新增：打开隐私条款页面
+	/** 打开隐私政策页面 */
 	const openPrivacy = () => {
 		// 假设你的路由配置里有这个页面，或者直接用 jump
 		jump(ROUTES.PRIVACY);
 	};
 
-	// 新增：打开用户服务协议页面
+	/** 打开用户协议页面 */
 	const openAgreement = () => {
 		jump(ROUTES.USER_AGREEMENT); // 确保在 ROUTES 中配置了此常量
 	};
@@ -104,13 +104,11 @@
 		}
 	});
 
+	/** 执行登录操作 */
 	const login = () => {
 		// 新增：登录前校验是否同意条款
 		if (!isAgree.value) {
-			uni.showToast({
-				title: "请先阅读并同意隐私条款",
-				icon: "none",
-			});
+			showToast("请先阅读并同意隐私条款");
 			return;
 		}
 

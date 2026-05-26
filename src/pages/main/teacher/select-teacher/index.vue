@@ -38,10 +38,15 @@
 
 	const userStore = useUserStore();
 
+	/** 搜索关键词 */
 	const keyword = ref("");
+	/** 临时选中的教师 ID 列表 */
 	const tempIds = ref<string[]>([]);
+	/** 教师列表数据 */
 	const list = ref<TeacherResponse[]>([]);
+	/** 当前页码 */
 	const currentPage = ref(1);
+	/** 每页数量 */
 	const pageSize = ref(100);
 
 	onLoad(async (opt) => {
@@ -83,12 +88,14 @@
 		console.log("老师列表", list.value);
 	});
 
+	/** 处理教师选中状态变更 */
 	const onCheckChange = (e: any) => {
 		console.log("e.detail.value", e.detail.value);
 		tempIds.value = e.detail.value;
 		console.log("选中后当前tempIds", tempIds.value);
 	};
 
+	/** 确认选择教师 */
 	const confirm = () => {
 		const result = list.value.filter((t) =>
 			tempIds.value.includes(t.teacherId.toString()),
@@ -97,6 +104,7 @@
 		uni.navigateBack();
 	};
 
+	/** 处理搜索关键词变更 */
 	const handleSearch = () => {
 		currentPage.value = 1;
 		console.log("搜索后当前list", list.value);

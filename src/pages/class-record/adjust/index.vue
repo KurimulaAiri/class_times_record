@@ -127,10 +127,11 @@
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { post } from "@/utils/request";
-	import { parseData } from "@/utils/common";
+	import { parseData, showToast } from "@/utils/common";
 
 	const adjustList = ref<CourseRecordResponse[]>([]);
 
+	/** 课卡记录列表 */
 	const courseRecordList = ref<CourseRecordResponse[]>([]);
 
 	const showRightRef = ref<any>(null);
@@ -139,8 +140,10 @@
 
 	const loadStatus = ref("loading");
 
+	/** 已选中的记录 ID 列表 */
 	const selectedIds = ref<number[]>([]);
 
+	/** 临时选中的记录 ID 列表（抽屉内） */
 	const tempSelectIds = ref<number[]>([]);
 
 	const queryForm = ref({
@@ -149,6 +152,7 @@
 		pageSize: 10,
 	});
 
+	/** 加载更多数据 */
 	const loadMore = () => {
 		if (courseRecordList.value.length >= total.value) {
 			console.log("没有更多数据了");
@@ -165,10 +169,7 @@
 	const confirmSelect = () => {
 		console.log("确认选择:", tempSelectIds.value);
 		if (tempSelectIds.value.length === 0) {
-			uni.showToast({
-				title: "至少选择一门课程",
-				icon: "none",
-			});
+			showToast("至少选择一门课程");
 			return;
 		}
 		console.log("tempSelectIds.value", tempSelectIds.value);
@@ -203,10 +204,7 @@
 	const toggleSelect = (id) => {
 		if (tempSelectIds.value.includes(id)) {
 			if (tempSelectIds.value.length === 1) {
-				uni.showToast({
-					title: "至少选择一门课程",
-					icon: "none",
-				});
+				showToast("至少选择一门课程");
 				return;
 			}
 			tempSelectIds.value = tempSelectIds.value.filter((item) => item !== id);
@@ -215,6 +213,7 @@
 		}
 	};
 
+	/** 获取课卡记录数据 */
 	const getData = (isRefresh = false) => {
 		if (isRefresh) {
 			queryForm.value.currentPage = 1;
@@ -261,12 +260,9 @@
 				}
 			})
 			.catch((err) => {
-				loadStatus.value = "more"; // 发生错误时，允许用户再次尝试
+				loadStatus.value = "more";
 				console.log("获取课程记录失败:", err);
-				uni.showToast({
-					title: err.msg || "获取课程记录失败",
-					icon: "none",
-				});
+				showToast(err.msg || "获取课程记录失败");
 			})
 			.finally(() => {
 				uni.hideLoading();
@@ -279,6 +275,7 @@
 		showRightRef.value.open();
 	};
 
+	/** 记录类型选项列表 */
 	const recordTypeItemList = ref([
 		{
 			[1]: "消耗课时",
@@ -313,6 +310,7 @@
 		}
 	});
 
+	/** 获取今天的日期字符串 */
 	const getToday = () => {
 		const date = new Date();
 		const year = date.getFullYear();
@@ -322,12 +320,10 @@
 		return `${year}-${month}-${day}`;
 	};
 
+	/** 提交调课请求 */
 	const submit = () => {
 		if (record.value.recordChange === null) {
-			uni.showToast({
-				title: "请输入课时调整",
-				icon: "none",
-			});
+			showToast("请输入课时调整");
 			return;
 		}
 
@@ -336,10 +332,7 @@
 			isNaN(Number(record.value.recordChange)) ||
 			Number(record.value.recordChange) <= 0
 		) {
-			uni.showToast({
-				title: "课时调整必须为正整数",
-				icon: "none",
-			});
+			showToast("课时调整必须为正整数");
 			return;
 		}
 
@@ -350,18 +343,12 @@
 			.then((res) => {
 				console.log("提交后:", res);
 				if (res.code === 200) {
-					uni.showToast({
-						title: "调整成功",
-						icon: "success",
-					});
+					showToast("调整成功", "success");
 					uni.navigateBack({
 						delta: 1,
 					});
 				} else {
-					uni.showToast({
-						title: res.message,
-						icon: "none",
-					});
+					showToast(res.message);
 				}
 			})
 			.finally(() => {

@@ -1,3 +1,4 @@
+/** @description 通用工具函数库，提供页面跳转、消息提示、数据解析、账号切换等基础能力 */
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
@@ -6,10 +7,9 @@ import { logOut } from "@/api/auth";
 
 /**
  * 这里的 GlobalPagePath 提供提示
- * (string & {}) 允许接受任何字符串，且不会让 GlobalPagePath 塌陷为普通的 string
+ * (string & {}) 允许接受任何字符串，且不会让 FlexiblePath 塌陷为普通的 string
  */
 type FlexiblePath = PagePath | (string & {});
-
 
 /**
  * 跳转页面
@@ -38,10 +38,7 @@ const jump = (
 		console.error(
 			`[Jump Error]: 路径 "${targetPath}" 不在 pages.json 路由定义中`,
 		);
-		uni.showToast({
-			title: "跳转路径错误",
-			icon: "error",
-		});
+		showToast("跳转路径错误", "error");
 		return; // 拦截跳转
 	}
 
@@ -91,6 +88,22 @@ const jump = (
 			}
 			return;
 	}
+};
+
+/**
+ * 显示消息提示
+ * @param msg 提示文字
+ * @param icon 图标类型，默认 none
+ * @param duration 显示时长（毫秒），默认 2000
+ * @param mask 是否显示透明蒙层，防止触摸穿透，默认 false
+ */
+const showToast = (
+	msg: string,
+	icon: "none" | "success" | "loading" | "error" = "none",
+	duration: number = 2000,
+	mask: boolean = false,
+) => {
+	uni.showToast({ title: msg, icon, duration, mask });
 };
 
 /**
@@ -205,6 +218,6 @@ type FormModel<T, K extends keyof T> = Overwrite<
 	}
 >;
 
-export { jump, parseData, switchUser, usePageData };
+export { jump, parseData, switchUser, usePageData, showToast };
 
 export type { Overwrite, FormModel };

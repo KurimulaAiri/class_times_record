@@ -176,7 +176,7 @@
 
 	const studentStore = useStudentStore();
 
-	// 1. 顶部四个图标数据优化
+	/** 功能宫格列表 */
 	const gridList = ref([
 		{
 			name: "余额",
@@ -202,7 +202,7 @@
 	// 2. 判断是否有任何可见项
 	const hasVisibleItems = computed(() => activeGridList.value.length > 0);
 
-	// 2. 下方列表数据优化（图标和颜色更贴合原图）
+	/** 子菜单列表 */
 	const subMenuList = ref([
 		{
 			menuName: "礼品兑换",
@@ -262,6 +262,7 @@
 		},
 	]);
 
+	/** 处理用户操作（切换账号/退出登录） */
 	const handleAction = (type: string) => {
 		console.log("点击了操作:", type);
 		// 实现具体的切换账号或退出逻辑

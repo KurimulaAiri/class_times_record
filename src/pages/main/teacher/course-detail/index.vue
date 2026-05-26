@@ -17,7 +17,7 @@
 		},
 	]);
 
-	// 1. 定义一个字典或映射关系
+	/** 课程类型映射表 */
 	const courseTypeMap: Record<number, string> = {
 		1: "按次",
 		2: "按天",
@@ -43,6 +43,7 @@
 		},
 	]);
 
+	/** 课程表单数据 */
 	const form = ref<CourseResponse>({
 		id: 0,
 		courseName: "",

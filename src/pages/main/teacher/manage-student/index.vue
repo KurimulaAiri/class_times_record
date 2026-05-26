@@ -63,7 +63,7 @@
 </template>
 
 <script lang="ts" setup>
-	import { jump } from "@/utils/common";
+	import { jump, showToast } from "@/utils/common";
 	import { ref } from "vue";
 	import { onShow } from "@dcloudio/uni-app";
 	import { ROUTES } from "@/config/routes";
@@ -81,6 +81,7 @@
 		studentList.value = studentStore.studentList;
 	});
 
+	/** 解绑学生与课程的关联 */
 	const handleUnbind = (item: any) => {
 		uni.showModal({
 			title: "提示",
@@ -93,12 +94,13 @@
 		});
 	};
 
+	/** 跳转到编辑学生信息页面 */
 	const handleEdit = (item: any) => {
 		console.log("编辑资料:", item);
 		jump(ROUTES.EDIT_STUDENT_INFO, item);
 	};
 
-	// 模拟获取数据的函数
+	/** 获取学生列表数据 */
 	const fetchStudentList = async () => {
 		try {
 			if (userStore.userInfo?.roleId === 3) {
@@ -114,7 +116,7 @@
 		}
 	};
 
-	// 下拉刷新触发的处理函数
+	/** 下拉刷新回调 */
 	const onRefresherRefresh = async () => {
 		if (isRefreshing.value) return; // 防止重复触发
 
@@ -125,10 +127,7 @@
 		// 延迟一会关闭动画，体验更好
 		setTimeout(() => {
 			isRefreshing.value = false;
-			uni.showToast({
-				title: "刷新成功",
-				icon: "success",
-			});
+			showToast("刷新成功", "success");
 		}, 500);
 	};
 </script>

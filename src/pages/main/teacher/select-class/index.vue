@@ -166,16 +166,18 @@
 		},
 	});
 
+	/** 当前激活的筛选条件 */
 	const activeFilters = ref({
 		scope: 1,
 		status: 1,
 	});
-
+/** 处理筛选条件变更 */
+	
 	const handleFilterChange = () => {
 		loadData(true);
 	};
 
-	// --- 核心 mock / 请求逻辑 ---
+	/** 加载班级列表数据 */
 	const loadData = async (reset = false) => {
 		if (isLoading.value) return;
 		if (reset) {
@@ -221,6 +223,7 @@
 		}
 	};
 
+	/** 判断班级是否已被选中 */
 	const isItemSelected = (id: number) => {
 		return selectedList.value.some((c) => c.id === id);
 	};
@@ -255,7 +258,7 @@
 		loadData(true);
 	};
 
-	// 选择与返回逻辑
+	/** 点击班级卡片 */
 	const handleClick = (item: ClassResponse) => {
 		if (isMultiSelect.value) {
 			const index = selectedList.value.findIndex((c) => c.id === item.id);
@@ -271,7 +274,7 @@
 		}
 	};
 
-	// 长按菜单
+	/** 长按班级卡片，弹出删除确认 */
 	const handleLongPress = (item: ClassResponse) => {
 		uni.vibrateShort();
 		uni.showActionSheet({
@@ -292,7 +295,7 @@
 		uni.navigateBack();
 	};
 
-	// 头像文本格式化（提取班级最后两个字，如 "一班"、"前端班"）
+	/** 格式化头像文字（取姓名首字） */
 	const formatAvatarText = (name: string) => {
 		if (!name) return "";
 		return name.length > 2 ? name.substring(name.length - 2) : name;

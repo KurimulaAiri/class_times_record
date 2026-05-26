@@ -121,23 +121,31 @@
 	import { DATA_DETAIL_MAP } from "@/config/common";
 	import { onLoad, onShow, onShareAppMessage } from "@dcloudio/uni-app";
 	import { ref } from "vue";
-	import { jump, parseData } from "@/utils/common";
+	import { jump, parseData, showToast } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
 	import { loginNoPwd } from "@/api/auth";
 	import { post } from "@/utils/request";
 
+	/** 当前选中的课卡记录数据 */
 	const selectData = ref<CourseRecordResponse>({} as CourseRecordResponse);
+	/** 课卡记录列表 */
 	const recordList = ref<RecordResponse[]>([]);
+	/** 绑定表单数据 */
 	const bindForm = ref({
 		courseRecordId: 0,
 		permissionType: "",
 	});
 
+	/** 分享类型 */
 	const shareType = ref("");
+	/** 分享弹窗是否显示 */
 	const sharePopup = ref<any>(null!);
 
+	/** 列表加载状态 */
 	const loadStatus = ref("more");
+	/** 记录总数 */
 	const total = ref(0);
+	/** 查询表单参数 */
 	const queryForm = ref({
 		courseRecordId: 0,
 		currentPage: 1,
@@ -171,7 +179,7 @@
 				// 调用后端接口，将此课程记录关联到当前登录用户的账户下
 				post("/permission_record/bind", bindForm.value).then((res) => {
 					if (res.code === 200) {
-						uni.showToast({ title: "已保存至我的课程", icon: "success" });
+						showToast("已保存至我的课程", "success");
 						// 绑定成功后，重新加载数据
 						queryForm.value.courseRecordId = shareId;
 
@@ -226,6 +234,7 @@
 		getData(true);
 	});
 
+	/** 获取课卡记录详情数据 */
 	const getData = (isRefresh = false) => {
 		// 1. 请求锁：防止在请求过程中重复触发 loadMore
 		if (!isRefresh && loadStatus.value === "loading") return;
@@ -260,11 +269,8 @@
 						loadStatus.value = "more";
 					}
 				} else {
-					loadStatus.value = "more"; // 失败了重置为 more，允许用户重试
-					uni.showToast({
-						title: res.message || "获取记录失败",
-						icon: "none",
-					});
+					loadStatus.value = "more";
+					showToast(res.message || "获取记录失败");
 				}
 			})
 			.catch((e) => {
@@ -307,6 +313,7 @@
 		};
 	});
 
+	/** 处理分享操作 */
 	const handleShare = (shareTypeIn) => {
 		// 这种方式在小程序中无法通过 JS 直接唤起转发
 		// 必须引导用户点击 open-type="share" 的按钮
@@ -314,6 +321,7 @@
 		shareType.value = shareTypeIn;
 	};
 
+	/** 跳转到指定页面 */
 	const toJump = (type, data) => {
 		if (type === "share") {
 			sharePopup.value.open();

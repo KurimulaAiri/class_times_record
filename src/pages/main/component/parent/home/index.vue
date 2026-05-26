@@ -65,6 +65,7 @@
 		fetchMenus();
 	});
 
+	/** 获取菜单列表数据 */
 	const fetchMenus = async () => {
 		try {
 			const res = await getMenuList({

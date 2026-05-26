@@ -104,7 +104,7 @@
 		onShow,
 	} from "@dcloudio/uni-app";
 	import { ref } from "vue";
-	import { jump } from "@/utils/common";
+	import { jump, showToast } from "@/utils/common";
 	import { loginNoPwd } from "@/api/auth";
 	import { post } from "@/utils/request";
 	import { ROUTES } from "@/config/routes";
@@ -124,6 +124,7 @@
 			name: "删除",
 		},
 	]);
+	/** 数据标签页列表 */
 	const dataTabsList = ref([
 		{
 			name: "全部",
@@ -150,7 +151,7 @@
 
 	const total = ref(0);
 
-	// 定义加载状态
+	/** 列表加载状态 */
 	const loadStatus = ref("more"); // more, loading, noMore
 
 	// 获取数据方法 (核心修改)
@@ -223,7 +224,7 @@
 		getData();
 	});
 
-	// 方法定义（替代原 methods 中的内容）
+	/** 处理搜索关键词变更 */
 	const handleSearch = () => {
 		queryDataForm.value.stuName = searchText.value;
 		queryDataForm.value.courseName = searchText.value;
@@ -232,7 +233,7 @@
 		console.log(searchText.value); // Vue3 响应式数据需通过 .value 访问
 	};
 
-	// 2. 切换 Tab 的方法
+	/** 处理标签页点击切换 */
 	const handleTabClick = (index) => {
 		currentTabIndex.value = index;
 		// 这里可以根据 index 过滤数据或重新请求 getData(true)
@@ -268,30 +269,22 @@
 						}).then((res) => {
 							console.log("删除响应:", res);
 							if (res.code === 200) {
-								uni.showToast({
-									title: "删除成功",
-									icon: "success",
-								});
+								showToast("删除成功", "success");
 								getData(true); // 刷新数据
 							} else {
-								uni.showToast({
-									title: res.message || "删除失败",
-									icon: "none",
-								});
+								showToast(res.message || "删除失败");
 							}
 						});
 						break;
 					default:
-						uni.showToast({
-							title: "未知操作",
-							icon: "none",
-						});
+						showToast("未知操作");
 						break;
 				}
 			},
 		});
 	};
 
+	/** 点击课卡记录项 */
 	const handleClick = (item) => {
 		const navItem = {
 			data: item,

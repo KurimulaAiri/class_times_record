@@ -65,8 +65,10 @@
 <script setup lang="ts">
 	import { ref } from "vue";
 	import { post } from "@/utils/request";
+	import { showToast } from "@/utils/common";
 	import type { AddCourseRequest } from ".";
 
+	/** 课卡记录数据 */
 	const data = ref<AddCourseRequest>({
 		stuName: "",
 		courseName: "",
@@ -75,35 +77,24 @@
 		courseRemark: "",
 	});
 
+	/** 提交添加课卡记录 */
 	const submit = () => {
 		console.log(data.value);
 		if (data.value.stuName === "") {
-			uni.showToast({
-				title: "请输入学生姓名",
-				icon: "none",
-			});
+			showToast("请输入学生姓名", "none");
 			return;
 		}
 		console.log(data.value.stuName);
 		if (data.value.courseName === "") {
-			uni.showToast({
-				title: "请输入课程名称",
-				icon: "none",
-			});
+			showToast("请输入课程名称", "none");
 			return;
 		}
 		if (data.value.courseTotalTime === null) {
-			uni.showToast({
-				title: "请输入总课时",
-				icon: "none",
-			});
+			showToast("请输入总课时");
 			return;
 		}
 		if (data.value.courseRestTime === null) {
-			uni.showToast({
-				title: "请输入剩余课时",
-				icon: "none",
-			});
+			showToast("请输入剩余课时");
 			return;
 		}
 
@@ -111,36 +102,24 @@
 		const numReg = /^\d+$/;
 
 		if (!numReg.test(data.value.courseTotalTime?.toString() || "")) {
-			uni.showToast({
-				title: "总课时必须是正整数",
-				icon: "none",
-			});
+			showToast("总课时必须是正整数", "none");
 			return;
 		}
 
 		if (!numReg.test(data.value.courseRestTime?.toString() || "")) {
-			uni.showToast({
-				title: "剩余课时必须是正整数",
-				icon: "none",
-			});
+			showToast("剩余课时必须是正整数");
 			return;
 		}
 
 		post("/course_record/add", data.value).then((res) => {
 			console.log("添加课程响应:", res);
 			if (res.code === 200) {
-				uni.showToast({
-					title: "添加成功",
-					icon: "success",
-				});
+				showToast("添加成功", "success");
 				uni.navigateBack({
 					delta: 1,
 				});
 			} else {
-				uni.showToast({
-					title: res.message,
-					icon: "none",
-				});
+				showToast(res.message);
 			}
 		});
 	};

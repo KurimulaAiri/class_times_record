@@ -32,6 +32,7 @@
 	import { onLoad } from "@dcloudio/uni-app";
 	import { useStudentStore } from "@/stores/student";
 	import { updateStudent } from "@/api/student";
+	import { showToast } from "@/utils/common";
 	import FormPage from "@/components/form-page/index.vue";
 	import PageFooter from "@/components/page-footer/index.vue";
 
@@ -42,7 +43,7 @@
 		{ name: "女", value: 0 },
 	];
 
-	// 默认空表单骨架
+	/** 创建空的表单初始数据 */
 	const createEmptyForm = (): StudentResponse => ({
 		id: 0,
 		avatar: "",
@@ -75,6 +76,7 @@
 		updateTimeStr: "",
 	});
 
+	/** 学生编辑表单数据 */
 	const form = ref<StudentResponse>(createEmptyForm());
 
 	// 核心修复：配置项 items 不要使用条件动态销毁！
@@ -182,6 +184,7 @@
 		fetchStudentDetail();
 	});
 
+	/** 获取学生详情并填充表单 */
 	const fetchStudentDetail = async () => {
 		if (!studentStore.studentInfo) return;
 		uni.showLoading({ title: "加载中..." });
@@ -216,16 +219,17 @@
 			form.value.primaryParent = emptyParent;
 		} else {
 			if (!form.value.primaryParent) {
-				return uni.showToast({ title: "请先添加主要联系人", icon: "none" });
+				return showToast("请先添加主要联系人");
 			}
 			emptyParent.isPrimary = false;
 			form.value.secondaryParent = emptyParent;
 		}
 	};
 
+	/** 提交修改后的学生信息 */
 	const submitForm = async () => {
 		if (!form.value.studentName)
-			return uni.showToast({ title: "姓名不能为空", icon: "none" });
+			return showToast("姓名不能为空");
 
 		if (form.value.primaryParent) {
 			if (
@@ -233,7 +237,7 @@
 				!form.value.primaryParent.phone ||
 				!form.value.primaryParent.relation
 			) {
-				return uni.showToast({ title: "请完善主要联系人信息", icon: "none" });
+				return showToast("请完善主要联系人信息");
 			}
 		}
 
@@ -244,7 +248,7 @@
 			hasSecondary = Boolean(sp.username || sp.phone || sp.relation);
 			const isComplete = Boolean(sp.username && sp.phone && sp.relation);
 			if (hasSecondary && !isComplete) {
-				return uni.showToast({ title: "请完善备用联系人信息", icon: "none" });
+				return showToast("请完善备用联系人信息");
 			}
 		}
 
@@ -266,7 +270,7 @@
 		try {
 			uni.showLoading({ title: "保存中..." });
 			await updateStudent(submitData);
-			uni.showToast({ title: "修改成功", icon: "success" });
+			showToast("修改成功", "success");
 			setTimeout(() => {
 				uni.navigateBack();
 				uni.$emit("needRefresh");

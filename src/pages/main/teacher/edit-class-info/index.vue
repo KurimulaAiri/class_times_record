@@ -149,13 +149,14 @@
 
 <script setup lang="ts">
 	import { ref, computed, onUnmounted, watch } from "vue";
-	import { jump, usePageData } from "@/utils/common";
+	import { jump, usePageData, showToast } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
 	import { updateClassById } from "@/api/class";
 	import { getClassScheduleByClassId } from "@/api/class-schedule";
 	import FormPage from "@/components/form-page/index.vue";
 	import PageFooter from "@/components/page-footer/index.vue";
 
+	/** 星期选项列表 */
 	const weekOptions = [
 		{ label: "周一", value: 1 },
 		{ label: "周二", value: 2 },
@@ -166,10 +167,14 @@
 		{ label: "周日", value: 7 },
 	];
 
+	/** 主题色 */
 	const themeColor = "#70a9a2";
+	/** 已选择的课程名称 */
 	const courseName = ref("");
+	/** 已选择的教师列表 */
 	const selectedTeachers = ref<TeacherResponse[]>([]);
 
+	/** 班级表单数据 */
 	const form = ref<UpdateClassRequest>({
 		classId: 0,
 		className: "",
@@ -181,6 +186,7 @@
 		schedules: [] as ClassScheduleRequest[],
 	});
 
+	/** 表单分组配置 */
 	const groups = computed<FormGroupConfig[]>(() => [
 		{
 			title: "基础信息",
@@ -238,6 +244,7 @@
 		},
 	]);
 
+	/** picker 类型点击事件路由，根据 key 判断跳转目标 */
 	const onPickerTap = (key: string) => {
 		if (key === "courseId") toSelectCourse();
 	};
@@ -323,6 +330,7 @@
 		});
 	};
 
+	/** 切换日程的上课周期（星期几） */
 	const toggleWeekDay = (scheduleIndex: number, dayValue: number) => {
 		if (!form.value.schedules) return;
 		const target = form.value.schedules[scheduleIndex];
@@ -336,43 +344,46 @@
 		if (item.endDate && item.endDate < item.startDate) item.endDate = "";
 	};
 
+	/** 跳转到课程选择页面 */
 	const toSelectCourse = () => jump(ROUTES.SELECT_COURSE);
+	/** 跳转到教师选择页面 */
 	const toSelectTeacher = () => {
 		const ids = selectedTeachers.value
 			.map((t) => t.teacherId.toString())
 			.join(",");
 		jump(ROUTES.SELECT_TEACHER, ids);
 	};
+	/** 移除已选择的教师 */
 	const removeTeacher = (index: number) => {
 		selectedTeachers.value.splice(index, 1);
 		form.value.teachers?.splice(index, 1);
 	};
 
 	const submitForm = async () => {
-		if (!form.value.className) return showToast("请输入班级名称");
-		if (!form.value.courseId) return showToast("请关联课程");
+		if (!form.value.className) return showToast("请输入班级名称", "none");
+		if (!form.value.courseId) return showToast("请关联课程", "none");
 		if (!form.value.schedules || form.value.schedules.length === 0)
-			return showToast("请至少添加一组上课日程");
+			return showToast("请至少添加一组上课日程", "none");
 		if (selectedTeachers.value.length === 0)
-			return showToast("请至少选择一位班级教师");
+			return showToast("请至少选择一位班级教师", "none");
 
 		form.value.teachers = selectedTeachers.value;
 
 		for (let i = 0; i < form.value.schedules.length; i++) {
 			const item = form.value.schedules[i];
 			const prefix = `第 ${i + 1} 组时段: `;
-			if (item.dayOfWeek === 0) return showToast(`${prefix}请选择上课周期`);
+			if (item.dayOfWeek === 0) return showToast(`${prefix}请选择上课周期`, "none");
 			if (!item.startDate || !item.endDate)
-				return showToast(`${prefix}请补全有效日期`);
+				return showToast(`${prefix}请补全有效日期`, "none");
 			if (!item.startTime || !item.endTime)
-				return showToast(`${prefix}请补全具体上课时间`);
+				return showToast(`${prefix}请补全具体上课时间`, "none");
 
 			const startDateTime = new Date(item.startDate).getTime();
 			const endDateTime = new Date(item.endDate).getTime();
 			if (endDateTime < startDateTime)
-				return showToast(`${prefix}结束日期不能早于开始日期`);
+				return showToast(`${prefix}结束日期不能早于开始日期`, "none");
 			if (item.endTime <= item.startTime)
-				return showToast(`${prefix}结束时间必须大于开始时间`);
+				return showToast(`${prefix}结束时间必须大于开始时间`, "none");
 		}
 
 		console.log("提交表单数据:", form.value);
@@ -383,12 +394,7 @@
 
 		if (res > 0) {
 			setTimeout(() => {
-				uni.showToast({
-					title: "班级修改成功",
-					icon: "success",
-					duration: 1500,
-					mask: true,
-				});
+				showToast("班级修改成功", "success", 1500, true);
 			}, 1500);
 
 			uni.$emit("needRefresh");
@@ -398,12 +404,8 @@
 				uni.navigateBack();
 			}, 1500);
 		} else {
-			uni.showToast({ title: "班级修改失败", icon: "error" });
+			showToast("班级修改失败", "error");
 		}
-	};
-
-	const showToast = (title: string) => {
-		uni.showToast({ title, icon: "error" });
 	};
 </script>
 

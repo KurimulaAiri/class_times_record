@@ -10,12 +10,13 @@
 	import { ref } from "vue";
 	import { useUserStore } from "@/stores/user";
 	import { insertCourse } from "@/api/course";
-	import { jump } from "@/utils/common/index";
+	import { jump, showToast } from "@/utils/common/index";
 	import FormPage from "@/components/form-page/index.vue";
 	import PageFooter from "@/components/page-footer/index.vue";
 
 	const userStore = useUserStore();
 
+	/** 课程表单数据 */
 	const form = ref<CourseResponse>({
 		id: 0,
 		courseType: 1,
@@ -58,12 +59,10 @@
 		},
 	];
 
+	/** 提交创建课程表单 */
 	const submitForm = async () => {
 		if (!form.value.courseName) {
-			uni.showToast({
-				title: "请输入课程名称",
-				icon: "none",
-			});
+			showToast("请输入课程名称");
 			return;
 		}
 
@@ -81,21 +80,12 @@
 				setTimeout(() => {
 					uni.navigateBack();
 				}, 1000);
-				uni.showToast({
-					title: "信息保存成功",
-					icon: "success",
-				});
+				showToast("信息保存成功", "success");
 			} else {
-				uni.showToast({
-					title: "信息保存失败",
-					icon: "error",
-				});
+				showToast("信息保存失败", "error");
 			}
 		} catch (error) {
-			uni.showToast({
-				title: "信息保存失败",
-				icon: "error",
-			});
+			showToast("信息保存失败", "error");
 		}
 	};
 </script>

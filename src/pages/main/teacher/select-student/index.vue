@@ -176,6 +176,7 @@
 		},
 	});
 
+	/** 当前激活的筛选条件 */
 	const activeFilters = ref<ActiveFiltersType>({
 		scope: 1,
 		gender: -1,
@@ -186,7 +187,7 @@
 		loadData(true);
 	};
 
-	// --- 核心请求逻辑 ---
+	/** 加载学生列表数据 */
 	const loadData = async (reset = false) => {
 		if (isLoading.value) return; // 正在加载中，跳过
 		if (reset) {
@@ -240,7 +241,7 @@
 		}
 	};
 
-	// 判断当前 ID 是否被选中
+	/** 判断学生是否已被选中 */
 	const isItemSelected = (id: number) => {
 		return selectedList.value.some((s) => s.id === id);
 	};
@@ -277,7 +278,7 @@
 		// 或者直接使用 uni.navigateTo({ url: '/pages/student/add' })
 	};
 
-	// --- 搜索逻辑 ---
+	/** 处理搜索关键词变更 */
 	const handleSearch = () => {
 		searchKeyword.value = tempKeyword.value.trim();
 		// 搜索通常需要重置列表并从第一页开始查
@@ -301,7 +302,7 @@
 		}
 	};
 
-	// 处理长按反馈
+	/** 长按学生卡片，弹出删除确认 */
 	const handleLongPress = (item: StudentResponse) => {
 		// 震动反馈
 		uni.vibrateShort();
@@ -332,6 +333,7 @@
 		uni.navigateBack();
 	};
 
+	/** 格式化头像文字（取姓名首字） */
 	const formatAvatarText = (name: string) => {
 		if (!name) return "";
 		return name.length > 2 ? name.substring(name.length - 2) : name;
