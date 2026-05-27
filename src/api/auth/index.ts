@@ -22,7 +22,10 @@ const storeTokens = (res: ApiResponse<LoginResponse>) => {
  * 获取微信 OpenID，通过微信登录获取 code 后调用后端接口换取 openId
  * @returns 返回包含 openId 的登录响应
  */
-const getOpenId = (): Promise<ApiResponse<LoginResponse>> => {
+const getOpenId = (): Promise<string> => {
+	if (uni.getStorageSync("openId")) {
+		return Promise.resolve(uni.getStorageSync("openId"));
+	}
 	console.log("获取 OpenID");
 	return new Promise((resolve, reject) => {
 		uni.login({
@@ -35,7 +38,7 @@ const getOpenId = (): Promise<ApiResponse<LoginResponse>> => {
 						});
 						console.log("OpenID 获取成功:", response);
 						uni.setStorageSync("openId", response.data.openId);
-						resolve(response);
+						resolve(response.data.openId);
 					} catch (err) {
 						reject(err);
 					}
@@ -50,22 +53,18 @@ const getOpenId = (): Promise<ApiResponse<LoginResponse>> => {
 
 /**
  * 通过账号密码登录，先获取 OpenID 再调用密码登录接口
- * @param data - 登录请求参数，包含账号和密码
+ * @param data - 登录请求参数，包含账号、密码、OpenID 和是否需要验证管理员权限
  * @returns 返回登录响应数据，包含 Token 信息
  */
 const loginByPwd = async (
-	data: LoginRequest,
+	data: LoginByPwdRequest,
 ): Promise<ApiResponse<LoginResponse>> => {
 	try {
-		const res = await getOpenId();
-		const openId = res.data.openId;
-
-		console.log("OpenID 获取成功:", openId);
-
 		const loginRes = await post<LoginResponse>("/auth/login_by_pwd", {
 			...data,
-			openId,
-			needValidateAdmin: true,
+			// #ifdef MP-WEIXIN
+			platform: "WEIXIN",
+			// #endif
 		});
 
 		storeTokens(loginRes);
@@ -104,22 +103,18 @@ const loginNoPwd = () => {
 
 /**
  * 通过 Token 登录，先获取 OpenID 再使用已有 Token 进行认证登录
- * @param token - 已有的认证 Token
+ * @param params - 登录请求参数，包含 Token 和 OpenID
  * @returns 返回登录响应数据，包含新的 Token 信息
  */
 const loginByToken = async (
-	token: string,
+	params: LoginByTokenRequest,
 ): Promise<ApiResponse<LoginResponse>> => {
 	try {
-		const res = await getOpenId();
-		const openId = res.data.openId;
-
-		console.log("OpenID 获取成功:", openId);
-
 		const loginRes = await post<LoginResponse>("/auth/login_by_token", {
-			token,
-			openId,
-			needValidateAdmin: true,
+			...params,
+			// #ifdef MP-WEIXIN
+			platform: "weixin",
+			// #endif
 		});
 
 		storeTokens(loginRes);
@@ -136,7 +131,7 @@ const loginByToken = async (
  * @returns 刷新成功返回 true，否则返回 false
  */
 const refreshAccessToken = async (): Promise<boolean> => {
-	const refreshToken = uni.getStorageSync("refreshToken");
+	const refreshToken: string = uni.getStorageSync("refreshToken");
 	if (!refreshToken) {
 		return false;
 	}
@@ -144,7 +139,7 @@ const refreshAccessToken = async (): Promise<boolean> => {
 	try {
 		const res = await post<LoginResponse>("/auth/refresh", {
 			token: refreshToken,
-		});
+		} as RefreshTokenRequest);
 
 		if (res.code === 200 && res.data.accessToken) {
 			uni.setStorageSync("accessToken", res.data.accessToken);

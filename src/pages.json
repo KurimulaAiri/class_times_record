@@ -198,6 +198,24 @@
 					"style": {
 						"navigationBarTitleText": "编辑课程信息"
 					}
+				},
+				{
+					"path": "teacher/institution-detail/index",
+					"style": {
+						"navigationBarTitleText": "校区详情"
+					}
+				},
+				{
+					"path": "teacher/my-schedule/index",
+					"style": {
+						"navigationBarTitleText": "我的课表"
+					}
+				},
+				{
+					"path": "teacher/edit-institution/index",
+					"style": {
+						"navigationBarTitleText": "编辑校区信息"
+					}
 				}
 			]
 		},

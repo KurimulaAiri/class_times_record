@@ -95,6 +95,152 @@ $placeholder-color: #b0b0b0;
 		margin-left: -10rpx; // 稍微靠拢
 	}
 }
+.custom-select-container {
+	position: relative;
+	width: 100%;
+
+	.institution-select-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		cursor: pointer;
+
+		.select-current-text {
+			font-size: 30rpx;
+			color: $text-color;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
+			// 💡 新增：当没有任何选中的机构时，显示类似 placeholder 的淡淡灰色
+			&.placeholder-style {
+				color: $placeholder-color;
+				font-style: italic;
+			}
+		}
+
+		.select-arrow {
+			width: 14rpx;
+			height: 14rpx;
+			border-right: 4rpx solid #b0b0b0;
+			border-bottom: 4rpx solid #b0b0b0;
+			transform: rotate(45deg);
+			margin-right: 8rpx;
+			transition:
+				transform 0.3s ease,
+				border-color 0.3s ease;
+		}
+
+		.select-arrow-rotate {
+			transform: rotate(-135deg);
+			border-color: $theme-color;
+		}
+	}
+
+	.select-header-active {
+		border-color: rgba($theme-color, 0.4) !important;
+		background-color: #fff !important;
+		box-shadow: 0 0 15rpx rgba($theme-color, 0.1);
+	}
+
+	.custom-dropdown-list {
+		position: absolute;
+		top: 110rpx;
+		left: 0;
+		width: 100%;
+		background-color: #ffffff;
+		border: 2rpx solid rgba($theme-color, 0.15);
+		border-radius: 24rpx;
+		box-shadow: 0 20rpx 50rpx rgba(0, 0, 0, 0.08);
+		z-index: 99;
+
+		max-height: 0;
+		opacity: 0;
+		pointer-events: none;
+		overflow: hidden;
+		transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+
+		&.dropdown-show {
+			max-height: 480rpx; // 稍微调高，给底部的操作留出足够空间
+			opacity: 1;
+			pointer-events: auto;
+		}
+
+		.dropdown-scroll {
+			max-height: 460rpx;
+		}
+
+		.dropdown-item {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 28rpx 36rpx;
+			transition: background-color 0.2s ease;
+
+			// 为多列表项增加一道极细的分隔线
+			border-bottom: 2rpx solid #fcfdfe;
+
+			.item-name {
+				font-size: 28rpx;
+				color: #555;
+			}
+
+			&.dropdown-item-selected {
+				background-color: rgba($theme-color, 0.04);
+				.item-name {
+					color: $theme-color;
+					font-weight: 500;
+				}
+			}
+
+			&:active {
+				background-color: #f5f9f9;
+			}
+
+			.item-check {
+				font-size: 28rpx;
+				color: $theme-color;
+				font-weight: bold;
+			}
+		}
+
+		// 💡 新增：内嵌于列表顶部的无数据微提示
+		.dropdown-empty-tip {
+			padding: 40rpx 36rpx 20rpx 36rpx;
+			text-align: center;
+			font-size: 26rpx;
+			color: $placeholder-color;
+			font-style: italic;
+		}
+
+		// 💡 新增：固定位于最后一项的“添加”专属操作栏样式
+		.dropdown-action-item {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 28rpx 0;
+			margin-top: 10rpx;
+			background-color: rgba($theme-color, 0.04); // 主题淡背景区分普通项
+			color: $theme-color; // 采用鲜明的主题色文字
+			font-size: 28rpx;
+			font-weight: 500;
+			border-top: 2rpx dashed rgba($theme-color, 0.15); // 用虚线和上方常规列表做切分
+			transition: all 0.2s ease;
+
+			.add-icon {
+				font-size: 34rpx;
+				margin-right: 10rpx;
+				margin-top: -4rpx;
+			}
+		}
+
+		// 最后一项点击时的反馈高亮
+		.dropdown-action-item-active {
+			background-color: rgba($theme-color, 0.1);
+			letter-spacing: 1px; // 轻微的弹性动画回馈
+		}
+	}
+}
 
 // 如果你使用的是 uniapp 默认 checkbox，可能需要微调缩放
 checkbox .wx-checkbox-input,
@@ -111,7 +257,11 @@ checkbox .uni-checkbox-input {
 	height: 100rpx;
 	line-height: 100rpx;
 	text-align: center;
-	background: linear-gradient(135deg, color.adjust($theme-color, $lightness: 5%), $theme-color);
+	background: linear-gradient(
+		135deg,
+		color.adjust($theme-color, $lightness: 5%),
+		$theme-color
+	);
 	color: #fff;
 	font-size: 34rpx;
 	font-weight: 500;

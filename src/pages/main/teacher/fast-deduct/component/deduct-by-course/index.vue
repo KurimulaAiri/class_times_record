@@ -113,6 +113,7 @@
 			id: 0,
 			institutionName: "",
 			institutionAddress: "",
+			institutionCode: "",
 			status: 0,
 			createTimeStr: "",
 			updateTimeStr: "",

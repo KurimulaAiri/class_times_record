@@ -7,8 +7,8 @@ let baseUrl: string;
 console.log("process.env.NODE_ENV:", process.env.NODE_ENV);
 switch (process.env.NODE_ENV) {
 	case "development":
-		// baseUrl = "http://localhost:9999";
-		baseUrl = "https://api.kurimula-airi.top";
+		baseUrl = "http://localhost:9999";
+		// baseUrl = "https://api.kurimula-airi.top";
 
 		break;
 	case "production":

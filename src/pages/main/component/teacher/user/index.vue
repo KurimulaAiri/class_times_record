@@ -16,7 +16,11 @@
 		</view>
 
 		<view class="margin-gap"></view>
-		<view class="list-item" @tap="handleAction('school')">
+		<view
+			class="list-item"
+			@tap="handleAction('school')"
+			hover-class="item-hover"
+		>
 			<view class="left-content">
 				<uni-icons type="shop" size="22" color="#66cdaa"></uni-icons>
 				<text class="label">当前校区</text>
@@ -86,7 +90,8 @@
 	import { ref } from "vue";
 	import { logOut } from "@/api/auth";
 	import { useUserStore } from "@/stores/user";
-	import { switchUser } from "@/utils/common";
+	import { jump, switchUser } from "@/utils/common";
+	import { ROUTES } from "@/config/routes";
 
 	const userStore = useUserStore();
 
@@ -97,7 +102,7 @@
 			menuName: "我的课表",
 			icon: "calendar",
 			iconType: 1,
-			path: "/pages/schedule/index",
+			path: ROUTES.MY_SCHEDULE,
 			isVisible: true,
 		},
 		{
@@ -122,11 +127,15 @@
 		if (path) uni.navigateTo({ url: path });
 	};
 
-	/** 处理用户操作（切换账号/退出登录） */
+	/** 处理用户操作 */
 	const handleAction = (type: string) => {
 		console.log("点击了操作:", type);
-		// 实现具体的切换账号或退出逻辑
+
 		switch (type) {
+			case "school":
+				jump(ROUTES.INSTITUTION_DETAIL);
+				break;
+
 			case "switch":
 				// 切换账号逻辑
 				uni.showModal({
@@ -135,12 +144,11 @@
 					success({ confirm, cancel }) {
 						if (confirm) {
 							switchUser(4);
-						} else if (cancel) {
-							return;
 						}
 					},
 				});
 				break;
+
 			case "logout":
 				uni.showModal({
 					title: "退出登录",
@@ -149,12 +157,11 @@
 					success({ confirm, cancel }) {
 						if (confirm) {
 							logOut();
-						} else if (cancel) {
-							return;
 						}
 					},
 				});
 				break;
+
 			default:
 				break;
 		}

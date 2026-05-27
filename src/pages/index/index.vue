@@ -31,11 +31,11 @@
 	import { onLoad } from "@dcloudio/uni-app";
 	import { ref } from "vue";
 	import { useUserStore } from "@/stores/user";
-	import { loginByToken } from "@/api/auth";
+	import { loginByToken, getOpenId } from "@/api/auth";
 
 	const version = ref("1.0.0"); // 默认版本号
 
-	onLoad((options: any) => {
+	onLoad(async (options: any) => {
 		if (options.data) {
 			const data: any = parseData(options.data);
 			console.log("options.data:", data);
@@ -45,9 +45,18 @@
 		}
 
 		console.log("onLoad 执行");
-		const refreshToken = uni.getStorageSync("refreshToken");
+
+		const refreshToken: string = uni.getStorageSync("refreshToken");
+
+		let openId: string = await getOpenId();
+		console.log("OpenID 获取成功:", openId);
+
 		if (refreshToken) {
-			loginByToken(refreshToken).then((res) => {
+			loginByToken({
+				token: refreshToken,
+				openId: openId,
+				needValidateAdmin: true,
+			}).then((res) => {
 				if (res.code === 200) {
 					console.log("登录成功:", res);
 					const userStore = useUserStore();

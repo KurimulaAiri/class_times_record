@@ -34,6 +34,9 @@ export const ROUTES = {
 	LEAVE_MANAGE: "/pages/main/teacher/leave-manage/index", // 教师端请假管理
 	ADJUST_CLASS_SCHEDULE: "/pages/main/teacher/adjust-class-schedule/index", // 教师端调整排课
 	EDIT_COURSE_INFO: "/pages/main/teacher/edit-course-info/index", // 教师端编辑课程信息
+	INSTITUTION_DETAIL: "/pages/main/teacher/institution-detail/index", // 教师端校区详情
+	MY_SCHEDULE: "/pages/main/teacher/my-schedule/index", // 教师端我的课表
+	EDIT_INSTITUTION: "/pages/main/teacher/edit-institution/index", // 教师端编辑校区信息
 } as const;
 
 export type PagePath = (typeof ROUTES)[keyof typeof ROUTES];

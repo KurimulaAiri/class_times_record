@@ -33,6 +33,71 @@
 					</view>
 				</view>
 
+				<view class="login-form-item">
+					<view class="login-form-item-label">登录机构</view>
+
+					<view class="custom-select-container">
+						<view
+							class="login-form-item-input institution-select-header"
+							:class="{ 'select-header-active': isDropdownOpen }"
+							@click="toggleDropdown"
+						>
+							<text
+								class="select-current-text"
+								:class="{
+									'placeholder-style':
+										institutionList.length === 0 || selectIndex === -1,
+								}"
+							>
+								{{
+									institutionList.length > 0 && selectIndex !== -1
+										? institutionList[selectIndex].institutionName
+										: "暂无登录机构，请展开添加"
+								}}
+							</text>
+							<text
+								class="select-arrow"
+								:class="{ 'select-arrow-rotate': isDropdownOpen }"
+							></text>
+						</view>
+
+						<view
+							class="custom-dropdown-list"
+							:class="{ 'dropdown-show': isDropdownOpen }"
+						>
+							<scroll-view scroll-y class="dropdown-scroll">
+								<block v-if="institutionList.length > 0">
+									<view
+										class="dropdown-item"
+										:class="{ 'dropdown-item-selected': index === selectIndex }"
+										v-for="(item, index) in institutionList"
+										:key="item.id"
+										@click="selectInstitution(index)"
+									>
+										<text class="item-name">{{ item.institutionName }}</text>
+										<text class="item-check" v-if="index === selectIndex"
+											>✓</text
+										>
+									</view>
+								</block>
+
+								<view class="dropdown-empty-tip" v-else>
+									<text>暂无历史登录机构</text>
+								</view>
+
+								<view
+									class="dropdown-action-item"
+									@click="addInstitution"
+									hover-class="dropdown-action-item-active"
+								>
+									<text class="add-icon">+</text>
+									<text>添加并绑定新机构</text>
+								</view>
+							</scroll-view>
+						</view>
+					</view>
+				</view>
+
 				<!-- 隐私条款 -->
 				<view class="privacy-wrapper">
 					<checkbox-group @change="handleCheckboxChange">
@@ -68,14 +133,107 @@
 	import { ref } from "vue";
 	import { jump, parseData, showToast } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
-	import { loginByPwd } from "@/api/auth";
+	import { loginByPwd, getOpenId } from "@/api/auth";
 	import { useUserStore } from "@/stores/user";
 	import { encryptPassword } from "@/utils/crypto";
+	import {
+		getInstitutionByOpenId,
+		getInstitutionByCode,
+	} from "@/api/institution";
 
 	const role = ref(0);
 
 	const account = ref("");
 	const password = ref("");
+
+	// 模拟历史机构数据（你可以从本地缓存 uni.getStorageSync('history_institutions') 中读取）
+	// 如果要测试空数据状态，直接把下面的数组置为空即可：ref<Institution[]>([])
+	const institutionList = ref<InstitutionResponse[]>([
+		{
+			id: 0,
+			institutionName: "",
+			institutionCode: "",
+			status: 0,
+			institutionAddress: "",
+			createTimeStr: "",
+			updateTimeStr: "",
+		},
+	]);
+
+	// 修改：如果一开始就没数据，选中索引默认初始化为 -1
+	const selectIndex = ref(institutionList.value.length > 0 ? 0 : -1);
+
+	// 💡 新增：控制下拉框展开状态
+	const isDropdownOpen = ref(false);
+
+	// 💡 新增：切换下拉框展开/收起
+	const toggleDropdown = () => {
+		isDropdownOpen.value = !isDropdownOpen.value;
+	};
+
+	// 💡 新增：选中某个机构
+	const selectInstitution = (index: number) => {
+		selectIndex.value = index;
+		isDropdownOpen.value = false; // 选中后自动收起
+		console.log("当前选择的机构信息:", institutionList.value[index]);
+	};
+
+	// 点击最后一项的“添加机构”
+	const addInstitution = async () => {
+		isDropdownOpen.value = false; // 点击添加时，先收起下拉框，避免遮挡弹窗
+		console.log("点击了添加机构");
+
+		uni.showModal({
+			title: "添加登录机构",
+			editable: true,
+			placeholderText: "请输入唯一的机构码",
+			success: async (res) => {
+				if (res.confirm && res.content) {
+					// 💡 过滤前后空格，防止用户误输入空格导致匹配失败
+					const inputCode = res.content.trim();
+					if (!inputCode) {
+						showToast("机构码不能为空");
+						return;
+					}
+
+					uni.showLoading({ title: "查询中..." });
+
+					try {
+						const institution = await getInstitutionByCode({
+							institutionCode: inputCode,
+						});
+
+						uni.hideLoading();
+
+						if (institution && institution.id) {
+							// 💡 核心查重逻辑：检查新机构的 id 是否已经存在于列表中
+							const existingIndex = institutionList.value.findIndex(
+								(item) => item.id === institution.id,
+							);
+
+							if (existingIndex !== -1) {
+								// 1. 如果已经存在，直接将选择项指向它
+								selectIndex.value = existingIndex;
+								showToast("该机构已在列表中，已自动为你选中");
+							} else {
+								// 2. 如果不存在，才安全地推入新机构
+								institutionList.value.push(institution);
+								// 自动选中刚刚追加进去的最后一项
+								selectIndex.value = institutionList.value.length - 1;
+								showToast("添加成功");
+							}
+						} else {
+							showToast("机构码不存在");
+						}
+					} catch (error) {
+						uni.hideLoading();
+						console.error("添加机构失败:", error);
+						showToast("网络请求失败");
+					}
+				}
+			},
+		});
+	};
 
 	/** 是否同意用户协议 */
 	const isAgree = ref(false);
@@ -96,21 +254,55 @@
 		isAgree.value = e.detail.value.length > 0;
 	};
 
-	onLoad((options) => {
+	onLoad(async (options) => {
 		if (options) {
 			const data: any = parseData(options.data);
 			console.log("roleId:", data.role);
 			role.value = Number(data.role);
 		}
+		const openId = await getOpenId();
+		console.log("OpenID 获取成功:", openId);
+
+		const res = await getInstitutionByOpenId({
+			openId: openId,
+		});
+		console.log("机构信息:", res);
+		if (res) {
+			institutionList.value = res;
+		}
 	});
 
-	/** 执行登录操作 */
-	const login = () => {
-		// 新增：登录前校验是否同意条款
+	const validateForm = () => {
+		// 校验账号密码是否为空
+		if (!account.value || !password.value) {
+			showToast("请输入账号密码");
+			return false;
+		}
+		// 校验是否勾选协议
 		if (!isAgree.value) {
-			showToast("请先阅读并同意隐私条款");
+			showToast("请先阅读并同意《隐私条款》和《用户服务协议》");
+			return false;
+		}
+		// 💡 修正：如果强制要求选择机构，当索引为 -1 时拦截提示
+		if (selectIndex.value === -1) {
+			showToast("请展开并选择/添加要登录的机构");
+			return false;
+		}
+		return true;
+	};
+
+	/** 执行登录操作 */
+	const login = async () => {
+		// 校验表单
+		if (!validateForm()) {
 			return;
 		}
+
+		// 获取当前选中的机构 ID
+		const currentInstitutionId =
+			institutionList.value.length > 0
+				? institutionList.value[selectIndex.value].id
+				: 0;
 
 		console.log(
 			"账号:",
@@ -118,25 +310,32 @@
 			"\n密码:",
 			encryptPassword(password.value),
 		);
-		loginByPwd({
+
+		let openId: string = await getOpenId();
+		console.log("OpenID 获取成功:", openId);
+
+		const res = await loginByPwd({
 			role: role.value,
 			account: account.value,
 			password: encryptPassword(password.value),
-		})
-			.then((res) => {
-				console.log("登录响应:", res);
-				uni.setStorageSync("accessToken", res.data.accessToken);
-				uni.setStorageSync("refreshToken", res.data.refreshToken);
-				console.log("Token 已缓存");
-				const userStore = useUserStore();
-				userStore.setUserInfo(res.data.user);
-				if (res.code === 200) {
-					jump(ROUTES.MAIN_INDEX, role.value, "relaunch");
-				}
-			})
-			.catch((err) => {
-				console.error("登录失败:", err);
-			});
+			institutionId: currentInstitutionId,
+			openId: openId,
+			needValidateAdmin: true,
+		});
+
+		if (res.code === 200) {
+			console.log("登录响应:", res);
+			uni.setStorageSync("accessToken", res.data.accessToken);
+			uni.setStorageSync("refreshToken", res.data.refreshToken);
+			console.log("Token 已缓存");
+			const userStore = useUserStore();
+			userStore.setUserInfo(res.data.user);
+			if (res.code === 200) {
+				jump(ROUTES.MAIN_INDEX, role.value, "relaunch");
+			}
+		} else {
+			showToast("登录失败");
+		}
 	};
 </script>
 
