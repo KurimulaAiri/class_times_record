@@ -3,7 +3,7 @@
 		<FormPage
 			:groups="groups"
 			v-model:modelValue="form"
-			@pickerTap="onPickerTap"
+			@picker-tap="onPickerTap"
 		>
 			<template #group-0-teachers>
 				<view class="form-item no-border block-item">

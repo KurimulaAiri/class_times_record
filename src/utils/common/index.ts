@@ -103,7 +103,9 @@ const showToast = (
 	duration: number = 2000,
 	mask: boolean = false,
 ) => {
-	uni.showToast({ title: msg, icon, duration, mask });
+	setTimeout(() => {
+		uni.showToast({ title: msg, icon, duration, mask });
+	}, 200);
 };
 
 /**
@@ -170,7 +172,12 @@ const usePageData = <T = any>(
 		}
 
 		// 核心通道 2：如果 EventChannel 没拿到（比如走的是 redirect/relaunch 或传统模式），则通过 URL 兜底解析
-		if (!hasReceived && options && options.data) {
+		if (
+			!hasReceived &&
+			options &&
+			options.data &&
+			options.data !== "undefined"
+		) {
 			try {
 				const decoded = decodeURIComponent(options.data);
 				const parsed = JSON.parse(decoded) as T;

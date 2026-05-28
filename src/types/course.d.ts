@@ -28,3 +28,9 @@ interface GetCourseByInstitutionIdRequest {
 	currentPage: number;
 	pageSize: number;
 }
+
+interface GetCourseListByStudentIdRequest {
+	studentId: number;
+	currentPage: number;
+	pageSize: number;
+}

@@ -29,7 +29,7 @@
 				</view>
 				<view class="info-item">
 					<text class="label">课程类型</text>
-					<text class="value">{{ classDetail?.courseType || "课程类型" }}</text>
+					<text class="value">{{ classDetail?.courseType === 1 ? "按次扣课" : "按时间扣课" }}</text>
 				</view>
 				<view class="info-item">
 					<text class="label">学生人数</text>

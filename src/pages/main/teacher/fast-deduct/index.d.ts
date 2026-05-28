@@ -1,0 +1,3 @@
+interface FastDeductPageTransfer {
+	student: StudentResponse;
+}

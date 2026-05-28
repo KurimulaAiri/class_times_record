@@ -14,10 +14,18 @@ interface CourseRecordResponse {
 	updateTimeStr: string;
 }
 
+interface InsertCourseRecordRequest {
+	courseId: number;
+	studentId: number;
+	courseRemark: string;
+	courseRestTime: number;
+	courseTotalTime: number;
+}
+
 type CourseRecordListResponse = {
 	courseRecords: CourseRecordResponse[];
-    total: number;
-}
+	total: number;
+};
 
 type GetCourseRecordListRequest = {
 	studentId: number;

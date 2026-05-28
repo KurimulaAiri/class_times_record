@@ -22,7 +22,11 @@
 			<view class="id-badge">学号: {{ student?.id || "" }}</view>
 		</view>
 
-		<FormPage :groups="groups" :modelValue="student">
+		<FormPage
+			:groups="groups"
+			:modelValue="student"
+			@groupTitleTap="handleGroupTitleTap"
+		>
 			<template #group-1>
 				<view class="info-item" v-if="student?.primaryParent">
 					<text class="label">主要联系人</text>
@@ -70,7 +74,34 @@
 					<text class="empty-text">暂无联系人</text>
 				</view>
 			</template>
+
+			<template #group-title-extra-2>
+				<view class="group-right-action" @tap.stop="handleAddCourse">
+					<uni-icons type="plus" size="14" color="#70a9a2"></uni-icons>
+					<text class="action-text">添加课程</text>
+				</view>
+			</template>
+
 			<template #group-2>
+				<view class="course-list" v-if="courseList && courseList.length > 0">
+					<view
+						class="course-card"
+						v-for="(item, index) in courseList"
+						:key="'course-' + index"
+					>
+						<view class="info-item">
+							<text class="label">课程名称</text>
+							<text class="value highlight">{{ item.courseName }}</text>
+						</view>
+					</view>
+				</view>
+				<view class="empty-state" v-else>
+					<uni-icons type="info" size="30" color="#999"></uni-icons>
+					<text class="empty-text">暂无报读课程</text>
+				</view>
+			</template>
+
+			<template #group-3>
 				<view class="class-list" v-if="classList && classList.length > 0">
 					<view
 						class="class-card"
@@ -89,7 +120,7 @@
 							<text class="label">班级ID</text>
 							<text class="value">{{ item.id }}</text>
 						</view>
-						<view class="info-item small">
+						<view class="info-item some-small">
 							<text class="label">学生人数</text>
 							<text class="value">{{ item.studentCount }}人</text>
 						</view>
@@ -102,14 +133,19 @@
 			</template>
 		</FormPage>
 
-		<PageFooter :buttons="[{ text: '编辑档案', type: 'primary' }]" @btnClick="handleEdit" :fixed="false"></PageFooter>
+		<PageFooter
+			:buttons="[{ text: '编辑档案', type: 'primary' }]"
+			@btnClick="handleEdit"
+		></PageFooter>
 	</view>
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { onUnmounted, ref } from "vue";
 	import { useStudentStore } from "@/stores/student";
 	import { getClassListByStudentId } from "@/api/class";
+	import { getCourseListByStudentId } from "@/api/course";
+
 	import { onLoad, onShow } from "@dcloudio/uni-app";
 	import { jump, showToast } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
@@ -117,8 +153,9 @@
 	import PageFooter from "@/components/page-footer/index.vue";
 
 	const studentStore = useStudentStore();
-	const student = ref<StudentResponse>();
+	const student = ref<StudentResponse>({} as StudentResponse);
 	const classList = ref<ClassResponse[]>([]);
+	const courseList = ref<CourseResponse[]>([]);
 
 	/** 信息展示分组配置 */
 	const groups: FormGroupConfig[] = [
@@ -144,6 +181,12 @@
 		},
 		{
 			title: "联系人信息",
+			titleStyle: "theme",
+			mode: "display",
+			items: [],
+		},
+		{
+			title: "报读课程", // 新增模块，对应 #group-2
 			titleStyle: "theme",
 			mode: "display",
 			items: [],
@@ -178,21 +221,43 @@
 	];
 
 	onLoad(async () => {
-		const classListIn = await getClassListByStudentId(student?.value?.id || 0);
+		if (studentStore.studentInfo) {
+			student.value = studentStore.studentInfo;
+		}
+		const classListIn = await getClassListByStudentId({
+			studentId: student?.value?.id || 0,
+			currentPage: 1,
+			pageSize: 10,
+		});
 		console.log("接收到报读班级:", classListIn.classList);
 		classList.value = classListIn.classList;
 	});
 
-	onShow(() => {
+	onShow(async () => {
 		if (studentStore.studentInfo) {
 			student.value = studentStore.studentInfo;
 		}
+		const courseListIn = await getCourseListByStudentId({
+			studentId: student?.value?.id || 0,
+			currentPage: 1,
+			pageSize: 10,
+		});
+		console.log("接收到报读课程:", courseListIn.courses);
+		courseList.value = courseListIn.courses;
 	});
 
 	/** 格式化头像文字（取姓名首字） */
 	const formatAvatarText = (name: string) => {
 		if (!name) return "无";
 		return name.length > 2 ? name.substring(name.length - 2) : name;
+	};
+
+	// 增加对 FormPage 抛出的 groupTitleTap 事件的处理
+	const handleGroupTitleTap = (groupIndex: number) => {
+		if (groupIndex === 2) {
+			// 如果点击了“报读课程”标题行的任意非按钮安全区域，也可以顺便触发跳转
+			handleAddCourse();
+		}
 	};
 
 	/** 拨打电话 */
@@ -216,6 +281,12 @@
 	const handleEdit = () => {
 		console.log("跳转编辑页");
 		jump(ROUTES.EDIT_STUDENT_INFO_TEACHER);
+	};
+
+	/** 跳转到添加/选择课程页面 */
+	const handleAddCourse = () => {
+		console.log("点击了添加课程");
+		jump(ROUTES.ADD_COURSE_RECORD);
 	};
 </script>
 

@@ -216,6 +216,12 @@
 					"style": {
 						"navigationBarTitleText": "编辑校区信息"
 					}
+				},
+				{
+					"path": "teacher/add-course-record/index",
+					"style": {
+						"navigationBarTitleText": "添加学生课程"
+					}
 				}
 			]
 		},

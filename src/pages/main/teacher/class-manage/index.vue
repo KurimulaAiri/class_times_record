@@ -79,11 +79,20 @@
 				{ label: "当前教师", value: 1 },
 			],
 		},
+		classStatus: {
+			label: "班级状态",
+			options: [
+				{ label: "全部", value: -1 },
+				{ label: "进行中", value: 1 },
+				{ label: "已结束", value: 0 },
+			],
+		},
 	});
 
 	/** 当前激活的筛选条件 */
 	const activeFilters = ref<ActiveFiltersType>({
 		scope: 2,
+		classStatus: -1,
 	});
 
 	const userStore = useUserStore();
@@ -92,6 +101,7 @@
 
 	const queryForm = ref<GetClassListRequest>({
 		scope: 0,
+		classStatus: -1,
 		targetId: 0,
 		keyword: "",
 	});
@@ -108,6 +118,7 @@
 		if (teacherId) {
 			queryForm.value = {
 				scope: activeFilters.value.scope,
+				classStatus: activeFilters.value.classStatus,
 				targetId: teacherId,
 				keyword: queryForm.value.keyword,
 			};
@@ -127,6 +138,7 @@
 	const loadData = async () => {
 		const res = await getClassList({
 			scope: activeFilters.value.scope,
+			classStatus: activeFilters.value.classStatus,
 			targetId: queryForm.value.targetId,
 			keyword: queryForm.value.keyword,
 		});

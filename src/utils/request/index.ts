@@ -136,7 +136,10 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 							reject(res as T);
 							break;
 						default:
-							showToast(`系统错误：${statusCode}`, "none");
+							showToast(
+								`系统错误：${statusCode}, ${responseData.message || "未知错误"}`,
+								"none",
+							);
 							reject(res as T);
 							break;
 					}

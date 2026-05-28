@@ -122,7 +122,7 @@
 		selectedMap,
 		(newMap) => {
 			const selectedEntries = Object.values(newMap);
-			const result = {
+			const result: DeductByStudentPayload = {
 				studentId: student.value.id,
 				isValid: student.value.id > 0 && selectedEntries.length > 0,
 				classes: selectedEntries.map((entry) => ({
@@ -193,12 +193,14 @@
 
 	// 页面通信监听
 	uni.$on("updateStudent", async (data: StudentResponse) => {
+		console.log("updateStudent调用");
 		student.value = data;
 		selectedMap.value = {};
 		await loadData();
 	});
 
 	uni.$on("refreshDeductList", async () => {
+		console.log("refreshDeductList调用");
 		await loadData();
 	});
 

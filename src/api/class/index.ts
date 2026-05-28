@@ -7,11 +7,11 @@ import { post } from "@/utils/request";
  * @returns 返回班级列表响应数据
  */
 const getClassListByStudentId = async (
-	studentId: number,
+	QueryForm: GetClassListByStudentIdRequest,
 ): Promise<ClassListResponse> => {
 	const res = await post<ClassListResponse>(
 		"/class/get_classes_by_student_id",
-		{ studentId },
+		QueryForm,
 	);
 	return res.data;
 };
@@ -56,11 +56,13 @@ const getClassList = async (
 ): Promise<ClassListResponse> => {
 	if (QueryForm.scope === 1) {
 		return getClassListByTeacherId({
+			classStatus: QueryForm.classStatus,
 			teacherId: QueryForm.targetId,
 			keyword: QueryForm.keyword,
 		});
 	} else if (QueryForm.scope === 2) {
 		return getClassListByInstitutionId({
+			classStatus: QueryForm.classStatus,
 			institutionId: QueryForm.targetId,
 			keyword: QueryForm.keyword,
 		});

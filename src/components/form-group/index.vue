@@ -17,11 +17,15 @@
 				titleStyle === 'dark' && 'title-dark',
 			]"
 		>
-			<!-- 标题前缀插槽，可用于插入自定义图标等 -->
 			<slot name="title-prefix"></slot>
-			{{ title }}
-			<!-- 必填标记：required 为 true 时显示红色星号 -->
+
+			<text class="title-text">{{ title }}</text>
+
 			<text v-if="required" class="required">*</text>
+
+			<view class="title-extra" @tap.stop="emit('titleExtraTap')">
+				<slot name="title-extra"></slot>
+			</view>
 		</view>
 
 		<!-- 遍历 items 配置数组，根据 type 渲染不同的表单控件 -->
@@ -32,7 +36,7 @@
 			     插槽作用域提供 modelValue（表单数据）和 item（当前配置项） -->
 			<slot
 				v-if="item.type === 'slot'"
-				:name="item.key"
+				name="item-slot"
 				:modelValue="modelValue"
 				:item="item"
 			></slot>
@@ -333,6 +337,9 @@
 		 * @param value - 更新后的完整表单数据对象
 		 */
 		(e: "update:modelValue", value: Record<string, any>): void;
+		/** 新增：标题右侧额外区域点击事件
+		 */
+		(e: "titleExtraTap"): void;
 	}>();
 
 	/**
@@ -350,9 +357,7 @@
 	watch(
 		() => props.modelValue,
 		(newVal) => {
-			if (newVal) {
-				localForm.value = { ...newVal };
-			}
+			localForm.value = newVal ? { ...newVal } : {};
 		},
 		{ immediate: true, deep: false },
 	);

@@ -14,25 +14,54 @@
 	padding: 10rpx 30rpx;
 	box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.03);
 
-	/* display 模式下的容器调整：更大的内边距和圆角 */
+	/* display 模式下的容器调整：更大的圆角 */
 	&.display-mode {
-		padding: 30rpx;
 		border-radius: 24rpx;
 	}
 
 	/* ---- 分组标题 ----
-	   左侧带竖条装饰，支持 theme（主题色）和 dark（深色）两种风格 */
+        左侧带竖条装饰，支持 theme（主题色）和 dark（深色）两种风格 */
 	.group-title {
 		font-size: 28rpx;
 		font-weight: bold;
 		padding: 30rpx 0 10rpx;
 		display: flex;
-		align-items: center;
+		align-items: center; /* 💡 核心：确保左侧装饰条、文字、右侧内容在一条水平线上 */
+		width: 100%; // 确保整行撑满
+		box-sizing: border-box;
+		line-height: 1; /* 💡 核心：强制行高为 1，消除由于字号不同导致的默认行高撑起的高度差 */
 
 		/* 必填标记：红色星号 */
 		.required {
 			color: #ff4d4f;
 			margin-left: 4rpx;
+		}
+
+		/* ⚡ 优化：右侧插槽容器样式 */
+		.title-extra {
+			margin-left: auto; // 核心：自动推至最右侧
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			font-size: 26rpx; // 右侧辅助文字通常略小
+			font-weight: normal; // 取消加粗
+			color: #999; // 默认灰色，可在外部自由覆盖
+			line-height: 1; /* 💡 核心：保持行高一致 */
+
+			/* 点击态反馈 */
+			&:active {
+				opacity: 0.7;
+			}
+
+			/* 💡 核心修正：穿透处理微信小程序/uni-app可能自动生成的影子节点或包裹标签，确保内部的图标和文字也完美成行 */
+			:deep(view),
+			:deep(uni-view),
+			:deep(text),
+			:deep(uni-icons) {
+				display: inline-flex;
+				align-items: center;
+				line-height: 1;
+			}
 		}
 
 		/* 主题色标题风格：绿色文字 + 8rpx 宽装饰条 */
@@ -46,6 +75,7 @@
 				background-color: $theme-color;
 				margin-right: 16rpx;
 				border-radius: 4rpx;
+				flex-shrink: 0; /* 防止被挤压 */
 			}
 		}
 
@@ -60,6 +90,7 @@
 				background-color: $theme-color;
 				margin-right: 14rpx;
 				border-radius: 4rpx;
+				flex-shrink: 0; /* 防止被挤压 */
 			}
 		}
 	}

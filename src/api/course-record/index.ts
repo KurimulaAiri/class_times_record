@@ -18,6 +18,21 @@ const getCourseRecordList = async (
 	return courseList;
 };
 
+const insertCourseRecord = async (
+	form: InsertCourseRecordRequest,
+): Promise<CourseRecordResponse> => {
+	let result = {} as CourseRecordResponse;
+	await post<CourseRecordResponse>("/course_record/insert", form).then(
+		(res) => {
+			if (res.code === 200) {
+				result = res.data;
+				return result;
+			}
+		},
+	);
+	return result;
+};
+
 /**
  * 按学生 ID 进行扣课操作
  * @param data - 扣课请求参数，包含学生 ID 及扣课模式为 student
@@ -44,4 +59,9 @@ const deductByCourseId = async (
 	});
 };
 
-export { getCourseRecordList, deductByStudentId, deductByCourseId };
+export {
+	getCourseRecordList,
+	deductByStudentId,
+	deductByCourseId,
+	insertCourseRecord,
+};

@@ -21,16 +21,27 @@ interface ClassResponse {
 
 interface GetClassListRequest {
 	scope: number;
+	classStatus: number;
 	targetId: number;
 	keyword: string | undefined;
 }
 
 interface GetClassListByTeacherIdRequest {
+	classStatus: number;
 	teacherId: number;
 	keyword: string | undefined;
 }
 
+interface GetClassListByStudentIdRequest {
+	studentId: number;
+	currentPage: number;
+	pageSize: number;
+}
+
+
+
 interface GetClassListByInstitutionIdRequest {
+	classStatus: number;
 	institutionId: number;
 	keyword: string | undefined;
 }
@@ -57,6 +68,11 @@ interface ClassDeductRequest {
 	deductCount: number;
 }
 
+interface StudentDeductRequest {
+	studentId: number;
+	deductCount: number;
+}
+
 type FastDeductRequest = {
 	remark: string;
 } & (
@@ -68,7 +84,7 @@ type FastDeductRequest = {
 	| {
 			mode: "course";
 			courseId: number;
-			students: StudentResponse[];
+			students: StudentDeductRequest[];
 	  }
 );
 

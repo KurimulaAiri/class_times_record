@@ -12,6 +12,18 @@ const getCourseByInstitutionId = async (query: GetCourseByInstitutionIdRequest) 
 };
 
 /**
+ * 根据学生 ID 获取该学生所在的课程列表
+ * @param studentId - 学生 ID
+ * @returns 返回课程列表响应数据
+ */
+const getCourseListByStudentId = async (query: GetCourseListByStudentIdRequest) => {
+	const res = await post<CourseListResponse>(`/course/get_course_by_student_id`, query);
+	return res.data;
+};
+
+
+
+/**
  * 新增课程
  * @param query - 新增课程请求参数
  * @returns 返回新增课程响应数据
@@ -22,4 +34,4 @@ const insertCourse = async (query: InsertCourseRequest) => {
 };
 
 
-export { getCourseByInstitutionId, insertCourse };
+export { getCourseByInstitutionId, insertCourse, getCourseListByStudentId };
