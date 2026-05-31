@@ -150,8 +150,7 @@
 	/** 提交学生信息表单，校验后调用 insertStudent 接口 */
 	const submitForm = async () => {
 		// 💡 所有表单校验记得加上 .value
-		if (!form.value.studentName)
-			return showToast("姓名不能为空");
+		if (!form.value.studentName) return showToast("姓名不能为空");
 		if (
 			!form.value.primaryParent.username ||
 			!form.value.primaryParent.phone ||

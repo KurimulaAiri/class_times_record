@@ -2,7 +2,7 @@
 	<view class="container">
 		<SearchFilterBar
 			v-model:keyword="tempKeyword"
-			v-model:activeFilters="activeFilters" 
+			v-model:activeFilters="activeFilters"
 			:filters="filterConfig"
 			placeholder="搜索姓名、学号或手机号"
 			@search="handleSearch"
@@ -87,12 +87,22 @@
 				v-if="selectedList.length > 0"
 				info="已选 {{count}} 人"
 				:count="selectedList.length"
-				:buttons="[{ text: '确认选择', type: 'primary', disabled: selectedList.length === 0 }]"
+				:buttons="[
+					{
+						text: '确认选择',
+						type: 'primary',
+						disabled: selectedList.length === 0,
+					},
+				]"
 				@btnClick="handleMultiConfirm"
 			></PageFooter>
 
 			<view v-if="students.length === 0 && !isLoading" class="empty">
-				<view class="empty-icon">🔍</view>
+				<image
+					mode="aspectFit"
+					class="empty-img"
+					src="@/static/icon/empty-search.svg"
+				></image>
 				<text class="empty-text">未找到相关学生</text>
 				<text class="empty-tips">可以尝试换个姓名或学号搜索</text>
 			</view>
@@ -178,7 +188,7 @@
 
 	/** 当前激活的筛选条件 */
 	const activeFilters = ref<ActiveFiltersType>({
-		scope: 1,
+		scope: 2,
 		gender: -1,
 		classStatus: -1,
 	});
@@ -210,10 +220,7 @@
 				// --- 新增：传给后端的筛选参数 ---
 				scope: activeFilters.value.scope,
 				sex: activeFilters.value.gender,
-				hasClass:
-					activeFilters.value.classStatus === 0
-						? null
-						: activeFilters.value.classStatus === 1,
+				hasClass: activeFilters.value.classStatus,
 			});
 
 			if (res && res.length > 0) {

@@ -36,8 +36,10 @@ export const ROUTES = {
 	EDIT_COURSE_INFO: "/pages/main/teacher/edit-course-info/index", // 教师端编辑课程信息
 	INSTITUTION_DETAIL: "/pages/main/teacher/institution-detail/index", // 教师端校区详情
 	MY_SCHEDULE: "/pages/main/teacher/my-schedule/index", // 教师端我的课表
-	EDIT_INSTITUTION: "/pages/main/teacher/edit-institution/index", // 教师端编辑校区信息
+	EDIT_INSTITUTION_INFO: "/pages/main/teacher/edit-institution-info/index", // 教师端编辑校区信息
 	ADD_COURSE_RECORD: "/pages/main/teacher/add-course-record/index", // 教师端添加学生课程
+	EDIT_CLASS_SCHEDULE_INFO:
+		"/pages/main/teacher/edit-class-schedule-info/index", // 教师端编辑班级课表
 } as const;
 
 export type PagePath = (typeof ROUTES)[keyof typeof ROUTES];

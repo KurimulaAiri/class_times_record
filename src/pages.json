@@ -212,7 +212,7 @@
 					}
 				},
 				{
-					"path": "teacher/edit-institution/index",
+					"path": "teacher/edit-institution-info/index",
 					"style": {
 						"navigationBarTitleText": "编辑校区信息"
 					}
@@ -221,6 +221,12 @@
 					"path": "teacher/add-course-record/index",
 					"style": {
 						"navigationBarTitleText": "添加学生课程"
+					}
+				},
+				{
+					"path": "teacher/edit-class-schedule-info/index",
+					"style": {
+						"navigationBarTitleText": "编辑班级课表"
 					}
 				}
 			]

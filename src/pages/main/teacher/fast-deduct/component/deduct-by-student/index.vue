@@ -105,8 +105,8 @@
 
 	const emit = defineEmits(["updateData"]);
 
-	const student = ref<any>({ id: 0, studentName: "" });
-	const classes = ref<any[]>([]);
+	const student = ref<StudentResponse>({} as StudentResponse);
+	const classes = ref<ClassResponse[]>([]);
 	const selectedMap = ref<Record<number, { detail: any; count: number }>>({});
 
 	// 💡 计算属性：动态判断当前是否处于全选状态
@@ -186,7 +186,11 @@
 	/** 加载学生关联的班级列表 */
 	const loadData = async () => {
 		if (student.value.id !== 0) {
-			const classesInfo = await getClassListByStudentId(student.value.id);
+			const classesInfo = await getClassListByStudentId({
+				studentId: student.value.id,
+				currentPage: 1,
+				pageSize: 1000,
+			});
 			classes.value = classesInfo.classList || [];
 		}
 	};

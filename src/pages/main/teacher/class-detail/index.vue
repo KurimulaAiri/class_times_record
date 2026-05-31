@@ -29,7 +29,9 @@
 				</view>
 				<view class="info-item">
 					<text class="label">课程类型</text>
-					<text class="value">{{ classDetail?.courseType === 1 ? "按次扣课" : "按时间扣课" }}</text>
+					<text class="value">{{
+						classDetail?.courseType === 1 ? "按次扣课" : "按时间扣课"
+					}}</text>
 				</view>
 				<view class="info-item">
 					<text class="label">学生人数</text>
@@ -494,7 +496,7 @@
 	};
 
 	/** 点击课程时段 */
-	const handlePeriodTap = (period: any) => {
+	const handlePeriodTap = (period: PeriodItem) => {
 		console.log("点击了排课周期:", period);
 		// 示例：点击大卡片可以跳转到该周期的修改页面，并把日期区间等参数带过去
 		/* 
@@ -506,7 +508,7 @@
 	};
 
 	/** 长按课程时段 */
-	const handlePeriodLongPress = (period: any) => {
+	const handlePeriodLongPress = (period: PeriodItem) => {
 		// 触发震动反馈
 		uni.vibrateShort();
 
@@ -519,6 +521,9 @@
 				switch (res.tapIndex) {
 					case 0:
 						console.log("点击调整该周期:", period.dateKey);
+						jump(ROUTES.EDIT_CLASS_SCHEDULE_INFO, {
+							...period,
+						});
 						break;
 					case 1:
 						uni.showModal({

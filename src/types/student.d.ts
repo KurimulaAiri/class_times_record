@@ -25,7 +25,7 @@ interface GetStudentListByParentIdRequest {
 interface GetStudentListByTeacherIdRequest {
 	teacherId: number;
 	sex: number | null;
-	hasClass: boolean | null;
+	hasClass: number | null;
 	keyword: string | null;
 	currentPage: number;
 	pageSize: number;
@@ -34,7 +34,7 @@ interface GetStudentListByTeacherIdRequest {
 interface GetStudentListByInstitutionIdRequest {
 	institutionId: number;
 	sex: number | null;
-	hasClass: boolean | null;
+	hasClass: number | null;
 	keyword: string | null;
 	currentPage: number;
 	pageSize: number;
@@ -44,7 +44,7 @@ interface GetStudentListRequest {
 	scope: number;
 	targetId: number;
 	sex: number | null;
-	hasClass: boolean | null;
+	hasClass: number | null;
 	keyword: string | null;
 	currentPage: number;
 	pageSize: number;
@@ -55,7 +55,10 @@ type UpdateStudentInfoRequest = import("@/utils/common").FormModel<
 	"id" | "avatar" | "birthStr" | "school" | "address"
 >;
 
-type SubmitUpdateStudentInfoRequest = Omit<UpdateStudentInfoRequest, "birthStr"> & {
+type SubmitUpdateStudentInfoRequest = Omit<
+	UpdateStudentInfoRequest,
+	"birthStr"
+> & {
 	birth: string;
 };
 

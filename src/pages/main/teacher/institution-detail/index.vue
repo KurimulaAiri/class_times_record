@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<FormPage :groups="groups" :model-value="institution"> </FormPage>
+		<FormPage :groups="groups" v-model:modelValue="institution"></FormPage>
 		<PageFooter :buttons="buttons" @btn-click="toEdit" />
 	</view>
 </template>
@@ -8,11 +8,12 @@
 <script setup lang="ts">
 	import FormPage from "@/components/form-page/index.vue";
 	import PageFooter from "@/components/page-footer/index.vue";
+	import { getInstitutionById } from "@/api/institution";
 	import { useUserStore } from "@/stores/user";
 	import { onLoad } from "@dcloudio/uni-app";
 	import { jump } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
-	import { ref } from "vue";
+	import { onUnmounted, ref } from "vue";
 
 	const userStore = useUserStore();
 
@@ -26,21 +27,17 @@
 		updateTimeStr: "",
 	});
 
-	onLoad(() => {
-		if (userStore.userInfo?.roleId === 4) {
-			institution.value = userStore.userInfo.identityInfo.institution;
-			console.log("institution.value:", institution.value);
-		}
-
-		console.log("onLoad 执行");
+	onLoad(async () => {
+		console.log("onShow 开始请求接口...");
+		await loadData();
 	});
 
-    const buttons = ref<FooterButton[]>([
-        {
-            text: "编辑信息",
-            type: "primary",
-        },
-    ]);
+	const buttons = ref<FooterButton[]>([
+		{
+			text: "编辑信息",
+			type: "primary",
+		},
+	]);
 
 	const groups = ref<FormGroupConfig[]>([
 		{
@@ -67,8 +64,35 @@
 	]);
 
 	const toEdit = () => {
-		jump(ROUTES.EDIT_INSTITUTION, { institution: institution.value });
+		jump(ROUTES.EDIT_INSTITUTION_INFO, institution.value);
 	};
+
+	// 2. 定义刷新数据函数
+	const loadData = async () => {
+		const targetId =
+			userStore.userInfo?.roleId === 4
+				? userStore.userInfo.identityInfo.institutionId
+				: 0;
+
+		const res = await getInstitutionById({ institutionId: targetId });
+
+		if (res) {
+			// 【修正点 2】：使用属性合并 + 浅拷贝触发响应，确保子组件能捕获到深层变化
+			Object.assign(institution.value, res);
+			institution.value = { ...institution.value };
+
+			console.log("onShow 接口数据更新成功:", institution.value);
+			uni.$emit("needRefreshUser");
+		}
+	};
+
+	uni.$on("needRefresh", () => {
+		loadData();
+	});
+
+	onUnmounted(() => {
+		uni.$off("needRefresh");
+	});
 </script>
 
 <style scoped lang="scss" src="./index.scss"></style>

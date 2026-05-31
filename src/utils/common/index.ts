@@ -156,6 +156,7 @@ const usePageData = <T = any>(
 
 				if (eventChannel && typeof eventChannel.on === "function") {
 					eventChannel.on("acceptClassData", (res: T) => {
+						console.log("EventChannel 接收到数据:", res);
 						if (res) {
 							hasReceived = true;
 							data.value = res;
@@ -182,6 +183,7 @@ const usePageData = <T = any>(
 				const decoded = decodeURIComponent(options.data);
 				const parsed = JSON.parse(decoded) as T;
 				if (parsed) {
+					console.log("URL 兜底参数:", parsed);
 					data.value = parsed;
 					if (callback) callback(parsed);
 				}

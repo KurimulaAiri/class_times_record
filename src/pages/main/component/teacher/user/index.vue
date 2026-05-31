@@ -92,6 +92,7 @@
 	import { useUserStore } from "@/stores/user";
 	import { jump, switchUser } from "@/utils/common";
 	import { ROUTES } from "@/config/routes";
+	import { getInstitutionById } from "@/api/institution";
 
 	const userStore = useUserStore();
 
@@ -166,6 +167,23 @@
 				break;
 		}
 	};
+
+	uni.$on("needRefreshUser", async () => {
+		const newIns = await getInstitutionById({
+			institutionId:
+				userStore.userInfo?.roleId === 4
+					? userStore.userInfo?.identityInfo.institutionId
+					: 0,
+		});
+		if (newIns) {
+			const currentUser = userStore.userInfo;
+			if (currentUser?.roleId === 4) {
+				currentUser.identityInfo.institution = newIns;
+			}
+			const newUser = { ...currentUser } as UserResponse;
+			userStore.setUserInfo(newUser);
+		}
+	});
 </script>
 
 <style scoped src="./index.scss"></style>

@@ -232,14 +232,12 @@ $gray-light: #fdfdfd;
 	padding-top: 200rpx; // 避开固定的搜索栏
 	width: 100%;
 
-	.empty-icon {
-		font-size: 120rpx;
+	.empty-img {
 		margin-bottom: 40rpx;
 		opacity: 0.6;
 		// 如果想更精致，可以加一个淡淡的圆圈背景
 		width: 200rpx;
 		height: 200rpx;
-		background-color: #fff;
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
@@ -266,7 +264,11 @@ $gray-light: #fdfdfd;
 	bottom: calc(60rpx + var(--window-bottom)); // 考虑底部 tabbar 的高度
 	width: 110rpx;
 	height: 110rpx;
-	background: linear-gradient(135deg, color.adjust($theme-color, $lightness: 5%), $theme-color);
+	background: linear-gradient(
+		135deg,
+		color.adjust($theme-color, $lightness: 5%),
+		$theme-color
+	);
 	border-radius: 50%;
 	display: flex;
 	justify-content: center;
@@ -315,5 +317,3 @@ $gray-light: #fdfdfd;
 		}
 	}
 }
-
-

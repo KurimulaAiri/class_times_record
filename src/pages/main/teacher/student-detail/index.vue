@@ -141,7 +141,7 @@
 </template>
 
 <script setup lang="ts">
-	import { onUnmounted, ref } from "vue";
+	import { ref } from "vue";
 	import { useStudentStore } from "@/stores/student";
 	import { getClassListByStudentId } from "@/api/class";
 	import { getCourseListByStudentId } from "@/api/course";

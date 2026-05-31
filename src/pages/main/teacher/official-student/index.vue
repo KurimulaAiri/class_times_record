@@ -138,7 +138,7 @@
 	});
 
 	const activeFilters = ref<ActiveFiltersType>({
-		scope: 1,
+		scope: 2,
 		gender: -1,
 		classStatus: -1,
 	});
@@ -175,10 +175,7 @@
 				keyword: searchKeyword.value,
 				scope: activeFilters.value.scope,
 				sex: activeFilters.value.gender,
-				hasClass:
-					activeFilters.value.classStatus === 0
-						? null
-						: activeFilters.value.classStatus === 1,
+				hasClass: activeFilters.value.classStatus,
 			});
 
 			if (res && res.length > 0) {
