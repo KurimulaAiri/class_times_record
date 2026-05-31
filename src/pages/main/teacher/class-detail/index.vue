@@ -287,75 +287,73 @@
 		await Promise.all([loadStudentList(), loadClassScheduleList()]);
 
 		console.log("班级详情最终初始化完成:", classDetail.value);
+	});
 
-		uni.$on("backFromEditClass", async () => {
-			const newClassDetail = await getClassByClassId(
-				classDetail.value?.id || 0,
-			);
-			if (newClassDetail) {
-				classDetail.value = {
-					...newClassDetail.classList?.[0], // 后端返回的新班级基础数据
-					scheduleList: classDetail.value?.scheduleList || [], // 牢牢抱住我们原有的排课数据
-				};
-			}
-			loadStudentList();
-			loadClassScheduleList();
-		});
+	// 监听全局事件
+	uni.$on("updateStudents", (data) => {
+		// 1. 处理 Proxy 问题（切断响应式引用）
+		const studentList = JSON.parse(JSON.stringify(data));
 
-		// 监听全局事件
-		uni.$on("updateStudents", (data) => {
-			// 1. 处理 Proxy 问题（切断响应式引用）
-			const studentList = JSON.parse(JSON.stringify(data));
+		console.log("接收到的原始数据:", data);
+		console.log("转换后的纯对象:", studentList);
 
-			console.log("接收到的原始数据:", data);
-			console.log("转换后的纯对象:", studentList);
+		if (studentList && studentList.length > 0) {
+			// 2. 使用 showModal 而不是 showToast
+			setTimeout(() => {
+				uni.showModal({
+					title: "提示",
+					content: `确定要添加选中的 ${studentList.length} 名学员吗？`,
+					success: async (res) => {
+						if (res.confirm) {
+							// 执行添加逻辑...
+							console.log("用户点击了确定");
+							// 调用添加接口
+							const result = await addStudentToClass({
+								classId: classDetail.value?.id || 0,
+								students: studentList,
+							});
+							if (result !== 0) {
+								showToast("添加成功", "success");
+								if (classDetail.value?.id) {
+									const res = await getClassByClassId(
+										classDetail.value?.id || 0,
+									);
 
-			if (studentList && studentList.length > 0) {
-				// 2. 使用 showModal 而不是 showToast
-				setTimeout(() => {
-					uni.showModal({
-						title: "提示",
-						content: `确定要添加选中的 ${studentList.length} 名学员吗？`,
-						success: async (res) => {
-							if (res.confirm) {
-								// 执行添加逻辑...
-								console.log("用户点击了确定");
-								// 调用添加接口
-								const result = await addStudentToClass({
-									classId: classDetail.value?.id || 0,
-									students: studentList,
-								});
-								if (result !== 0) {
-									showToast("添加成功", "success");
-									if (classDetail.value?.id) {
-										const res = await getClassByClassId(
-											classDetail.value?.id || 0,
-										);
-
-										// ✅ 修复：保留原有的 scheduleList 不被覆盖
-										classDetail.value = {
-											...res.classList?.[0], // 后端返回的新班级基础数据
-											scheduleList: classDetail.value.scheduleList, // 牢牢抱住我们原有的排课数据
-										};
-									}
-								} else {
-									showToast("添加失败");
+									// ✅ 修复：保留原有的 scheduleList 不被覆盖
+									classDetail.value = {
+										...res.classList?.[0], // 后端返回的新班级基础数据
+										scheduleList: classDetail.value.scheduleList, // 牢牢抱住我们原有的排课数据
+									};
 								}
-								await loadStudentList();
-							} else if (res.cancel) {
-								console.log("用户点击了取消");
+							} else {
+								showToast("添加失败");
 							}
-						},
-					});
-				}, 200);
-			}
-		});
+							await loadStudentList();
+						} else if (res.cancel) {
+							console.log("用户点击了取消");
+						}
+					},
+				});
+			}, 200);
+		}
+	});
 
-		uni.$on("needRefresh", () => {
-			loadStudentList();
-			loadClassScheduleList();
-			getClassByClassId(classDetail.value?.id || 0);
-		});
+	uni.$on("needRefresh", () => {
+		loadStudentList();
+		loadClassScheduleList();
+		getClassByClassId(classDetail.value?.id || 0);
+	});
+
+	uni.$on("backFromEditClass", async () => {
+		const newClassDetail = await getClassByClassId(classDetail.value?.id || 0);
+		if (newClassDetail) {
+			classDetail.value = {
+				...newClassDetail.classList?.[0], // 后端返回的新班级基础数据
+				scheduleList: classDetail.value?.scheduleList || [], // 牢牢抱住我们原有的排课数据
+			};
+		}
+		loadStudentList();
+		loadClassScheduleList();
 	});
 
 	// 页面显示时获取班级详情
@@ -515,7 +513,7 @@
 		console.log("长按了排课周期:", period);
 
 		uni.showActionSheet({
-			itemList: ["调整该周期排课", "删除该周期全部排课"],
+			itemList: ["调整该周期排课", "删除该周期排课"],
 			itemColor: "#333",
 			success: (res) => {
 				switch (res.tapIndex) {

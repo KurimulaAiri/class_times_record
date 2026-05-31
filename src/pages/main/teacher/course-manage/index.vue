@@ -24,6 +24,7 @@
 				<!-- 课程内容区域 -->
 				<view class="course-content">
 					<text class="course-name">{{ item.courseName }}</text>
+					<text class="course-type">{{ item.courseType === 1 ? "按次" : "按天" }}</text>
 				</view>
 
 				<!-- 右侧装饰箭头 -->
@@ -52,28 +53,15 @@
 	import FloatingActionButton from "@/components/floating-action-button/index.vue";
 	import { jump } from "@/utils/common";
 
-	// 定义课程的 TypeScript 接口
-	interface Course {
-		id: number;
-		courseName: string;
-		// 后续可以扩展：price, lessonPeriod 等
-	}
-
 	const userStore = useUserStore();
 
 	const keyword = ref("");
 
 	/** 全部课程数据 */
-	const allCourses = ref<Course[]>([
-		{ id: 1, courseName: "创意少儿美术基础班" },
-		{ id: 2, courseName: "硬笔书法进阶速成课" },
-		{ id: 3, courseName: "少儿编程 Python 启蒙" },
-		{ id: 4, courseName: "国际象棋初级博弈班" },
-		{ id: 5, courseName: "架子鼓一对一私教课" },
-	]);
+	const allCourses = ref<CourseResponse[]>([]);
 
 	/** 过滤后的课程数据 */
-	const courses = ref<Course[]>([...allCourses.value]);
+	const courses = ref<CourseResponse[]>([...allCourses.value]);
 
 	/** 跳转到添加课程页面 */
 	const goToAddCourse = () => {
@@ -111,7 +99,7 @@
 	};
 
 	/** 点击课程卡片，跳转到课程详情 */
-	const handleCourseClick = (item: Course) => {
+	const handleCourseClick = (item: CourseResponse) => {
 		console.log("点击了课程：", item);
 		// 这里可以写跳转逻辑，例如：
 		// uni.navigateTo({ url: `/pages/course/detail?id=${item.id}` })

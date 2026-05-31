@@ -43,3 +43,17 @@ interface ClassScheduleListResponse {
 	classSchedules: ClassScheduleResponse[];
 	total: number;
 }
+
+interface UpdateClassScheduleRequest {
+	id: number;
+	dayOfWeek: number;
+	startDate: string;
+	endDate: string;
+	startTime: string;
+	endTime: string;
+	remark?: string;
+}
+
+interface UpdateClassScheduleResponse {
+	classSchedules: ClassScheduleResponse[];
+}

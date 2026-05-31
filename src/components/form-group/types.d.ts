@@ -35,6 +35,7 @@ interface FormItemConfig {
 	 * - textarea: 多行文本域
 	 * - number: 数字输入框（type=number 的 input）
 	 * - radio: 单选按钮组，需配合 options 使用
+	 * - select: 下拉选择器，需配合 options 使用，在多个选项中选择一个
 	 * - date: 日期选择器（picker mode=date）
 	 * - time: 时间选择器（picker mode=time）
 	 * - picker: 点击跳转选择器，点击整行触发 pickerTap 事件，由父组件处理跳转逻辑
@@ -48,6 +49,7 @@ interface FormItemConfig {
 		| "textarea"
 		| "number"
 		| "radio"
+		| "select"
 		| "date"
 		| "time"
 		| "picker"
@@ -89,8 +91,8 @@ interface FormItemConfig {
 	itemClass?: string;
 
 	/**
-	 * radio 类型的选项列表
-	 * 仅 type 为 "radio" 时需要提供
+	 * radio / select 类型的选项列表
+	 * 仅 type 为 "radio" 或 "select" 时需要提供
 	 */
 	options?: FormItemOption[];
 

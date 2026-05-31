@@ -134,6 +134,40 @@
 				</radio-group>
 			</view>
 
+			<!-- ========== type: select — 下拉选择器 ==========
+			     使用 picker mode=selector 实现下拉选择
+			     options 数组提供选项列表，选中值通过 onSelectChange 写入 modelValue
+			     显示当前选中项的 label 文本，未选择时显示 placeholder -->
+			<view
+				v-else-if="item.type === 'select'"
+				class="form-item"
+				:class="[item.itemClass, getItemClass(item)]"
+			>
+				<text class="label"
+					>{{ item.label
+					}}<text v-if="item.required" class="required">*</text></text
+				>
+				<picker
+					mode="selector"
+					:range="item.options"
+					range-key="label"
+					:value="getSelectIndex(item)"
+					@change="onSelectChange(item, $event)"
+				>
+					<view class="picker-value-wrapper">
+						<text
+							:class="[
+								'picker-value',
+								getValue(item.key) === '' && 'placeholder',
+							]"
+						>
+							{{ getSelectLabel(item) || item.placeholder || "请选择" }}
+						</text>
+						<uni-icons type="right" size="14" color="#ccc"></uni-icons>
+					</view>
+				</picker>
+			</view>
+
 			<!-- ========== type: date — 日期选择器 ==========
 			     column 为 true 时使用带日历图标的 input-box 纵向布局
 			     column 为 false 时使用行内 picker-value 样式 -->
@@ -442,7 +476,11 @@
 			return item.emptyText || "未填写";
 		}
 
-		// 核心改动：如果配置项里有自定义的 format 转换函数，则用它格式化
+		if (item.type === "select" && item.options) {
+			const matched = item.options.find((opt) => opt.value === val);
+			if (matched) return matched.label || matched.name || String(val);
+		}
+
 		if (typeof item.format === "function") {
 			return item.format(val);
 		}
@@ -457,6 +495,45 @@
 	 */
 	const onRadioChange = (item: FormItemConfig, e: any): void => {
 		setValue(item.key, Number(e.detail.value));
+	};
+
+	/**
+	 * 获取 select 类型当前选中项在 options 中的索引
+	 * picker mode=selector 需要传入索引值来定位选中项
+	 * @param item - 表单项配置
+	 * @returns 选中项的索引，未匹配时返回 -1
+	 */
+	const getSelectIndex = (item: FormItemConfig): number => {
+		const val = getValue(item.key);
+		if (val === "" || val === undefined || val === null) return -1;
+		return (item.options || []).findIndex((opt) => opt.value === val);
+	};
+
+	/**
+	 * 获取 select 类型当前选中项的显示文本
+	 * 根据 modelValue 中的值匹配 options 中的 label
+	 * @param item - 表单项配置
+	 * @returns 选中项的 label 文本，未匹配时返回空字符串
+	 */
+	const getSelectLabel = (item: FormItemConfig): string => {
+		const val = getValue(item.key);
+		if (val === "" || val === undefined || val === null) return "";
+		const matched = (item.options || []).find((opt) => opt.value === val);
+		return matched ? matched.label || matched.name || "" : "";
+	};
+
+	/**
+	 * select 下拉选择器变更事件处理
+	 * picker mode=selector 返回选中项的索引，通过索引从 options 中取出对应的 value 写入
+	 * @param item - 触发变更的表单项配置
+	 * @param e - picker 的 change 事件对象，e.detail.value 为选中项索引
+	 */
+	const onSelectChange = (item: FormItemConfig, e: any): void => {
+		const idx = e.detail.value;
+		const options = item.options || [];
+		if (idx >= 0 && idx < options.length) {
+			setValue(item.key, options[idx].value);
+		}
 	};
 
 	/**

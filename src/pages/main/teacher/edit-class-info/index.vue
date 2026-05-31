@@ -197,6 +197,7 @@
 					key: "className",
 					label: "班级名称",
 					type: "input",
+					inputAlign: "right",
 					required: true,
 					placeholder: "请输入班级名称",
 				},

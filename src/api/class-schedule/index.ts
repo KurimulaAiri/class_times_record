@@ -37,4 +37,16 @@ const getClassScheduleByInstitutionId = async (
 	return res;
 };
 
-export { getClassScheduleByClassId, getClassScheduleByInstitutionId };
+const updateClassScheduleById = async (
+	query: UpdateClassScheduleRequest,
+): Promise<UpdateClassScheduleResponse> => {
+	return (
+		await post<UpdateClassScheduleResponse>(`/class_schedule/update_by_id`, query)
+	).data;
+};
+
+export {
+	getClassScheduleByClassId,
+	getClassScheduleByInstitutionId,
+	updateClassScheduleById,
+};
