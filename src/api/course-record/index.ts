@@ -9,13 +9,21 @@ import { post } from "@/utils/request";
 const getCourseRecordList = async (
 	data: GetCourseRecordListRequest,
 ): Promise<CourseRecordResponse[]> => {
-	let courseList: CourseRecordResponse[] = [];
-	await post<CourseRecordListResponse>("/course_record/new_get", data).then(
-		(res) => {
-			courseList = res.data.courseRecords;
-		},
+	const res = await post<CourseRecordListResponse>(
+		"/course_record/new_get",
+		data,
 	);
-	return courseList;
+	return res.data.courseRecords;
+};
+
+const getCourseRecordListByStudentId = async (
+	data: GetCourseRecordListByStudentIdRequest,
+): Promise<CourseRecordResponse[]> => {
+	const res = await post<CourseRecordListResponse>(
+		"/course_record/get_by_student_id",
+		data,
+	);
+	return res.data.courseRecords;
 };
 
 const insertCourseRecord = async (
@@ -40,10 +48,12 @@ const insertCourseRecord = async (
  */
 const deductByStudentId = async (
 	data: FastDeductRequest & { mode: "student" },
-): Promise<any> => {
-	await post<any>("/course_record/deduct_by_student_id", data).then((res) => {
-		return res.data;
-	});
+): Promise<FastDeductResponse> => {
+	const res = await post<FastDeductResponse>(
+		"/course_record/deduct_by_student_id",
+		data,
+	);
+	return res.data;
 };
 
 /**
@@ -53,10 +63,17 @@ const deductByStudentId = async (
  */
 const deductByCourseId = async (
 	data: FastDeductRequest & { mode: "course" },
-): Promise<any> => {
-	await post<any>("/course_record/deduct_by_course_id", data).then((res) => {
-		return res.data;
-	});
+): Promise<FastDeductResponse> => {
+	return (
+		await post<FastDeductResponse>("/course_record/deduct_by_course_id", data)
+	).data;
+};
+
+const updateCourseRecordById = async (
+	form: UpdateCourseRecordRequest,
+): Promise<number> => {
+	const res = await post<number>("/course_record/update", form);
+	return res.data;
 };
 
 export {
@@ -64,4 +81,6 @@ export {
 	deductByStudentId,
 	deductByCourseId,
 	insertCourseRecord,
+	getCourseRecordListByStudentId,
+	updateCourseRecordById,
 };

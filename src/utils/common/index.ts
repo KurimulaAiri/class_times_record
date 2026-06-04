@@ -38,7 +38,7 @@ const jump = (
 		console.error(
 			`[Jump Error]: 路径 "${targetPath}" 不在 pages.json 路由定义中`,
 		);
-		showToast("跳转路径错误", "error");
+		showToast({ msg: "跳转路径错误", icon: "error" });
 		return; // 拦截跳转
 	}
 
@@ -92,19 +92,46 @@ const jump = (
 
 /**
  * 显示消息提示
- * @param msg 提示文字
- * @param icon 图标类型，默认 none
- * @param duration 显示时长（毫秒），默认 2000
- * @param mask 是否显示透明蒙层，防止触摸穿透，默认 false
+ * @param msgOrOptions 提示文字，或包含完整配置的 ToastOptions 对象
+ * @param icon 图标类型（位置参数兼容模式），默认 none
+ * @param duration 显示时长（位置参数兼容模式），默认 2000
+ * @param mask 是否显示透明蒙层（位置参数兼容模式），默认 false
  */
 const showToast = (
-	msg: string,
-	icon: "none" | "success" | "loading" | "error" = "none",
-	duration: number = 2000,
-	mask: boolean = false,
+	msgOrOptions: string | ToastOptions,
+	icon?: "none" | "success" | "loading" | "error",
+	duration?: number,
+	mask?: boolean,
 ) => {
+	let msg: string;
+	let _icon: "none" | "success" | "loading" | "error" = "none";
+	let _duration = 2000;
+	let _mask = false;
+	let callback: (() => void) | undefined;
+
+	if (typeof msgOrOptions === "string") {
+		msg = msgOrOptions;
+		_icon = icon ?? "none";
+		_duration = duration ?? 2000;
+		_mask = mask ?? false;
+	} else {
+		msg = msgOrOptions.msg;
+		_icon = msgOrOptions.icon ?? "none";
+		_duration = msgOrOptions.duration ?? 2000;
+		_mask = msgOrOptions.mask ?? false;
+		callback = msgOrOptions.callback;
+	}
+
 	setTimeout(() => {
-		uni.showToast({ title: msg, icon, duration, mask });
+		uni.showToast({
+			title: msg,
+			icon: _icon,
+			duration: _duration,
+			mask: _mask,
+		});
+		if (callback) {
+			callback();
+		}
 	}, 200);
 };
 

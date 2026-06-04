@@ -40,6 +40,11 @@ export const ROUTES = {
 	ADD_COURSE_RECORD: "/pages/main/teacher/add-course-record/index", // 教师端添加学生课程
 	EDIT_CLASS_SCHEDULE_INFO:
 		"/pages/main/teacher/edit-class-schedule-info/index", // 教师端编辑班级课表
+	SELECT_COURSE_RECORD: "/pages/main/teacher/select-course-record/index", // 教师端选择学生课程
+	MANAGE_COURSE_RECORD: "/pages/main/teacher/manage-course-record/index", // 教师端管理学生课程
+	EDIT_COURSE_RECORD_INFO: "/pages/main/teacher/edit-course-record-info/index", // 教师端编辑学生课程信息
+	MANAGE_TEACHER: "/pages/main/teacher/manage-teacher/index", // 教师端管理老师
+	USER_PROFILE: "/pages/main/teacher/user-profile/index", // 教师端用户信息
 } as const;
 
 export type PagePath = (typeof ROUTES)[keyof typeof ROUTES];

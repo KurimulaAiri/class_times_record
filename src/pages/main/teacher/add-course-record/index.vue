@@ -119,23 +119,23 @@
 
     const validate = () => {
         if (!insertForm.value.studentId || insertForm.value.studentId <= 0) {
-            showToast("当前学生身份未就绪，请返回重试", "none");
+            showToast({ msg: "当前学生身份未就绪，请返回重试", icon: "none" });
             return false;
         }
         if (!insertForm.value.courseId || insertForm.value.courseId === 0) {
-            showToast("请选择课程", "none");
+            showToast({ msg: "请选择课程", icon: "none" });
             return false;
         }
         if (insertForm.value.courseRestTime <= 0) {
-            showToast("请输入正确的剩余课时", "none");
+            showToast({ msg: "请输入正确的剩余课时", icon: "none" });
             return false;
         }
         if (insertForm.value.courseTotalTime <= 0) {
-            showToast("请输入正确的总课时", "none");
+            showToast({ msg: "请输入正确的总课时", icon: "none" });
             return false;
         }
         if (insertForm.value.courseRestTime > insertForm.value.courseTotalTime) {
-            showToast("剩余课时不能大于总课时", "none");
+            showToast({ msg: "剩余课时不能大于总课时", icon: "none" });
             return false;
         }
         return true;
@@ -149,10 +149,10 @@
         const res = await insertCourseRecord(insertForm.value);
 
         if (res) {
-            showToast("添加成功", "success");
+            showToast({ msg: "添加成功", icon: "success" });
             uni.navigateBack();
         } else {
-            showToast("添加失败", "none");
+            showToast({ msg: "添加失败", icon: "none" });
         }
     };
 

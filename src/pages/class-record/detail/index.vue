@@ -179,7 +179,7 @@
 				// 调用后端接口，将此课程记录关联到当前登录用户的账户下
 				post("/permission_record/bind", bindForm.value).then((res) => {
 					if (res.code === 200) {
-						showToast("已保存至我的课程", "success");
+						showToast({ msg: "已保存至我的课程", icon: "success" });
 						// 绑定成功后，重新加载数据
 						queryForm.value.courseRecordId = shareId;
 
@@ -270,7 +270,7 @@
 					}
 				} else {
 					loadStatus.value = "more";
-					showToast(res.message || "获取记录失败");
+					showToast({ msg: res.message || "获取记录失败" });
 				}
 			})
 			.catch((e) => {

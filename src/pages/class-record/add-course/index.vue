@@ -81,20 +81,20 @@
 	const submit = () => {
 		console.log(data.value);
 		if (data.value.stuName === "") {
-			showToast("请输入学生姓名", "none");
+			showToast({ msg: "请输入学生姓名", icon: "none" });
 			return;
 		}
 		console.log(data.value.stuName);
 		if (data.value.courseName === "") {
-			showToast("请输入课程名称", "none");
+			showToast({ msg: "请输入课程名称", icon: "none" });
 			return;
 		}
 		if (data.value.courseTotalTime === null) {
-			showToast("请输入总课时");
+			showToast({ msg: "请输入总课时" });
 			return;
 		}
 		if (data.value.courseRestTime === null) {
-			showToast("请输入剩余课时");
+			showToast({ msg: "请输入剩余课时" });
 			return;
 		}
 
@@ -102,24 +102,24 @@
 		const numReg = /^\d+$/;
 
 		if (!numReg.test(data.value.courseTotalTime?.toString() || "")) {
-			showToast("总课时必须是正整数", "none");
+			showToast({ msg: "总课时必须是正整数", icon: "none" });
 			return;
 		}
 
 		if (!numReg.test(data.value.courseRestTime?.toString() || "")) {
-			showToast("剩余课时必须是正整数");
+			showToast({ msg: "剩余课时必须是正整数" });
 			return;
 		}
 
 		post("/course_record/add", data.value).then((res) => {
 			console.log("添加课程响应:", res);
 			if (res.code === 200) {
-				showToast("添加成功", "success");
+				showToast({ msg: "添加成功", icon: "success" });
 				uni.navigateBack({
 					delta: 1,
 				});
 			} else {
-				showToast(res.message);
+				showToast({ msg: res.message });
 			}
 		});
 	};

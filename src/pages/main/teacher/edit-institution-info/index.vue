@@ -66,11 +66,11 @@
 			institutionAddress: institution.value.institutionAddress,
 		});
 		if (res.result !== 0) {
-			showToast("更新成功");
+			showToast({ msg: "更新成功" });
 			uni.$emit("needRefresh");
 			uni.navigateBack();
 		} else {
-			showToast("更新失败");
+			showToast({ msg: "更新失败" });
 		}
 	};
 </script>

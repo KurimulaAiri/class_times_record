@@ -313,7 +313,7 @@
 								students: studentList,
 							});
 							if (result !== 0) {
-								showToast("添加成功", "success");
+								showToast({ msg: "添加成功", icon: "success" });
 								if (classDetail.value?.id) {
 									const res = await getClassByClassId(
 										classDetail.value?.id || 0,
@@ -326,7 +326,7 @@
 									};
 								}
 							} else {
-								showToast("添加失败");
+								showToast({ msg: "添加失败" });
 							}
 							await loadStudentList();
 						} else if (res.cancel) {
@@ -426,7 +426,7 @@
 									});
 									if (result !== 0) {
 										setTimeout(() => {
-											showToast("移除成功", "success", 2000);
+											showToast({ msg: "移除成功", icon: "success", duration: 2000 });
 										}, 200);
 										if (classDetail.value?.id) {
 											const res = await getClassByClassId(

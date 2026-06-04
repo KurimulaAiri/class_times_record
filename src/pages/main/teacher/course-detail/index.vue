@@ -49,15 +49,8 @@
 		courseName: "",
 		courseType: 0,
 		isAvailable: false,
-		institution: {
-			id: 0,
-			institutionName: "",
-			institutionAddress: "",
-			institutionCode: "",
-			status: 0,
-			createTimeStr: "",
-			updateTimeStr: "",
-		},
+		institution: {} as InstitutionResponse,
+		currentStudentCourseRecord: {} as CourseRecordResponse,
 	});
 
 	usePageData<CourseResponse>((rawCourse) => {

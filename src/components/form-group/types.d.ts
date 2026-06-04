@@ -12,11 +12,10 @@ interface FormItemOption {
 }
 
 /**
- * 表单项配置
- * 描述 FormGroup 内每一行的渲染方式，支持 11 种类型
- * 通过 type 字段区分渲染不同的表单控件
+ * 1. 基础表单项配置 (公共字段)
+ * 提取所有类型通用的共有属性
  */
-interface FormItemConfig {
+interface BaseFormItemConfig {
 	/**
 	 * 字段路径，对应 modelValue 中的属性名
 	 * 支持点号嵌套访问，如 "primaryParent.username" 会读取 modelValue.primaryParent.username
@@ -28,35 +27,6 @@ interface FormItemConfig {
 	 * 在 display 模式下作为 info-item 的 label
 	 */
 	label: string;
-
-	/**
-	 * 表单项类型，决定渲染哪种控件：
-	 * - input: 文本输入框
-	 * - textarea: 多行文本域
-	 * - number: 数字输入框（type=number 的 input）
-	 * - radio: 单选按钮组，需配合 options 使用
-	 * - select: 下拉选择器，需配合 options 使用，在多个选项中选择一个
-	 * - date: 日期选择器（picker mode=date）
-	 * - time: 时间选择器（picker mode=time）
-	 * - picker: 点击跳转选择器，点击整行触发 pickerTap 事件，由父组件处理跳转逻辑
-	 * - stepper: 数字步进器（+/- 按钮调节数值）
-	 * - avatar: 头像选择，点击触发 uni.chooseImage
-	 * - text: 纯文本展示（仅 display 模式有效）
-	 * - slot: 具名插槽，渲染 #key 插槽内容，用于完全自定义的表单项
-	 */
-	type:
-		| "input"
-		| "textarea"
-		| "number"
-		| "radio"
-		| "select"
-		| "date"
-		| "time"
-		| "picker"
-		| "stepper"
-		| "avatar"
-		| "text"
-		| "slot";
 
 	/** 是否必填，为 true 时在 label 后显示红色 * 标记 */
 	required?: boolean;
@@ -89,12 +59,6 @@ interface FormItemConfig {
 
 	/** 额外的自定义 CSS 类名，会追加到 form-item 或 info-item 的 class 上 */
 	itemClass?: string;
-
-	/**
-	 * radio / select 类型的选项列表
-	 * 仅 type 为 "radio" 或 "select" 时需要提供
-	 */
-	options?: FormItemOption[];
 
 	/** 输入框最大字符长度限制 */
 	maxLength?: number;
@@ -132,40 +96,54 @@ interface FormItemConfig {
 	format?: (value: any) => string;
 	/** 格式化函数的参数，用于自定义格式化 */
 	formatParams?: any;
+
+	/** radio / select 类型的选项列表 */
+	options?: FormItemOption[];
 }
 
 /**
- * 表单分组配置
- * 描述 FormPage 中每个 FormGroup 的渲染参数
- * 每个分组包含标题、样式、模式和表单项列表
+ * 2. 针对特定 type 扩展其特有字段
+ */
+
+// 只有 number 类型才拥有 allowNegative 属性
+interface NumberFormItemConfig extends BaseFormItemConfig {
+	type: "number";
+	/** 是否允许输入负数，仅在 type 为 number 时有效 */
+	allowNegative?: boolean;
+}
+
+// 其他不需要 allowNegative 的常规类型配置
+interface OtherFormItemConfig extends BaseFormItemConfig {
+	type:
+		| "input"
+		| "textarea"
+		| "radio"
+		| "select"
+		| "date"
+		| "time"
+		| "picker"
+		| "stepper"
+		| "avatar"
+		| "text"
+		| "slot";
+
+	// 显式禁止其他类型传入 allowNegative（设为 never 类型）
+	allowNegative?: never;
+}
+
+/**
+ * 3. 最终组合的表单项配置联合类型
+ * 通过辨识属性 'type' 自动推导对应的细分接口
+ */
+type FormItemConfig = NumberFormItemConfig | OtherFormItemConfig;
+
+/**
+ * 表单分组配置保持不变
  */
 interface FormGroupConfig {
-	/**
-	 * 分组标题文本
-	 * 为空字符串或不传则不显示标题栏
-	 */
 	title?: string;
-
-	/**
-	 * 标题样式风格：
-	 * - "theme": 主题色标题（绿色文字 + 8rpx 宽装饰条），适用于学生相关页面
-	 * - "dark": 深色标题（#333 文字 + 6rpx 窄装饰条），适用于班级相关页面
-	 */
 	titleStyle?: "theme" | "dark";
-
-	/**
-	 * 分组模式：
-	 * - "edit": 编辑模式，渲染可交互的表单控件（input/radio/picker 等）
-	 * - "display": 展示模式，渲染只读的 info-item（label + value 两端对齐）
-	 */
 	mode?: "edit" | "display";
-
-	/** 标题后是否显示红色 * 必填标记 */
 	required?: boolean;
-
-	/**
-	 * 分组内的表单项配置列表
-	 * 为空数组或不传时，分组只渲染标题和默认插槽，适用于完全自定义内容的场景
-	 */
 	items?: FormItemConfig[];
 }

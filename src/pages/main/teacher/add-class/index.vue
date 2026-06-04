@@ -321,41 +321,41 @@
 
     /** 提交创建班级表单 */
     const submitForm = async () => {
-        if (!form.value.className) return showToast("请输入班级名称");
-        if (!form.value.courseId) return showToast("请关联课程");
+        if (!form.value.className) return showToast({ msg: "请输入班级名称" });
+        if (!form.value.courseId) return showToast({ msg: "请关联课程" });
         if (!form.value.teachers || form.value.teachers.length === 0) {
-            return showToast("请至少选择一位班级教师");
+            return showToast({ msg: "请至少选择一位班级教师" });
         }
         if (!form.value.schedules || form.value.schedules.length === 0) {
-            return showToast("请至少添加一组上课日程");
+            return showToast({ msg: "请至少添加一组上课日程" });
         }
 
         for (let i = 0; i < form.value.schedules.length; i++) {
             const item = form.value.schedules[i];
             const prefix = `第 ${i + 1} 组时段: `;
 
-            if (item.dayOfWeek === 0) return showToast(`${prefix}请选择上课周期`);
-            if (!item.startDate || !item.endDate) return showToast(`${prefix}请补全有效日期`);
-            if (!item.startTime || !item.endTime) return showToast(`${prefix}请补全具体上课时间`);
+            if (item.dayOfWeek === 0) return showToast({ msg: `${prefix}请选择上课周期` });
+            if (!item.startDate || !item.endDate) return showToast({ msg: `${prefix}请补全有效日期` });
+            if (!item.startTime || !item.endTime) return showToast({ msg: `${prefix}请补全具体上课时间` });
 
             const startDateTime = new Date(item.startDate).getTime();
             const endDateTime = new Date(item.endDate).getTime();
 
             if (endDateTime < startDateTime) {
-                return showToast(`${prefix}结束日期不能早于开始日期`);
+                return showToast({ msg: `${prefix}结束日期不能早于开始日期` });
             }
             if (item.endTime <= item.startTime) {
-                return showToast(`${prefix}结束时间必须大于开始时间`);
+                return showToast({ msg: `${prefix}结束时间必须大于开始时间` });
             }
         }
 
         console.log("最终提交安全完整的班级报文:", JSON.parse(JSON.stringify(form.value)));
         const res = await insertClass(form.value);
         if (res) {
-            showToast("班级创建成功", "success");
+            showToast({ msg: "班级创建成功", icon: "success" });
             uni.navigateBack();
         } else {
-            showToast("班级创建失败", "none");
+            showToast({ msg: "班级创建失败", icon: "none" });
         }
     };
 </script>

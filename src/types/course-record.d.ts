@@ -1,6 +1,5 @@
 interface CourseRecordResponse {
 	courseLastTimeStr: string;
-	courseName: string;
 	courseOwnerUserId: number;
 	courseRemark: string;
 	courseRestTime: number;
@@ -10,8 +9,8 @@ interface CourseRecordResponse {
 	id: number;
 	isDelete: boolean;
 	permissionType: number;
-	stuName: string;
 	updateTimeStr: string;
+	course: CourseResponse;
 }
 
 interface InsertCourseRecordRequest {
@@ -29,10 +28,22 @@ type CourseRecordListResponse = {
 
 type GetCourseRecordListRequest = {
 	studentId: number;
-	stuName: string;
-	courseName: string;
-	courseRemark: string;
-	courseStatus: number | null;
+	stuName?: string;
+	courseName?: string;
+	courseRemark?: string;
+	courseStatus?: number | null;
 	currentPage: number;
 	pageSize: number;
 };
+
+type GetCourseRecordListByStudentIdRequest = {
+	studentId: number;
+	currentPage: number;
+	pageSize: number;
+};
+
+interface UpdateCourseRecordRequest {
+	id: number;
+	courseRestTime: number;
+	courseTotalTime: number;
+}

@@ -110,7 +110,7 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 							if (responseData.code === 200) {
 								resolve(responseData as T);
 							} else {
-								showToast(responseData.message || "业务逻辑错误", "none");
+								showToast({ msg: responseData.message || "业务逻辑错误", icon: "none" });
 								reject(responseData as T);
 							}
 							break;
@@ -128,15 +128,15 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 							);
 							break;
 						case 404:
-							showToast("资源不存在 (404)", "none");
+							showToast({ msg: "资源不存在 (404)", icon: "none" });
 							reject(res as T);
 							break;
 						case 500:
-							showToast("服务器开小差了 (500)", "none");
+							showToast({ msg: "服务器开小差了 (500)", icon: "none" });
 							reject(res as T);
 							break;
 						default:
-							showToast(`${responseData.message || "未知错误"}`, "none");
+							showToast({ msg: `${responseData.message || "未知错误"}`, icon: "none" });
 							reject(res as T);
 							break;
 					}
@@ -146,7 +146,7 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 					if (err.errMsg.includes("timeout")) {
 						errMsg = "请求超时，请稍后重试";
 					}
-					showToast(errMsg, "none");
+					showToast({ msg: errMsg, icon: "none" });
 
 					reject(err);
 				},
@@ -186,7 +186,7 @@ const handle401 = (
 	if (url === "/auth/refresh") {
 		uni.removeStorageSync("accessToken");
 		uni.removeStorageSync("refreshToken");
-		showToast("登录过期，请重新登录", "none");
+		showToast({ msg: "登录过期，请重新登录", icon: "none" });
 		setTimeout(() => {
 			uni.reLaunch({ url: "/pages/index/index" });
 		}, 1500);
@@ -202,7 +202,7 @@ const handle401 = (
 		if (!refreshToken) {
 			isRefreshing = false;
 			uni.removeStorageSync("accessToken");
-			showToast("登录过期，请重新登录", "none");
+			showToast({ msg: "登录过期，请重新登录", icon: "none" });
 			setTimeout(() => {
 				uni.reLaunch({ url: "/pages/index/index" });
 			}, 1500);
@@ -232,7 +232,7 @@ const handle401 = (
 				} else {
 					uni.removeStorageSync("accessToken");
 					uni.removeStorageSync("refreshToken");
-					showToast("登录过期，请重新登录", "none");
+					showToast({ msg: "登录过期，请重新登录", icon: "none" });
 					setTimeout(() => {
 						uni.reLaunch({ url: "/pages/index/index" });
 					}, 1500);
@@ -243,7 +243,7 @@ const handle401 = (
 				isRefreshing = false;
 				uni.removeStorageSync("accessToken");
 				uni.removeStorageSync("refreshToken");
-				showToast("登录过期，请重新登录", "none");
+				showToast({ msg: "登录过期，请重新登录", icon: "none" });
 				setTimeout(() => {
 					uni.reLaunch({ url: "/pages/index/index" });
 				}, 1500);
@@ -303,7 +303,7 @@ const retryRequest = (
 			if (res.statusCode === 200 && responseData.code === 200) {
 				resolve(responseData);
 			} else {
-				showToast(responseData.message || "请求失败", "none");
+				showToast({ msg: responseData.message || "请求失败", icon: "none" });
 
 				reject(responseData);
 			}

@@ -43,7 +43,8 @@
 										size="30"
 										color="#92dcd3"
 									></uni-icons>
-									<div class="name">{{ item.stuName }}</div>
+									<!-- 这里应该是学生的名称，但是因为数据库中已经不存stuName这个字段，需要的话需要修改后端接口返回，暂不修改 -->
+									<div class="name">{{ item.course.courseName || "无课程" }}</div>
 									<div class="status">
 										{{ item.courseStatus === 1 ? "" : "已完成" }}
 									</div>
@@ -269,15 +270,15 @@
 						}).then((res) => {
 							console.log("删除响应:", res);
 							if (res.code === 200) {
-								showToast("删除成功", "success");
+								showToast({ msg: "删除成功", icon: "success" });
 								getData(true); // 刷新数据
 							} else {
-								showToast(res.message || "删除失败");
+								showToast({ msg: res.message || "删除失败" });
 							}
 						});
 						break;
 					default:
-						showToast("未知操作");
+						showToast({ msg: "未知操作" });
 						break;
 				}
 			},

@@ -108,6 +108,14 @@
 		},
 		{
 			id: 102,
+			menuName: "管理老师",
+			icon: "person",
+			iconType: 1,
+			path: ROUTES.MANAGE_TEACHER,
+			isVisible: true,
+		},
+		{
+			id: 103,
 			menuName: "一对一约课",
 			icon: "person",
 			iconType: 1,
@@ -115,7 +123,7 @@
 			isVisible: false,
 		},
 		{
-			id: 103,
+			id: 104,
 			menuName: "我的地推码",
 			icon: "scan",
 			iconType: 1,
@@ -133,10 +141,12 @@
 		console.log("点击了操作:", type);
 
 		switch (type) {
+			case "profile":
+				jump(ROUTES.USER_PROFILE);
+				break;
 			case "school":
 				jump(ROUTES.INSTITUTION_DETAIL);
 				break;
-
 			case "switch":
 				// 切换账号逻辑
 				uni.showModal({
@@ -149,7 +159,6 @@
 					},
 				});
 				break;
-
 			case "logout":
 				uni.showModal({
 					title: "退出登录",
@@ -162,7 +171,6 @@
 					},
 				});
 				break;
-
 			default:
 				break;
 		}

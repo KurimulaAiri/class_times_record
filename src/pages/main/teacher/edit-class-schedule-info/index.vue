@@ -31,9 +31,14 @@
 				endTime: currentSchedule.value.endTimeStr,
 			});
 			if (res.classSchedules.length > 0) {
-				showToast("更新成功");
-				uni.navigateBack();
-                uni.$emit("needRefresh");
+				showToast({
+					msg: "更新成功",
+					icon: "success",
+					callback: () => {
+						uni.navigateBack();
+						uni.$emit("needRefresh");
+					},
+				});
 			}
 		}
 	};

@@ -84,7 +84,13 @@
 				v-if="selectedList.length > 0"
 				info="已选 {{count}} 个班级"
 				:count="selectedList.length"
-				:buttons="[{ text: '确认选择', type: 'primary', disabled: selectedList.length === 0 }]"
+				:buttons="[
+					{
+						text: '确认选择',
+						type: 'primary',
+						disabled: selectedList.length === 0,
+					},
+				]"
 				@btnClick="handleMultiConfirm"
 			></PageFooter>
 
@@ -169,10 +175,10 @@
 	/** 当前激活的筛选条件 */
 	const activeFilters = ref({
 		scope: 1,
-		status: 1,
+		status: -1,
 	});
-/** 处理筛选条件变更 */
-	
+	/** 处理筛选条件变更 */
+
 	const handleFilterChange = () => {
 		loadData(true);
 	};
@@ -197,6 +203,7 @@
 						? teacherId.value
 						: institutionId.value,
 				keyword: searchKeyword.value,
+				classStatus: activeFilters.value.status,
 			});
 
 			const classList = res.classList;

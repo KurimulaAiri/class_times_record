@@ -21,15 +21,8 @@
 		id: 0,
 		courseType: 1,
 		isAvailable: true,
-		institution: {
-			id: 0,
-			institutionName: "",
-			institutionAddress: "",
-			institutionCode: "",
-			status: 0,
-			createTimeStr: "",
-			updateTimeStr: "",
-		},
+		institution: {} as InstitutionResponse,
+		currentStudentCourseRecord: {} as CourseRecordResponse,
 		courseName: "",
 	});
 
@@ -63,7 +56,7 @@
 	/** 提交创建课程表单 */
 	const submitForm = async () => {
 		if (!form.value.courseName) {
-			showToast("请输入课程名称");
+			showToast({ msg: "请输入课程名称" });
 			return;
 		}
 
@@ -81,12 +74,12 @@
 				setTimeout(() => {
 					uni.navigateBack();
 				}, 1000);
-				showToast("信息保存成功", "success");
+				showToast({ msg: "信息保存成功", icon: "success" });
 			} else {
-				showToast("信息保存失败", "error");
+				showToast({ msg: "信息保存失败", icon: "error" });
 			}
 		} catch (error) {
-			showToast("信息保存失败", "error");
+			showToast({ msg: "信息保存失败", icon: "error" });
 		}
 	};
 </script>

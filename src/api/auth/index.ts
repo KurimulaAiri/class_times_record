@@ -178,7 +178,7 @@ const logOut = (targetRoute: string = ROUTES.INDEX, params: any = null) => {
 	uni.removeStorageSync("refreshToken");
 	uni.removeStorageSync("openId");
 
-	showToast("正在退出...", "loading", 800, true);
+	showToast({ msg: "正在退出...", icon: "loading", duration: 800, mask: true });
 
 	setTimeout(() => {
 		const jumpType = targetRoute === ROUTES.INDEX ? "relaunch" : "navigate";

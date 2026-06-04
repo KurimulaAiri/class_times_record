@@ -63,7 +63,7 @@
 	onMounted(async () => {
 		// 1. 权限前置拦截
 		if (userStore.userInfo?.roleId !== 4) {
-			showToast("您不是教师，非法访问");
+			showToast({ msg: "您不是教师，非法访问" });
 			return jump(ROUTES.LOGIN);
 		}
 
@@ -94,7 +94,7 @@
 			await fetchMenus();
 		} catch (error) {
 			console.error("获取教师信息失败", error);
-			showToast("信息加载失败");
+			showToast({ msg: "信息加载失败" });
 		}
 	});
 

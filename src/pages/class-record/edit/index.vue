@@ -94,14 +94,14 @@
 			.then((res) => {
 				console.log("更新响应:", res);
 				if (res.code === 200) {
-					showToast("更新成功", "success");
+					showToast({ msg: "更新成功", icon: "success" });
 					uni.navigateBack();
 				} else {
-					showToast(res.message || "更新失败");
+					showToast({ msg: res.message || "更新失败" });
 				}
 			})
 			.catch(() => {
-				showToast("更新失败");
+				showToast({ msg: "更新失败" });
 			})
 			.finally(() => {
 				uni.hideLoading();

@@ -9,6 +9,7 @@ interface CourseResponse {
 	courseType: number;
 	isAvailable: boolean;
 	institution: InstitutionResponse;
+	currentStudentCourseRecord: CourseRecordResponse;
 }
 
 interface InsertCourseResponse {

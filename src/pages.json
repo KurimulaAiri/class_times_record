@@ -228,6 +228,36 @@
 					"style": {
 						"navigationBarTitleText": "编辑班级课表"
 					}
+				},
+				{
+					"path": "teacher/select-course-record/index",
+					"style": {
+						"navigationBarTitleText": "选择学生课程"
+					}
+				},
+				{
+					"path": "teacher/manage-course-record/index",
+					"style": {
+						"navigationBarTitleText": "学生课程管理"
+					}
+				},
+				{
+					"path": "teacher/edit-course-record-info/index",
+					"style": {
+						"navigationBarTitleText": "编辑学生课程信息"
+					}
+				},
+				{
+					"path": "teacher/user-profile/index",
+					"style": {
+						"navigationBarTitleText": "用户信息"
+									}
+				},
+				{
+					"path": "teacher/manage-teacher/index",
+					"style": {
+						"navigationBarTitleText": "教师管理"
+					}
 				}
 			]
 		},

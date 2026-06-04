@@ -38,8 +38,6 @@ interface GetClassListByStudentIdRequest {
 	pageSize: number;
 }
 
-
-
 interface GetClassListByInstitutionIdRequest {
 	classStatus: number;
 	institutionId: number;
@@ -75,6 +73,7 @@ interface StudentDeductRequest {
 
 type FastDeductRequest = {
 	remark: string;
+	recordTime: string;
 } & (
 	| {
 			mode: "student";
@@ -87,6 +86,10 @@ type FastDeductRequest = {
 			students: StudentDeductRequest[];
 	  }
 );
+
+type FastDeductResponse = {
+	res: number;
+};
 
 interface InsertClassRequest {
 	className: string;

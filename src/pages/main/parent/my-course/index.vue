@@ -17,7 +17,7 @@
 		<view class="card-list">
 			<view class="card" v-for="(item, index) in dataList" :key="index">
 				<view class="card-header">
-					<text class="course-name">{{ item.courseName }}</text>
+					<text class="course-name">{{ item.course.courseName }}</text>
 					<view
 						class="status-tag"
 						:class="{ warning: item.courseRestTime < 3 }"

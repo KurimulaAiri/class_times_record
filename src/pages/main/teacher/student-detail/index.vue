@@ -76,9 +76,9 @@
 			</template>
 
 			<template #group-title-extra-2>
-				<view class="group-right-action" @tap.stop="handleAddCourse">
-					<uni-icons type="plus" size="14" color="#70a9a2"></uni-icons>
-					<text class="action-text">添加课程</text>
+				<view class="group-right-action" @tap.stop="handleAdjustCourse">
+					<uni-icons type="compose" size="14" color="#70a9a2"></uni-icons>
+					<text class="action-text">调整课程</text>
 				</view>
 			</template>
 
@@ -92,6 +92,18 @@
 						<view class="info-item">
 							<text class="label">课程名称</text>
 							<text class="value highlight">{{ item.courseName }}</text>
+						</view>
+						<view class="info-item">
+							<text class="label">总课时</text>
+							<text class="value">{{
+								item.currentStudentCourseRecord.courseTotalTime
+							}}</text>
+						</view>
+						<view class="info-item">
+							<text class="label">剩余课时</text>
+							<text class="value">{{
+								item.currentStudentCourseRecord.courseRestTime
+							}}</text>
 						</view>
 					</view>
 				</view>
@@ -256,7 +268,7 @@
 	const handleGroupTitleTap = (groupIndex: number) => {
 		if (groupIndex === 2) {
 			// 如果点击了“报读课程”标题行的任意非按钮安全区域，也可以顺便触发跳转
-			handleAddCourse();
+			handleAdjustCourse();
 		}
 	};
 
@@ -271,7 +283,7 @@
 				if (err.errMsg.indexOf("cancel") !== -1) {
 					console.log("用户取消了拨打");
 				} else {
-					showToast("拨号失败");
+					showToast({ msg: "拨号失败" });
 				}
 			},
 		});
@@ -283,10 +295,10 @@
 		jump(ROUTES.EDIT_STUDENT_INFO_TEACHER);
 	};
 
-	/** 跳转到添加/选择课程页面 */
-	const handleAddCourse = () => {
-		console.log("点击了添加课程");
-		jump(ROUTES.ADD_COURSE_RECORD);
+	/** 跳转到选择学生课程页面 */
+	const handleAdjustCourse = () => {
+		console.log("点击了调整课程");
+		jump(ROUTES.SELECT_COURSE_RECORD, student.value);
 	};
 </script>
 

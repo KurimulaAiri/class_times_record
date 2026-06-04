@@ -79,6 +79,8 @@
 						:placeholder="item.placeholder"
 						placeholder-class="placeholder"
 						:maxlength="item.maxLength !== undefined ? item.maxLength : 140"
+						pattern="[0-9]*"
+						confirm-type="done"
 					/>
 				</view>
 			</view>
@@ -440,15 +442,44 @@
 
 	/**
 	 * input/number/stepper 输入事件处理
-	 * number 和 stepper 类型自动将输入值转为 Number 类型
+	 * number 和 stepper 类型自动将输入值转为纯数字，并过滤掉非数字字符
 	 * @param item - 触发输入的表单项配置
 	 * @param e - 输入事件对象，e.detail.value 为输入值
 	 */
-	const onInput = (item: FormItemConfig, e: any): void => {
+
+	const onInput = (item: FormItemConfig, e: any): any => {
 		let val = e.detail.value;
+
 		if (item.type === "number" || item.type === "stepper") {
-			val = val === "" ? "" : isNaN(Number(val)) ? val : Number(val);
+			let filteredVal = val;
+
+			if (item.allowNegative) {
+				// 允许负数逻辑：
+				// 1. 保留开头的负号
+				// 2. 移除后面所有的非数字字符
+				// 正则说明：如果第一位是 - 则保留，其余位置只留数字
+				filteredVal = val.replace(/(?!^-)[^\d]/g, "");
+
+				// 特殊情况处理：如果用户只输入了一个 "-"，过滤结果是 "-"
+				// 这在输入过程中是合法的，但在转 Number 时会变成 NaN
+			} else {
+				// 仅允许纯正整数
+				filteredVal = val.replace(/[^\d]/g, "");
+			}
+
+			// 写入局部变量并通知父组件
+			// 如果当前是 "-" 则暂存为字符串或 0，防止 Number("-") 导致数据污染
+			const numVal =
+				filteredVal === "" || filteredVal === "-"
+					? filteredVal
+					: Number(filteredVal);
+
+			setValue(item.key, numVal);
+
+			// 强行同步视图
+			return filteredVal;
 		}
+
 		setValue(item.key, val);
 	};
 

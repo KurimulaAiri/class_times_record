@@ -192,7 +192,7 @@
 					// 💡 过滤前后空格，防止用户误输入空格导致匹配失败
 					const inputCode = res.content.trim();
 					if (!inputCode) {
-						showToast("机构码不能为空");
+						showToast({ msg: "机构码不能为空" });
 						return;
 					}
 
@@ -214,21 +214,21 @@
 							if (existingIndex !== -1) {
 								// 1. 如果已经存在，直接将选择项指向它
 								selectIndex.value = existingIndex;
-								showToast("该机构已在列表中，已自动为你选中");
+								showToast({ msg: "该机构已在列表中，已自动为你选中" });
 							} else {
 								// 2. 如果不存在，才安全地推入新机构
 								institutionList.value.push(institution);
 								// 自动选中刚刚追加进去的最后一项
 								selectIndex.value = institutionList.value.length - 1;
-								showToast("添加成功");
+								showToast({ msg: "添加成功" });
 							}
 						} else {
-							showToast("机构码不存在");
+							showToast({ msg: "机构码不存在" });
 						}
 					} catch (error) {
 						uni.hideLoading();
 						console.error("添加机构失败:", error);
-						showToast("网络请求失败");
+						showToast({ msg: "网络请求失败" });
 					}
 				}
 			},
@@ -275,17 +275,17 @@
 	const validateForm = () => {
 		// 校验账号密码是否为空
 		if (!account.value || !password.value) {
-			showToast("请输入账号密码");
+			showToast({ msg: "请输入账号密码" });
 			return false;
 		}
 		// 校验是否勾选协议
 		if (!isAgree.value) {
-			showToast("请先阅读并同意《隐私条款》和《用户服务协议》");
+			showToast({ msg: "请先阅读并同意《隐私条款》和《用户服务协议》" });
 			return false;
 		}
 		// 💡 修正：如果强制要求选择机构，当索引为 -1 时拦截提示
 		if (selectIndex.value === -1) {
-			showToast("请展开并选择/添加要登录的机构");
+			showToast({ msg: "请展开并选择/添加要登录的机构" });
 			return false;
 		}
 		return true;
@@ -334,7 +334,7 @@
 				jump(ROUTES.MAIN_INDEX, role.value, "relaunch");
 			}
 		} else {
-			showToast("登录失败");
+			showToast({ msg: "登录失败" });
 		}
 	};
 </script>

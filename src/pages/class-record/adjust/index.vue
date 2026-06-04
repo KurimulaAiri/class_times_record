@@ -169,7 +169,7 @@
 	const confirmSelect = () => {
 		console.log("确认选择:", tempSelectIds.value);
 		if (tempSelectIds.value.length === 0) {
-			showToast("至少选择一门课程");
+			showToast({ msg: "至少选择一门课程" });
 			return;
 		}
 		console.log("tempSelectIds.value", tempSelectIds.value);
@@ -204,7 +204,7 @@
 	const toggleSelect = (id) => {
 		if (tempSelectIds.value.includes(id)) {
 			if (tempSelectIds.value.length === 1) {
-				showToast("至少选择一门课程");
+				showToast({ msg: "至少选择一门课程" });
 				return;
 			}
 			tempSelectIds.value = tempSelectIds.value.filter((item) => item !== id);
@@ -262,7 +262,7 @@
 			.catch((err) => {
 				loadStatus.value = "more";
 				console.log("获取课程记录失败:", err);
-				showToast(err.msg || "获取课程记录失败");
+				showToast({ msg: err.msg || "获取课程记录失败" });
 			})
 			.finally(() => {
 				uni.hideLoading();
@@ -323,7 +323,7 @@
 	/** 提交调课请求 */
 	const submit = () => {
 		if (record.value.recordChange === null) {
-			showToast("请输入课时调整");
+			showToast({ msg: "请输入课时调整" });
 			return;
 		}
 
@@ -332,7 +332,7 @@
 			isNaN(Number(record.value.recordChange)) ||
 			Number(record.value.recordChange) <= 0
 		) {
-			showToast("课时调整必须为正整数");
+			showToast({ msg: "课时调整必须为正整数" });
 			return;
 		}
 
@@ -343,12 +343,12 @@
 			.then((res) => {
 				console.log("提交后:", res);
 				if (res.code === 200) {
-					showToast("调整成功", "success");
+					showToast({ msg: "调整成功", icon: "success" });
 					uni.navigateBack({
 						delta: 1,
 					});
 				} else {
-					showToast(res.message);
+					showToast({ msg: res.message });
 				}
 			})
 			.finally(() => {
