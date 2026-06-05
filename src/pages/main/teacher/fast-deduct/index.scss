@@ -4,14 +4,43 @@ $primary-color: $theme-color; // 定义主题色
 	min-height: 100vh;
 	background-color: $default-background-color;
 	padding: 20rpx;
-	padding-bottom: 120rpx;
+	padding-bottom: 180rpx;
+}
+
+.section-title {
+	font-size: 28rpx;
+	color: #666;
+	margin: 30rpx 0 20rpx 10rpx;
 }
 
 .section {
 	background-color: #ffffff;
 	border-radius: 16rpx;
-	padding: 30rpx;
-	margin-bottom: 20rpx;
+	margin-bottom: 24rpx;
+
+	.section-item {
+		display: flex;
+		justify-content: space-between;
+		align-content: center;
+		align-items: center;
+		padding: 30rpx;
+		.label {
+			font-size: 28rpx;
+			color: #333333;
+			font-weight: 500;
+		}
+
+		.value {
+			font-size: 28rpx;
+			color: #333333;
+			font-weight: 500;
+		}
+
+		.remark-input {
+			font-size: 28rpx;
+			text-align: right;
+		}
+	}
 }
 
 // 升级：带有极致平滑滑动动画的胶囊选择组件
@@ -68,14 +97,7 @@ $primary-color: $theme-color; // 定义主题色
 	}
 }
 
-.section-title {
-	font-size: 28rpx;
-	color: #666;
-	margin: 30rpx 0 20rpx 10rpx;
-}
-
 .remark-section {
-	// 💡 新增：日期选择行样式
 	.date-picker-row {
 		display: flex;
 		justify-content: space-between;
@@ -83,44 +105,17 @@ $primary-color: $theme-color; // 定义主题色
 		padding-bottom: 24rpx;
 		border-bottom: 1rpx solid #f1f3f5; // 轻轻加一条横线与下方备注做视觉区隔
 		margin-bottom: 24rpx;
-
-		.label {
-			font-size: 28rpx;
-			color: #333333;
-			font-weight: 500;
-		}
-
-		.picker-value {
-			font-size: 28rpx;
-			color: $primary-color; // 日期使用主题色高亮，提示可点击
-			font-weight: bold;
-			display: flex;
-			align-items: center;
-
-			.arrow-icon {
-				font-size: 20rpx;
-				color: #b2b2b2;
-				margin-left: 10rpx;
-				transform: rotate(90deg); // 旋转箭头让它向下指
-			}
-		}
 	}
 
-	// 微调一下下方备注文本的间距
-	.remark-label {
-		font-size: 28rpx;
-		color: #333333;
-		font-weight: 500;
+	.picker-value {
+		display: flex;
+		align-items: center;
 	}
 
-	.remark-input {
-		width: 100%;
-		height: 160rpx;
-		background-color: #f9f9f9;
-		border-radius: 8rpx;
-		margin-top: 20rpx;
-		padding: 20rpx;
+	.picker-value-text {
 		font-size: 28rpx;
-		box-sizing: border-box;
+		color: $primary-color; // 日期使用主题色高亮，提示可点击
+		font-weight: bold;
+		margin-right: 10rpx;
 	}
 }

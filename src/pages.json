@@ -251,12 +251,26 @@
 					"path": "teacher/user-profile/index",
 					"style": {
 						"navigationBarTitleText": "用户信息"
-									}
+					}
 				},
 				{
 					"path": "teacher/manage-teacher/index",
 					"style": {
 						"navigationBarTitleText": "教师管理"
+					}
+				},
+				{
+					"path": "teacher/manage-record/index",
+					"style": {
+						"navigationBarTitleText": "扣课记录",
+						"enablePullDownRefresh": true,
+						"onReachBottomDistance": 100
+					}
+				},
+				{
+					"path": "teacher/record-detail/index",
+					"style": {
+						"navigationBarTitleText": "扣课记录详情"
 					}
 				}
 			]

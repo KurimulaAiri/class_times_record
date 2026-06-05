@@ -25,9 +25,9 @@
 					<text
 						:class="[
 							'status-tag',
-							item.status === 0 ? 'status-tag-danger' : 'status-tag-success',
+							item.status === 2 ? 'status-tag-danger' : 'status-tag-success',
 						]"
-						>{{ item.status === 0 ? "已结束" : "进行中" }}</text
+						>{{ item.status === 2 ? "已结束" : "进行中" }}</text
 					>
 				</view>
 
@@ -84,7 +84,7 @@
 			options: [
 				{ label: "全部", value: -1 },
 				{ label: "进行中", value: 1 },
-				{ label: "已结束", value: 0 },
+				{ label: "已结束", value: 2 },
 			],
 		},
 	});
@@ -172,7 +172,7 @@
 					case 1:
 						console.log("点击结束班级");
 						// 执行结束班级逻辑
-						adjustClassStatus(item, item.status === 1 ? 0 : 1);
+						adjustClassStatus(item, item.status === 1 ? 2 : 1);
 						break;
 					case 2:
 						handleDeleteClass(item);
@@ -205,16 +205,16 @@
 	/** 切换班级状态（启用/停用） */
 	const adjustClassStatus = (item: ClassResponse, status: number) => {
 		console.log(
-			`调整班级状态为${status === 0 ? "已结课/毕业" : "进行中"}的班级`,
+			`调整班级状态为${status === 2 ? "已结课/毕业" : "进行中"}的班级`,
 			item.className,
 		);
 		uni.showModal({
-			title: status === 0 ? "确认结束班级" : "确认重启班级",
-			content: `确定要${status === 0 ? "结束" : "重启"}班级【${item.className}】吗？`,
+			title: status === 2 ? "确认结束班级" : "确认重启班级",
+			content: `确定要${status === 2 ? "结束" : "重启"}班级【${item.className}】吗？`,
 			showCancel: true,
 			success: ({ confirm, cancel }) => {
 				if (confirm) {
-					console.log(`执行${status === 0 ? "结束" : "重启"}班级接口...`);
+					console.log(`执行${status === 2 ? "结束" : "重启"}班级接口...`);
 					// 执行结束班级逻辑并刷新列表
 					updateClassById({
 						classId: item.id,

@@ -35,11 +35,11 @@ function stableStringify(obj: any): string {
         return '[' + obj.map(item => stableStringify(item)).join(',') + ']';
     }
 
-    // 对象：排序 key，过滤 null/undefined/""，递归处理值
+    // 对象：排序 key，过滤 null/undefined，递归处理值
     const sortedKeys = Object.keys(obj)
         .filter(key => {
             const val = obj[key];
-            return val !== null && val !== undefined && val !== "";
+            return val !== null && val !== undefined;
         })
         .sort();
 
@@ -80,7 +80,7 @@ export function generateSign(params: any) {
     const stringA = sortedKeys
         .map((key) => {
             let value = signObj[key];
-            // ⚠️ 关键修改：使用自定义的 stableStringify 替代 JSON.stringify
+            // 关键修改：使用自定义的 stableStringify 替代 JSON.stringify
             if (typeof value === "object" && value !== null) {
                 value = stableStringify(value);
             }

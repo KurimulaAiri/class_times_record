@@ -45,6 +45,8 @@ export const ROUTES = {
 	EDIT_COURSE_RECORD_INFO: "/pages/main/teacher/edit-course-record-info/index", // 教师端编辑学生课程信息
 	MANAGE_TEACHER: "/pages/main/teacher/manage-teacher/index", // 教师端管理老师
 	USER_PROFILE: "/pages/main/teacher/user-profile/index", // 教师端用户信息
+	MANAGE_RECORD: "/pages/main/teacher/manage-record/index", // 教师端扣课记录管理
+	RECORD_DETAIL: "/pages/main/teacher/record-detail/index", // 教师端扣课记录详情
 } as const;
 
 export type PagePath = (typeof ROUTES)[keyof typeof ROUTES];

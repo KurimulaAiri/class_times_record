@@ -74,7 +74,7 @@
 					<input
 						:class="['input']"
 						:type="item.type === 'number' ? 'number' : 'text'"
-						:value="getValue(item.key)"
+						:value="getValue(item.key) === 0 ? '0' : getValue(item.key)"
 						@input="onInput(item, $event)"
 						:placeholder="item.placeholder"
 						placeholder-class="placeholder"
@@ -98,7 +98,7 @@
 				>
 				<textarea
 					class="textarea"
-					:value="getValue(item.key)"
+					:value="getValue(item.key) === 0 ? '0' : getValue(item.key)"
 					@input="onInput(item, $event)"
 					:placeholder="item.placeholder"
 					placeholder-class="placeholder"
@@ -405,9 +405,14 @@
 	 * @returns 字段值，不存在时返回空字符串
 	 */
 	const getValue = (key: string): any => {
-		return (
-			key.split(".").reduce((obj: any, k) => obj?.[k], localForm.value) ?? ""
-		);
+		const val = key
+			.split(".")
+			.reduce((obj: any, k) => obj?.[k], localForm.value);
+
+		// 🌟 只要是 0 或 false，雷打不动返回原生态的值，不转字符串
+		if (val === 0 || val === false) return val;
+
+		return val ?? "";
 	};
 
 	/**

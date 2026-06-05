@@ -4,12 +4,21 @@ interface RecordResponse {
 	id: number;
 	recordChange: number;
 	recordRemark: string;
-	recordTime: string;
+	recordTimeStr: string;
 	recordType: number;
 	updateTimeStr: string;
+	courseRecord: CourseRecordResponse;
+	student: StudentResponse;
+	course: CourseResponse;
 }
 
 type RecordListResponse = {
 	records: RecordResponse[];
-    total: number;
+	total: number;
+};
+
+interface GetRecordListRequest {
+	institutionId: number;
+	currentPage: number;
+	pageSize: number;
 }

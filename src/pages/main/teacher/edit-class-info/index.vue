@@ -208,7 +208,7 @@
 					inputAlign: "right",
 					options: [
 						{ label: "进行中", value: 1 },
-						{ label: "已结束", value: 0 },
+						{ label: "已结束", value: 2 },
 					],
 				},
 				{
@@ -361,8 +361,10 @@
 	};
 
 	const submitForm = async () => {
-		if (!form.value.className) return showToast({ msg: "请输入班级名称", icon: "none" });
-		if (!form.value.courseId) return showToast({ msg: "请关联课程", icon: "none" });
+		if (!form.value.className)
+			return showToast({ msg: "请输入班级名称", icon: "none" });
+		if (!form.value.courseId)
+			return showToast({ msg: "请关联课程", icon: "none" });
 		if (!form.value.schedules || form.value.schedules.length === 0)
 			return showToast({ msg: "请至少添加一组上课日程", icon: "none" });
 		if (selectedTeachers.value.length === 0)
@@ -373,7 +375,8 @@
 		for (let i = 0; i < form.value.schedules.length; i++) {
 			const item = form.value.schedules[i];
 			const prefix = `第 ${i + 1} 组时段: `;
-			if (item.dayOfWeek === 0) return showToast({ msg: `${prefix}请选择上课周期`, icon: "none" });
+			if (item.dayOfWeek === 0)
+				return showToast({ msg: `${prefix}请选择上课周期`, icon: "none" });
 			if (!item.startDate || !item.endDate)
 				return showToast({ msg: `${prefix}请补全有效日期`, icon: "none" });
 			if (!item.startTime || !item.endTime)
@@ -382,9 +385,15 @@
 			const startDateTime = new Date(item.startDate).getTime();
 			const endDateTime = new Date(item.endDate).getTime();
 			if (endDateTime < startDateTime)
-				return showToast({ msg: `${prefix}结束日期不能早于开始日期`, icon: "none" });
+				return showToast({
+					msg: `${prefix}结束日期不能早于开始日期`,
+					icon: "none",
+				});
 			if (item.endTime <= item.startTime)
-				return showToast({ msg: `${prefix}结束时间必须大于开始时间`, icon: "none" });
+				return showToast({
+					msg: `${prefix}结束时间必须大于开始时间`,
+					icon: "none",
+				});
 		}
 
 		console.log("提交表单数据:", form.value);
@@ -395,7 +404,12 @@
 
 		if (res > 0) {
 			setTimeout(() => {
-				showToast({ msg: "班级修改成功", icon: "success", duration: 1500, mask: true });
+				showToast({
+					msg: "班级修改成功",
+					icon: "success",
+					duration: 1500,
+					mask: true,
+				});
 			}, 1500);
 
 			uni.$emit("needRefresh");

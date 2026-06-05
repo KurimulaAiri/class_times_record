@@ -58,7 +58,7 @@
 		},
 	]);
 
-	const validate = computed(() => {
+	const validate = () => {
 		if (
 			courseRecordModel.value.courseRecord.courseTotalTime <
 			courseRecordModel.value.courseRecord.courseRestTime
@@ -67,10 +67,10 @@
 			return false;
 		}
 		return true;
-	});
+	};
 
 	const submit = async () => {
-		if (!validate.value) {
+		if (!validate()) {
 			return;
 		}
 

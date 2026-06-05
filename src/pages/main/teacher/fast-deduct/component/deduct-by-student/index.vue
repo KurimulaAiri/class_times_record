@@ -9,7 +9,7 @@
 					student.studentName
 				}}</text>
 				<text v-else class="placeholder">请选择扣课学生</text>
-				<uni-icons type="right" size="16" color="#999"></uni-icons>
+				<uni-icons type="right" size="28rpx" color="#999"></uni-icons>
 			</view>
 		</view>
 

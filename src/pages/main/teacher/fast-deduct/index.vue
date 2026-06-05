@@ -35,22 +35,34 @@
 		<!-- 公共备注展示区 -->
 		<view class="section-title">其他信息</view>
 		<view class="section remark-section">
-			<view class="date-picker-row">
+			<view class="section-item">
 				<view class="label">扣课日期</view>
 				<picker mode="date" :value="deductDate" @change="handleDateChange">
 					<view class="picker-value">
-						{{ deductDate }}
-						<text class="arrow-icon">▶</text>
+						<view class="picker-value-text">
+							{{ deductDate }}
+						</view>
+						<uni-icons type="right" size="28rpx" color="#999"></uni-icons>
 					</view>
 				</picker>
 			</view>
-			<view class="label remark-label">扣课备注</view>
-			<textarea
-				v-model="remark"
-				placeholder="请输入本次扣课的备注说明..."
-				class="remark-input"
-				maxlength="200"
-			/>
+			<view class="section-item">
+				<view class="label">扣课备注</view>
+				<input
+					class="remark-input"
+					v-model="remark"
+					placeholder="请输入本次扣课备注"
+					maxlength="200"
+				/>
+			</view>
+		</view>
+
+		<view class="section-title">查询内容</view>
+		<view class="section">
+			<view class="section-item" @tap="handleClick">
+				<view class="label">扣课记录</view>
+				<uni-icons type="right" size="28rpx" color="#999"></uni-icons>
+			</view>
 		</view>
 
 		<!-- 底部操作栏 -->
@@ -63,12 +75,13 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
-	import { showToast, usePageData } from "@/utils/common";
+	import { jump, showToast, usePageData } from "@/utils/common";
 	import PageFooter from "@/components/page-footer/index.vue";
 	import DeductByStudent from "./component/deduct-by-student/index.vue";
 	import DeductByCourse from "./component/deduct-by-course/index.vue";
 	// 💡 引入你对应的扣课 API
 	import { deductByStudentId, deductByCourseId } from "@/api/course-record";
+	import { ROUTES } from "@/config/routes";
 
 	// 💡 获取当前日期的辅助函数 (格式: YYYY-MM-DD)
 	const getTodayDate = () => {
@@ -159,7 +172,6 @@
 			uni.hideLoading();
 			showToast({ msg: "扣课成功", icon: "success" });
 			remark.value = "";
-			deductDate.value = getTodayDate();
 
 			// 成功后可以通过 uni.$emit 通知子组件刷新列表数据
 			uni.$emit("refreshDeductList");
@@ -167,6 +179,11 @@
 			uni.hideLoading();
 			console.error(err);
 		}
+	};
+
+	/** 点击查询内容 */
+	const handleClick = () => {
+		jump(ROUTES.MANAGE_RECORD);
 	};
 </script>
 

@@ -3,7 +3,7 @@
 		<FormPage :groups="groups" v-model:modelValue="form">
 			<template #group-1>
 				<view
-					v-if="!form.primaryParent || !form.primaryParent.parentId"
+					v-if="!showPrimaryPanel"
 					class="add-placeholder"
 					@tap="initParent('primary')"
 				>
@@ -13,7 +13,7 @@
 			</template>
 			<template #group-2>
 				<view
-					v-if="!form.secondaryParent || !form.secondaryParent.parentId"
+					v-if="!showSecondaryPanel"
 					class="add-placeholder"
 					@tap="initParent('secondary')"
 				>
@@ -23,7 +23,10 @@
 			</template>
 		</FormPage>
 
-		<PageFooter :buttons="[{ text: '保存修改', type: 'primary' }]" @btnClick="submitForm"></PageFooter>
+		<PageFooter
+			:buttons="[{ text: '保存修改', type: 'primary' }]"
+			@btnClick="submitForm"
+		></PageFooter>
 	</view>
 </template>
 
@@ -54,27 +57,17 @@
 		school: "",
 		address: "",
 		institutions: [],
-		primaryParent: {
-			isPrimary: true,
-			username: "",
-			studentId: 0,
-			parentId: 0,
-			relation: "",
-			phone: "",
-		}, // 初始化为空对象，配合 template 中的展示
-		secondaryParent: {
-			isPrimary: false,
-			username: "",
-			studentId: 0,
-			parentId: 0,
-			relation: "",
-			phone: "",
-		},
+		primaryParent: {} as ParentResponse,
+		secondaryParent: {} as ParentResponse,
 		courseRestTime: 0,
 		courseTotalTime: 0,
 		createTimeStr: "",
 		updateTimeStr: "",
 	});
+
+	// 提取为独立响应式变量，绝对不会受 FormPage 组件组件 v-model 覆盖的影响
+	const showPrimaryPanel = ref(false);
+	const showSecondaryPanel = ref(false);
 
 	/** 学生编辑表单数据 */
 	const form = ref<StudentResponse>(createEmptyForm());
@@ -120,8 +113,8 @@
 			title: "主要联系人",
 			titleStyle: "theme",
 			mode: "edit",
-			// 💡 只有当有数据实体时，才下发 items 配置项渲染输入框
-			items: form.value.primaryParent
+			// 只有当有数据实体时，才下发 items 配置项渲染输入框
+			items: showPrimaryPanel.value
 				? [
 						{
 							key: "primaryParent.username",
@@ -153,7 +146,7 @@
 			title: "备用联系人 (可选)",
 			titleStyle: "theme",
 			mode: "edit",
-			items: form.value.secondaryParent
+			items: showSecondaryPanel.value
 				? [
 						{
 							key: "secondaryParent.username",
@@ -192,9 +185,14 @@
 			// 从 pinia 深度克隆数据
 			const res = JSON.parse(JSON.stringify(studentStore.studentInfo));
 
-			// 核心修复：直接大对象赋值，全量触发 Vue 的响应式追踪与 computed 重新计算
+			// 根据后端返回的数据实体，决定是否直接展示输入面板
+			showPrimaryPanel.value = !!(
+				res.primaryParent && res.primaryParent.parentId
+			);
+			showSecondaryPanel.value = !!(
+				res.secondaryParent && res.secondaryParent.parentId
+			);
 			form.value = res;
-
 			console.log("回显后的数据：", form.value);
 		} catch (error) {
 			console.error("获取详情失败", error);
@@ -204,10 +202,11 @@
 	};
 
 	const initParent = (type: "primary" | "secondary") => {
+		console.log("初始化联系人类型:", type);
 		// 创建一个全新的 Parent 结构，临时给一个非零的占位 id 撑开组件的检测限制
 		const emptyParent: ParentResponse = {
 			studentId: form.value.id,
-			parentId: -1, // 💡 用 -1 标记为新创建但未持久化的联系人节点
+			parentId: -1,
 			username: "",
 			relation: "",
 			phone: "",
@@ -217,19 +216,23 @@
 		if (type === "primary") {
 			emptyParent.isPrimary = true;
 			form.value.primaryParent = emptyParent;
+			showPrimaryPanel.value = true; // 激活展示输入框，永久隐藏按钮
 		} else {
 			if (!form.value.primaryParent) {
 				return showToast("请先添加主要联系人");
 			}
 			emptyParent.isPrimary = false;
 			form.value.secondaryParent = emptyParent;
+			showSecondaryPanel.value = true; // 激活展示输入框，永久隐藏按钮
 		}
+		console.log("初始化后的联系人数据:", emptyParent);
+		console.log("当前表单数据:", form.value);
 	};
 
 	/** 提交修改后的学生信息 */
 	const submitForm = async () => {
-		if (!form.value.studentName)
-			return showToast("姓名不能为空");
+		console.log("提交前的原始数据：", form.value);
+		if (!form.value.studentName) return showToast("姓名不能为空");
 
 		if (form.value.primaryParent) {
 			if (
@@ -252,25 +255,47 @@
 			}
 		}
 
-		const submitData: UpdateStudentRequest = { ...form.value };
+		// 💡 关键：浅克隆基本表单，准备进行底层数据的清洗和强制补全
+		const submitData: any = { ...form.value };
 
-		// 如果全新添加联系人时刚才用了临时 -1，提交给后端前清洗重置回 0
-		if (submitData.primaryParent && submitData.primaryParent.parentId === -1) {
-			submitData.primaryParent.parentId = 0;
+		// ==========================================
+		// 1. 强制补全并清洗【主要联系人】
+		// ==========================================
+		if (submitData.primaryParent) {
+			// 如果是从 Pinia/后端 带过来的或者页面新创建的，强制将关键字段合并回去
+			submitData.primaryParent = {
+				...submitData.primaryParent,
+				studentId: form.value.id,
+				// 如果原本是新创建的（由 showPrimaryPanel 独立状态控制）那就是新数据 0，否则看它本身有没有 id
+				parentId: studentStore.studentInfo?.primaryParent?.parentId || 0,
+				isPrimary: true,
+			};
 		}
+
+		// ==========================================
+		// 2. 强制补全并清洗【备用联系人】
+		// ==========================================
 		if (submitData.secondaryParent) {
-			if (submitData.secondaryParent.parentId === -1) {
-				submitData.secondaryParent.parentId = 0;
-			}
-			if (!hasSecondary) {
+			if (hasSecondary) {
+				submitData.secondaryParent = {
+					...submitData.secondaryParent,
+					studentId: form.value.id,
+					parentId: studentStore.studentInfo?.secondaryParent?.parentId || 0,
+					isPrimary: false,
+				};
+			} else {
+				// 如果没填内容，直接按照后端规则置空
 				submitData.secondaryParent = null;
 			}
 		}
+
+		console.log("最终组装好发送给后端的数据：", submitData);
 
 		try {
 			uni.showLoading({ title: "保存中..." });
 			await updateStudent(submitData);
 			showToast("修改成功", "success");
+			uni.hideLoading();
 			setTimeout(() => {
 				uni.navigateBack();
 				uni.$emit("needRefresh");

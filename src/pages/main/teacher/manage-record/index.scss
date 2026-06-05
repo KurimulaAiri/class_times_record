@@ -1,0 +1,156 @@
+.container {
+    background-color: $default-background-color; // 保持原有背景色
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-filter-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100; // 确保在页面最上层
+}
+
+// 🌟 优化 1：调整记录列表容器，去除 scroll-view 限制，允许页面自然延伸以触发 onReachBottom
+.record-list {
+    padding: 24rpx;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+// 记录卡片基础样式
+.record-card {
+    background-color: #ffffff;
+    border-radius: 16rpx;
+    padding: 28rpx;
+    margin-bottom: 24rpx;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    // 确保从点击态恢复时有平滑的过渡
+    transition: all 0.15s ease;
+
+    // 卡片头部
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2rpx solid #f5f5f5;
+        padding-bottom: 16rpx;
+        margin-bottom: 20rpx;
+
+        .student-name {
+            font-size: 32rpx;
+            font-weight: bold;
+            color: #333333;
+        }
+
+        // 类型标签基类
+        .type-tag {
+            font-size: 22rpx;
+            padding: 4rpx 16rpx;
+            border-radius: 8rpx;
+            font-weight: 500;
+        }
+
+        // 增加（浅绿底深绿字）
+        .tag-add {
+            background-color: #eef7f5;
+            color: $theme-color;
+        }
+
+        // 减少（浅红底红字）
+        .tag-reduce {
+            background-color: #fff1f0;
+            color: #ff4d4f;
+        }
+    }
+
+    // 卡片主体信息行
+    .card-body {
+        .info-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12rpx;
+            font-size: 26rpx;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            .label {
+                color: #999999;
+                width: 140rpx;
+            }
+
+            .value {
+                color: #444444;
+                flex: 1;
+            }
+        }
+    }
+
+    // 卡片底部课时显示
+    .card-footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-top: 16rpx;
+        padding-top: 16rpx;
+        border-top: 2rpx dashed #fafafa;
+        font-size: 32rpx;
+
+        .num-label {
+            font-size: 26rpx;
+            color: #666666;
+        }
+
+        .num-value {
+            font-size: 26rpx;
+            font-weight: bold;
+        }
+
+        // 课时增加颜色
+        .num-add {
+            color: $theme-color;
+        }
+
+        // 课时减少颜色
+        .num-reduce {
+            color: #ff4d4f;
+        }
+    }
+}
+
+// 空白状态提示
+.empty-placeholder {
+    padding: 100rpx 0;
+    text-align: center;
+    color: #999999;
+    font-size: 28rpx;
+}
+
+// 卡片点击高亮和按压塌陷效果
+.card-hover-active {
+    background-color: #f7f7f7 !important; // 变暗背景
+    transform: scale(0.98); // 微微向内塌陷，极具点击质感
+    box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.02) !important; // 阴影同步变弱
+    transition: all 0.1s ease; // 快速响应
+}
+
+// 🌟 优化 2：重构底部状态提示样式，完全对齐学生列表页面的规范 class 名
+.load-status {
+    padding: 30rpx 0;
+    text-align: center;
+    font-size: 24rpx;
+    color: #999999;
+
+    .loading-text,
+    .finished,
+    .more-text {
+        font-size: 24rpx;
+        color: #999999;
+    }
+}
