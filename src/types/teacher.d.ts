@@ -18,3 +18,23 @@ interface GetTeachersByInstitutionIdRequest {
 	currentPage: number;
 	pageSize: number;
 }
+
+interface UpdateTeacherByIdRequest {
+	teacherId: number;
+	username: string;
+}
+
+interface UpdateTeacherByIdResponse {
+	effect: number;
+}
+
+interface InsertTeacherRequest {
+	username: string;
+	account: string;
+	password: string;
+	institutionId: number;
+}
+
+interface InsertTeacherResponse {
+	teacher: TeacherResponse;
+}

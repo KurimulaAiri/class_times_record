@@ -272,6 +272,18 @@
 					"style": {
 						"navigationBarTitleText": "扣课记录详情"
 					}
+				},
+				{
+					"path": "teacher/teacher-detail/index",
+					"style": {
+						"navigationBarTitleText": "教师详情"
+					}
+				},
+				{
+					"path": "teacher/add-teacher/index",
+					"style": {
+						"navigationBarTitleText": "添加教师"
+					}
 				}
 			]
 		},

@@ -1,0 +1,11 @@
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-filter-bar {
+	position: sticky;
+	top: 0;
+	z-index: 100; // 确保在页面最上层
+}

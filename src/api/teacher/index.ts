@@ -21,13 +21,38 @@ const getTeacherById = async (id: number): Promise<TeacherResponse> => {
  * @param form - 查询参数，包含 institutionId 及分页条件
  * @returns 返回教师列表响应数据
  */
-const getTeachersByInstitutionId = async (form: GetTeachersByInstitutionIdRequest): Promise<TeacherListResponse> => {
-	const res = await post<TeacherListResponse>(`/teacher/get_teacher_by_institution_id`, {
-		institutionId: form.institutionId,
-		currentPage: form.currentPage,
-		pageSize: form.pageSize,
-	});
+const getTeachersByInstitutionId = async (
+	form: GetTeachersByInstitutionIdRequest,
+): Promise<TeacherListResponse> => {
+	const res = await post<TeacherListResponse>(
+		`/teacher/get_teacher_by_institution_id`,
+		{
+			institutionId: form.institutionId,
+			currentPage: form.currentPage,
+			pageSize: form.pageSize,
+		},
+	);
 	return res.data;
 };
 
-export { getTeacherById, getTeachersByInstitutionId };
+const updateTeacherById = async (
+	form: UpdateTeacherByIdRequest,
+): Promise<number> => {
+	const res = await post<UpdateTeacherByIdResponse>(
+		`/teacher/update_by_id`,
+		form,
+	);
+	return res.data.effect;
+};
+
+/**
+ * 添加教师
+ * @param form - 添加教师请求参数，包含用户名和机构 ID
+ * @returns 返回新创建的教师 ID
+ */
+const insertTeacher = async (form: InsertTeacherRequest): Promise<TeacherResponse> => {
+	const res = await post<InsertTeacherResponse>(`/teacher/insert`, form);
+	return res.data.teacher;
+};
+
+export { getTeacherById, getTeachersByInstitutionId, updateTeacherById, insertTeacher };

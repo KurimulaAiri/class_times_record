@@ -77,13 +77,13 @@
 	import { ref } from "vue";
 	import { jump, showToast, usePageData } from "@/utils/common";
 	import PageFooter from "@/components/page-footer/index.vue";
-	import DeductByStudent from "./component/deduct-by-student/index.vue";
-	import DeductByCourse from "./component/deduct-by-course/index.vue";
-	// 💡 引入你对应的扣课 API
+	import DeductByStudent from "./components/deduct-by-student/index.vue";
+	import DeductByCourse from "./components/deduct-by-course/index.vue";
+	// 引入你对应的扣课 API
 	import { deductByStudentId, deductByCourseId } from "@/api/course-record";
 	import { ROUTES } from "@/config/routes";
 
-	// 💡 获取当前日期的辅助函数 (格式: YYYY-MM-DD)
+	// 获取当前日期的辅助函数 (格式: YYYY-MM-DD)
 	const getTodayDate = () => {
 		const date = new Date();
 		const year = date.getFullYear();

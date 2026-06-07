@@ -7,9 +7,14 @@
 				mode="aspectFill"
 			></image>
 			<view class="info">
-				<text class="name">{{
-					userStore.userInfo?.identityInfo.username
-				}}</text>
+				<view class="name-wrapper">
+					<text class="name">{{
+						userStore.userInfo?.identityInfo.username
+					}}</text>
+					<text v-if="userStore.userInfo?.roleId === 4 ? userStore.userInfo?.admin : false" class="admin-tag"
+						>管理员</text
+					>
+				</view>
 				<text class="phone">{{ 1233 }}</text>
 			</view>
 			<uni-icons type="right" size="18" color="#ccc"></uni-icons>
@@ -43,7 +48,7 @@
 					v-if="item.isVisible"
 					class="list-item"
 					:class="{ 'border-bottom': index !== subMenuList.length - 1 }"
-					@tap="navigateTo(item.path)"
+					@tap="jump(item.path)"
 					hover-class="item-hover"
 				>
 					<view class="left-content">
@@ -131,11 +136,6 @@
 			isVisible: false,
 		},
 	]);
-
-	const navigateTo = (path: string) => {
-		if (path) uni.navigateTo({ url: path });
-	};
-
 	/** 处理用户操作 */
 	const handleAction = (type: string) => {
 		console.log("点击了操作:", type);

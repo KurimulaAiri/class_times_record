@@ -64,6 +64,13 @@ interface BaseFormItemConfig {
 	maxLength?: number;
 
 	/**
+	 * 输入框子类型
+	 * - "password": 密码输入框，内容以圆点显示
+	 * 仅 type 为 "input" 时生效
+	 */
+	inputType?: "password";
+
+	/**
 	 * 输入框文本对齐方式
 	 * - "left": 左对齐（默认）
 	 * - "right": 右对齐，适用于班级名称等需要右对齐的输入项

@@ -79,6 +79,7 @@
 						:placeholder="item.placeholder"
 						placeholder-class="placeholder"
 						:maxlength="item.maxLength !== undefined ? item.maxLength : 140"
+						:password="item.inputType === 'password'"
 						pattern="[0-9]*"
 						confirm-type="done"
 					/>

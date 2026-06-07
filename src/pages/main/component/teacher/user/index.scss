@@ -3,7 +3,7 @@
 	background-color: $default-background-color; // 统一背景色
 	padding: 30rpx; // 页面整体内边距
 	padding-bottom: 60rpx;
-    z-index: 1;
+	z-index: 1;
 }
 
 // 通用间距改为透明，通过卡片 margin 实现
@@ -16,11 +16,15 @@
 	display: flex;
 	align-items: center;
 	padding: 50rpx 40rpx;
-	background: linear-gradient(135deg, $theme-color-light 0%, $theme-color 100%); // 对应首页渐变
+	background: linear-gradient(
+		135deg,
+		$theme-color-light 0%,
+		$theme-color 100%
+	); // 对应首页渐变
 	border-radius: 30rpx;
 	box-shadow: 0 10rpx 30rpx rgba(102, 205, 170, 0.2);
 
-    z-index: 10;
+	z-index: 10;
 
 	.avatar {
 		width: 120rpx;
@@ -36,12 +40,33 @@
 		display: flex;
 		flex-direction: column;
 
+		// 新增包裹层，让名字和 tag 横向排列并居中对齐
+		.name-wrapper {
+			display: flex;
+			align-items: center;
+			margin-bottom: 8rpx;
+			flex-wrap: wrap; // 防止名字过长时撑破布局
+		}
+
 		.name {
 			font-size: 38rpx;
 			font-weight: bold;
 			color: #fff; // 改为白色以适配渐变背景
-			margin-bottom: 8rpx;
 		}
+
+		// 新增管理员 Tag 样式
+		.admin-tag {
+			margin-left: 16rpx;
+			font-size: 20rpx;
+			font-weight: 500;
+			color: $theme-color; // 提取你的主题色作为文字颜色
+			background-color: #ffffff; // 纯白底色，在渐变背景下很醒目
+			padding: 4rpx 12rpx;
+			border-radius: 8rpx;
+			box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.05);
+			line-height: 1.2;
+		}
+
 		.phone {
 			font-size: 26rpx;
 			color: rgba(255, 255, 255, 0.8); // 半透明白
