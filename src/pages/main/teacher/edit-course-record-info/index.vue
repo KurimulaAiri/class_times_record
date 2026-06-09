@@ -18,11 +18,16 @@
 		{} as MixCourseRecordResponse,
 	);
 
+	const originalExpireTime = ref<string>("");
+
 	usePageData<CourseRecordResponse>(async (courseRecordInput) => {
+		// 截取日期部分（去掉时分秒），确保 date picker 正确显示
+		courseRecordInput.expireTimeStr = courseRecordInput.expireTimeStr?.split(" ")[0] || "";
 		courseRecordModel.value = {
 			courseRecord: courseRecordInput,
 			course: courseRecordInput.course,
 		};
+		originalExpireTime.value = courseRecordInput.expireTimeStr;
 		console.log("courseRecordModel.value", courseRecordModel.value);
 	});
 
@@ -54,11 +59,23 @@
 					inputAlign: "right",
 					type: "number",
 				},
+				{
+					label: `到期时间`,
+					key: "courseRecord.expireTimeStr",
+					inputAlign: "right",
+					type: "date",
+				},
 			],
 		},
 	]);
 
 	const validate = () => {
+		// 校验到期时间是否与原始到期时间相同
+		if (courseRecordModel.value.courseRecord.expireTimeStr === originalExpireTime.value) {
+			showToast({ msg: "到期时间不能与原始到期时间相同" });
+			return false;
+		}
+
 		if (
 			courseRecordModel.value.courseRecord.courseTotalTime <
 			courseRecordModel.value.courseRecord.courseRestTime
@@ -79,6 +96,7 @@
 			id: courseRecordModel.value.courseRecord.id,
 			courseRestTime: courseRecordModel.value.courseRecord.courseRestTime,
 			courseTotalTime: courseRecordModel.value.courseRecord.courseTotalTime,
+			expireTime: courseRecordModel.value.courseRecord.expireTimeStr + " 00:00:00",
 		});
 		if (res === 1) {
 			showToast({

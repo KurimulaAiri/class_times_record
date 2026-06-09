@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<!-- ✅ 使用通用搜索筛选组件 -->
+		<!-- 使用通用搜索筛选组件 -->
 		<SearchFilterBar
 			v-model:keyword="tempKeyword"
 			v-model:activeFilters="activeFilters"

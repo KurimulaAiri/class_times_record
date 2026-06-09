@@ -5,13 +5,13 @@
 			<!-- 切换周控制器 -->
 			<view class="week-controller">
 				<view class="arrow-btn" @tap="changeWeek('prev')">
-					<text class="arrow-icon">◀</text>
+					<uni-icons type="left" size="14" color="#70a9a2"></uni-icons>
 					<text class="btn-txt">上一周</text>
 				</view>
 				<view class="month-indicator">{{ currentMonthStr }}</view>
 				<view class="arrow-btn" @tap="changeWeek('next')">
 					<text class="btn-txt">下一周</text>
-					<text class="arrow-icon">▶</text>
+					<uni-icons type="right" size="14" color="#70a9a2"></uni-icons>
 				</view>
 			</view>
 
@@ -84,6 +84,8 @@
 	import { ref, computed } from "vue";
 	import dayjs from "dayjs";
 	import { onLoad } from "@dcloudio/uni-app";
+	import { jump } from "@/utils/common";
+import { ROUTES } from "@/config/routes";
 	import { getClassScheduleByInstitutionId } from "@/api/class-schedule";
 
 	/** 课程表配色规则 */
@@ -254,11 +256,8 @@
 
 	/** 点击课程时段 */
 	const handleClassClick = (clazz: ClassScheduleResponse) => {
-		uni.showModal({
-			title: clazz.className,
-			content: `上课老师：${clazz.teachers.map((t) => t.username).join("、")}\n上课时段：${clazz.startTimeStr} - ${clazz.endTimeStr}`,
-			showCancel: false,
-		});
+		console.log("点击课程:", clazz);
+		jump(ROUTES.CLASS_SCHEDULE_DETAIL, clazz);
 	};
 </script>
 

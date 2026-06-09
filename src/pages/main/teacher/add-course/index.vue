@@ -17,14 +17,7 @@
 	const userStore = useUserStore();
 
 	/** 课程表单数据 */
-	const form = ref<CourseResponse>({
-		id: 0,
-		courseType: 1,
-		isAvailable: true,
-		institution: {} as InstitutionResponse,
-		currentStudentCourseRecord: {} as CourseRecordResponse,
-		courseName: "",
-	});
+	const form = ref<CourseResponse>({} as CourseResponse);
 
 	const groups: FormGroupConfig[] = [
 		{

@@ -77,9 +77,7 @@
 						</view>
 						<view class="stu-detail">
 							<text class="stu-name">{{ item.studentName }}</text>
-							<text class="stu-no"
-								>学号：{{ item.id }}； 剩余课时：{{ item.courseRestTime }}</text
-							>
+							<text class="stu-no">剩余课时 {{ item.courseRestTime }}</text>
 						</view>
 					</view>
 					<view
@@ -197,6 +195,7 @@
 		getClassByClassId,
 	} from "@/api/class";
 	import { getClassScheduleByClassId } from "@/api/class-schedule";
+	import { deductByClassId } from "@/api/course-record";
 
 	const themeColor = ref("#70a9a2"); // 对应你的 $theme-color
 	const classDetail = ref<ClassResponse>();
@@ -241,6 +240,15 @@
 
 		return groups;
 	});
+
+	// 获取当前日期的辅助函数 (格式: YYYY-MM-DD)
+	const getTodayDate = () => {
+		const date = new Date();
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, "0");
+		const day = String(date.getDate()).padStart(2, "0");
+		return `${year}-${month}-${day}`;
+	};
 
 	/** 将星期数字转换为中文文本 */
 	const getDayOfWeekText = (day: number): string => {
@@ -338,10 +346,11 @@
 		}
 	});
 
-	uni.$on("needRefresh", () => {
-		loadStudentList();
-		loadClassScheduleList();
-		getClassByClassId(classDetail.value?.id || 0);
+	uni.$on("needRefresh", async () => {
+		console.log("needRefresh in class-detail");
+		await loadStudentList();
+		await loadClassScheduleList();
+		await getClassByClassId(classDetail.value?.id || 0);
 	});
 
 	uni.$on("backFromEditClass", async () => {
@@ -357,7 +366,9 @@
 	});
 
 	// 页面显示时获取班级详情
-	onShow(async () => {});
+	onShow(async () => {
+		await loadStudentList();
+	});
 
 	/** 加载课程表列表 */
 	const loadClassScheduleList = async () => {
@@ -426,7 +437,11 @@
 									});
 									if (result !== 0) {
 										setTimeout(() => {
-											showToast({ msg: "移除成功", icon: "success", duration: 2000 });
+											showToast({
+												msg: "移除成功",
+												icon: "success",
+												duration: 2000,
+											});
 										}, 200);
 										if (classDetail.value?.id) {
 											const res = await getClassByClassId(
@@ -471,8 +486,33 @@
 	};
 
 	/** 跳转到课卡记录页面 */
-	const handleAttendance = () => {
-		uni.navigateTo({ url: "/pages/attendance/index" });
+	const handleAttendance = async () => {
+		uni.showModal({
+			title: "提示",
+			content: "是否进行点名（班级集体扣课）",
+			showCancel: true,
+			success: async ({ confirm, cancel }) => {
+				if (confirm) {
+					console.log("用户点击了确定");
+					const res = await deductByClassId({
+						mode: "class",
+						deductCount: 1,
+						classId: classDetail.value?.id || 0,
+						recordTime: getTodayDate() + " 00:00:00",
+						remark: "班级集体扣课",
+					});
+					if (res.result !== 0) {
+						showToast("点名失败");
+					} else {
+						showToast("点名成功");
+						// 刷新班级列表
+						await loadStudentList();
+					}
+				} else {
+					console.log("用户点击了取消");
+				}
+			},
+		});
 	};
 
 	/** 拨打电话 */
@@ -496,13 +536,10 @@
 	/** 点击课程时段 */
 	const handlePeriodTap = (period: PeriodItem) => {
 		console.log("点击了排课周期:", period);
-		// 示例：点击大卡片可以跳转到该周期的修改页面，并把日期区间等参数带过去
-		/* 
-    jump(ROUTES.EDIT_SCHEDULE, { 
-        startDate: period.startDate, 
-        endDate: period.endDate 
-    }); 
-    */
+		// 跳转到排课详情页
+		if (period.timeSlots && period.timeSlots.length > 0) {
+			jump(ROUTES.CLASS_SCHEDULE_DETAIL, period);
+		}
 	};
 
 	/** 长按课程时段 */
@@ -520,8 +557,9 @@
 					case 0:
 						console.log("点击调整该周期:", period.dateKey);
 						jump(ROUTES.EDIT_CLASS_SCHEDULE_INFO, {
-							...period,
-						});
+							refreshEventFunctionName: "needRefresh",
+							data: period,
+						} as EditClassScheduleInfoPageTransfer);
 						break;
 					case 1:
 						uni.showModal({

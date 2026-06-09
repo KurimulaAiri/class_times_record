@@ -290,6 +290,14 @@
 					"style": {
 						"navigationBarTitleText": "编辑教师信息"
 					}
+				},
+				{
+					"path": "teacher/class-schedule-detail/index",
+					"style": {
+						"navigationBarTitleText": "班级课表详情",
+						"navigationBarBackgroundColor": "#70a9a2",
+						"navigationBarTextStyle": "white"
+					}
 				}
 			]
 		},

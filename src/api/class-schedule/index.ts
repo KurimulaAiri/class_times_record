@@ -37,11 +37,22 @@ const getClassScheduleByInstitutionId = async (
 	return res;
 };
 
+const getClassScheduleById = async (
+	query: GetClassScheduleByIdRequest,
+): Promise<ClassScheduleResponse> => {
+	return (
+		await post<ClassScheduleListResponse>(`/class_schedule/get_by_id`, query)
+	).data.classSchedules[0];
+};
+
 const updateClassScheduleById = async (
 	query: UpdateClassScheduleRequest,
 ): Promise<UpdateClassScheduleResponse> => {
 	return (
-		await post<UpdateClassScheduleResponse>(`/class_schedule/update_by_id`, query)
+		await post<UpdateClassScheduleResponse>(
+			`/class_schedule/update_by_id`,
+			query,
+		)
 	).data;
 };
 
@@ -49,4 +60,5 @@ export {
 	getClassScheduleByClassId,
 	getClassScheduleByInstitutionId,
 	updateClassScheduleById,
+	getClassScheduleById,
 };

@@ -71,6 +71,7 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 	let loading = true;
 
 	if (loading) {
+		console.log("loading:", url);
 		uni.showLoading({
 			title: "加载中...",
 			mask: true,
@@ -152,6 +153,7 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 				},
 				complete: () => {
 					if (loading) {
+						console.log("hideLoading:", url);
 						uni.hideLoading();
 					}
 				},

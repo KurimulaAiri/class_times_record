@@ -216,6 +216,7 @@
 
 		// 调用 API 更新用户名
 		const effect = await updateTeacherById({
+			institutionId: identityInfo.value?.institutionId || 0,
 			teacherId: identityInfo.value?.teacherId || 0,
 			username: formData.value.username,
 		});

@@ -36,6 +36,7 @@
         courseTotalTime: 0,
         // 如果你的 FormPage 组件支持在数据模型里直接读取显示文本，可以加一个冗余字段，
         // 或者像下面通过固定 groups 配合单独的 watch 来解决。
+        expireTime: "",
     });
 
     // 2. 【核心破局点】：干掉 computed，改为普通固定配置
@@ -66,6 +67,13 @@
                     type: "stepper",
                     inputAlign: "right",
                     placeholder: "请输入总课时",
+                },
+                {
+                    label: "到期时间",
+                    key: "expireTime",
+                    type: "date",
+                    inputAlign: "right",
+                    placeholder: "请选择到期时间",
                 },
             ],
         },
@@ -146,7 +154,10 @@
         if (!validate()) return;
         
         console.log("安全提交表单:", insertForm.value);
-        const res = await insertCourseRecord(insertForm.value);
+        const res = await insertCourseRecord({
+            ...insertForm.value,
+            expireTime: insertForm.value.expireTime + " 00:00:00" || "",
+        });
 
         if (res) {
             showToast({ msg: "添加成功", icon: "success" });

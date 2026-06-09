@@ -110,20 +110,8 @@
 	onLoad(async () => {});
 
 	onShow(async () => {
-		const teacherId =
-			userStore.userInfo?.roleId === 4
-				? userStore.userInfo?.identityInfo.teacherId
-				: null;
-		console.log("teacherId", teacherId);
-		if (teacherId) {
-			queryForm.value = {
-				scope: activeFilters.value.scope,
-				classStatus: activeFilters.value.classStatus,
-				targetId: teacherId,
-				keyword: queryForm.value.keyword,
-			};
-			loadData();
-		}
+		queryForm.value.scope = activeFilters.value.scope;
+		loadData();
 	});
 
 	/** 处理搜索关键词变更 */
@@ -136,10 +124,26 @@
 
 	/** 加载班级列表数据 */
 	const loadData = async () => {
+		let targetId = 0;
+		queryForm.value.scope = activeFilters.value.scope;
+		if (queryForm.value.scope === 1) {
+			console.log("当前教师");
+			targetId =
+				userStore.userInfo?.roleId === 4
+					? userStore.userInfo?.identityInfo.teacherId || 0
+					: 0;
+		} else if (queryForm.value.scope === 2) {
+			console.log("当前机构");
+			targetId =
+				userStore.userInfo?.roleId === 4
+					? userStore.userInfo?.identityInfo.institutionId || 0
+					: 0;
+		}
+		console.log("targetId", targetId);
 		const res = await getClassList({
 			scope: activeFilters.value.scope,
 			classStatus: activeFilters.value.classStatus,
-			targetId: queryForm.value.targetId,
+			targetId: targetId,
 			keyword: queryForm.value.keyword,
 		});
 		classList.value = res.classList || [];

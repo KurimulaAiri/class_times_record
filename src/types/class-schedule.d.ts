@@ -57,3 +57,7 @@ interface UpdateClassScheduleRequest {
 interface UpdateClassScheduleResponse {
 	classSchedules: ClassScheduleResponse[];
 }
+
+interface GetClassScheduleByIdRequest {
+	id: number;
+}

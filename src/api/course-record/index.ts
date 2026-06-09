@@ -69,6 +69,14 @@ const deductByCourseId = async (
 	).data;
 };
 
+const deductByClassId = async (
+	data: FastDeductRequest & { mode: "class" },
+): Promise<FastDeductResponse> => {
+	return (
+		await post<FastDeductResponse>("/course_record/deduct_by_class_id", data)
+	).data;
+};
+
 const updateCourseRecordById = async (
 	form: UpdateCourseRecordRequest,
 ): Promise<number> => {
@@ -83,4 +91,5 @@ export {
 	insertCourseRecord,
 	getCourseRecordListByStudentId,
 	updateCourseRecordById,
+	deductByClassId,
 };

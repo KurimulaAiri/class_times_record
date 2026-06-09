@@ -104,18 +104,11 @@
 	const emit = defineEmits(["updateData"]);
 
 	/** 当前选择的课程数据 */
-	const course = ref<CourseResponse>({
-		id: 0,
-		courseName: "",
-		courseType: 0,
-		isAvailable: false,
-		institution: {} as InstitutionResponse,
-		currentStudentCourseRecord: {} as CourseRecordResponse,
-	});
+	const course = ref<CourseResponse>({} as CourseResponse);
 	const students = ref<StudentResponse[]>([]);
-	const selectedMap = ref<Record<number, { detail: StudentResponse; count: number }>>(
-		{},
-	);
+	const selectedMap = ref<
+		Record<number, { detail: StudentResponse; count: number }>
+	>({});
 
 	// 计算属性：动态判断当前学员是否处于全选状态
 	const isAllSelected = computed(() => {
@@ -149,7 +142,10 @@
 			selectedMap.value = {};
 		} else {
 			// 当前非全选，则把所有未选中的学员都加上，默认 1 课时
-			const tempMap: Record<number, { detail: StudentResponse; count: number }> = {};
+			const tempMap: Record<
+				number,
+				{ detail: StudentResponse; count: number }
+			> = {};
 			students.value.forEach((item) => {
 				// 如果原本就已经有输入的课时数量，保留原数量，否则赋初始值 1
 				const existCount = selectedMap.value[item.id]?.count;

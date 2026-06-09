@@ -85,10 +85,15 @@ type FastDeductRequest = {
 			courseId: number;
 			students: StudentDeductRequest[];
 	  }
+	| {
+			mode: "class";
+			classId: number;
+			deductCount: number;
+	  }
 );
 
 type FastDeductResponse = {
-	res: number;
+	result: number;
 };
 
 interface InsertClassRequest {

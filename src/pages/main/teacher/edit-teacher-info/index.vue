@@ -111,6 +111,8 @@
 		confirmPassword: "",
 	});
 
+	const originalAccount = ref("");
+
 	/** 登录账号表单（独立于主表单，不展示在 display 模式中） */
 	const accountForm = ref({
 		account: "",
@@ -127,9 +129,10 @@
 
 	/** 当前编辑的教师是否是登录用户自己 */
 	const isSelf = computed(() => {
-		const currentTeacherId = userStore.userInfo?.roleId === 4
-			? userStore.userInfo.identityInfo.teacherId
-			: null;
+		const currentTeacherId =
+			userStore.userInfo?.roleId === 4
+				? userStore.userInfo.identityInfo.teacherId
+				: null;
 		return teacher.value.teacherId === currentTeacherId;
 	});
 
@@ -163,9 +166,10 @@
 		},
 	]);
 
-	usePageData((data) => {
+	usePageData((data: TeacherResponse) => {
 		teacher.value = data;
 		form.value = {
+			institutionId: data.institution.id,
 			teacherId: data.teacherId,
 			username: data.username,
 			isAvailable: data.isAvailable,
@@ -184,6 +188,7 @@
 			const res = await getUserAuthInfoByTeacherId({
 				teacherId: teacher.value.teacherId,
 			});
+			originalAccount.value = res.data.account || "";
 			currentAccount.value = res.data.account || "";
 		} catch (error) {
 			showToast({ msg: "获取当前账号失败" });
@@ -218,12 +223,19 @@
 			}
 		}
 
+		// 校验登录账号是否与原始账号相同
+		if (accountForm.value.account === originalAccount.value) {
+			showToast({ msg: "新登录账号不能与原始账号相同" });
+			return false;
+		}
+
 		// 如果展开了密码区域，校验密码
 		if (showPasswordFields.value) {
 			if (!passwordForm.value.password) {
 				showToast({ msg: "请输入新密码" });
 				return false;
 			}
+
 			if (passwordForm.value.password !== passwordForm.value.confirmPassword) {
 				showToast({ msg: "两次密码输入不一致" });
 				return false;
@@ -239,6 +251,7 @@
 		}
 
 		const req: UpdateTeacherByIdRequest = {
+			institutionId: form.value.institutionId,
 			teacherId: teacher.value!.teacherId,
 			username: form.value.username.trim(),
 			isAvailable: form.value.isAvailable,
@@ -263,8 +276,9 @@
 				uni.$emit("needRefreshTeacher");
 				setTimeout(() => uni.navigateBack(), 1500);
 			}
-		} catch (error) {
-			showToast({ msg: "修改失败" });
+		} catch (error: any) {
+			console.error("修改教师信息失败:", error);
+			showToast({ msg: error.message || "修改失败" });
 		}
 	};
 </script>

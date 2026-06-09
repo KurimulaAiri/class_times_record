@@ -33,6 +33,10 @@
 						<text class="label">总课时：</text>
 						<text class="value">{{ item.courseTotalTime }}</text>
 					</view>
+					<view class="info-item">
+						<text class="label">到期时间：</text>
+						<text class="value">{{ item.expireTimeStr?.split(' ')[0] }}</text>
+					</view>
 				</view>
 			</view>
 

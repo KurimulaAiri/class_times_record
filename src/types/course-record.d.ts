@@ -1,5 +1,6 @@
 interface CourseRecordResponse {
 	courseLastTimeStr: string;
+	expireTimeStr: string;
 	courseOwnerUserId: number;
 	courseRemark: string;
 	courseRestTime: number;
@@ -16,6 +17,7 @@ interface CourseRecordResponse {
 interface InsertCourseRecordRequest {
 	courseId: number;
 	studentId: number;
+	expireTime: string;
 	courseRemark: string;
 	courseRestTime: number;
 	courseTotalTime: number;
@@ -46,4 +48,5 @@ interface UpdateCourseRecordRequest {
 	id: number;
 	courseRestTime: number;
 	courseTotalTime: number;
+	expireTime: string;
 }

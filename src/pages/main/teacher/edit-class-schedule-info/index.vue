@@ -10,6 +10,8 @@
 	import { showToast, usePageData } from "@/utils/common";
 	import { updateClassScheduleById } from "@/api/class-schedule";
 
+	const refreshEventFunctionName = ref<string>("");
+
 	const buttons = ref<FooterButton[]>([
 		{
 			text: "保存",
@@ -35,8 +37,8 @@
 					msg: "更新成功",
 					icon: "success",
 					callback: () => {
+						uni.$emit(refreshEventFunctionName.value);
 						uni.navigateBack();
-						uni.$emit("needRefresh");
 					},
 				});
 			}
@@ -103,8 +105,9 @@
 		{} as ClassScheduleResponse,
 	);
 
-	usePageData<PeriodItem>((res) => {
-		currentSchedule.value = res.timeSlots[0];
+	usePageData<EditClassScheduleInfoPageTransfer>((res) => {
+		refreshEventFunctionName.value = res.refreshEventFunctionName;
+		currentSchedule.value = res.data.timeSlots[0];
 	});
 </script>
 

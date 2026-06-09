@@ -105,6 +105,13 @@
 								item.currentStudentCourseRecord.courseRestTime
 							}}</text>
 						</view>
+						<view class="info-item">
+							<text class="label">到期时间</text>
+							<text class="value">{{
+								item.currentStudentCourseRecord.expireTimeStr?.split(" ")[0] ||
+								""
+							}}</text>
+						</view>
 					</view>
 				</view>
 				<view class="empty-state" v-else>

@@ -10,6 +10,8 @@ interface CourseResponse {
 	isAvailable: boolean;
 	institution: InstitutionResponse;
 	currentStudentCourseRecord: CourseRecordResponse;
+	updateTimeStr: string;
+	createTimeStr: string;
 }
 
 interface InsertCourseResponse {

@@ -44,14 +44,7 @@
 	]);
 
 	/** 课程表单数据 */
-	const form = ref<CourseResponse>({
-		id: 0,
-		courseName: "",
-		courseType: 0,
-		isAvailable: false,
-		institution: {} as InstitutionResponse,
-		currentStudentCourseRecord: {} as CourseRecordResponse,
-	});
+	const form = ref<CourseResponse>({} as CourseResponse);
 
 	usePageData<CourseResponse>((rawCourse) => {
 		form.value = rawCourse;
