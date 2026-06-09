@@ -187,6 +187,20 @@ const logOut = (targetRoute: string = ROUTES.INDEX, params: any = null) => {
 	}, 800);
 };
 
+const getUserAuthInfoByTeacherId = async (
+	data : GetUserAuthInfoByTeacherIdRequest
+): Promise<ApiResponse<GetUserAuthInfoByTeacherIdResponse>> => {
+	try {
+		const res = await post<GetUserAuthInfoByTeacherIdResponse>("/auth/get_user_auth_info_by_teacher_id", {
+			...data,
+		});
+		return res;
+	} catch (error) {
+		console.error("获取用户认证信息失败:", error);
+		return Promise.reject(error);
+	}
+};
+
 export {
 	loginNoPwd,
 	loginByPwd,
@@ -194,4 +208,5 @@ export {
 	loginByToken,
 	refreshAccessToken,
 	logOut,
+	getUserAuthInfoByTeacherId,
 };

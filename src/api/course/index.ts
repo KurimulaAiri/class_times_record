@@ -21,8 +21,6 @@ const getCourseListByStudentId = async (query: GetCourseListByStudentIdRequest) 
 	return res.data;
 };
 
-
-
 /**
  * 新增课程
  * @param query - 新增课程请求参数
@@ -33,5 +31,14 @@ const insertCourse = async (query: InsertCourseRequest) => {
 	return res.data;
 };
 
+/**
+ * 更新课程信息
+ * @param form - 更新课程请求参数
+ * @returns 返回影响的行数
+ */
+const updateCourse = async (form: UpdateCourseRequest): Promise<number> => {
+	const res = await post<UpdateCourseResponse>(`/course/update_by_id`, form);
+	return res.data.effect;
+};
 
-export { getCourseByInstitutionId, insertCourse, getCourseListByStudentId };
+export { getCourseByInstitutionId, insertCourse, getCourseListByStudentId, updateCourse };

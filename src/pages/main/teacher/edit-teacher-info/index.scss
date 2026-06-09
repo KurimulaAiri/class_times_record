@@ -1,0 +1,76 @@
+.container {
+	min-height: 100vh;
+	background-color: $default-background-color;
+	padding-bottom: 60rpx;
+}
+
+.change-password-btn {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 30rpx 0;
+
+	text {
+		font-size: 28rpx;
+		color: $theme-color;
+	}
+}
+
+.password-section {
+	padding: 0 0 16rpx;
+
+	.password-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 30rpx 0 30rpx;
+
+		.password-title {
+			font-size: 28rpx;
+			color: #333;
+			font-weight: 500;
+		}
+
+		.password-cancel {
+			font-size: 26rpx;
+			color: #999;
+		}
+	}
+
+	.password-fields {
+		background: #f8f9fa;
+		border-radius: 16rpx;
+		padding: 0 24rpx;
+
+		.password-field {
+			display: flex;
+			align-items: center;
+			padding: 24rpx 0;
+			border-bottom: 1rpx solid #eee;
+
+			&:last-child {
+				border-bottom: none;
+			}
+
+			.label {
+				font-size: 28rpx;
+				color: #333;
+				flex-shrink: 0;
+				width: 160rpx;
+			}
+
+			.input {
+				flex: 1;
+				font-size: 28rpx;
+				text-align: right;
+			}
+
+			.value-text {
+				flex: 1;
+				font-size: 28rpx;
+				color: #999;
+				text-align: right;
+			}
+		}
+	}
+}

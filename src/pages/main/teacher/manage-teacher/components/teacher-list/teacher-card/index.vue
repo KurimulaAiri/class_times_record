@@ -10,6 +10,10 @@
             <text>{{ teacher.username.slice(0, 1) }}</text>
         </view>
         <text class="name">{{ teacher.username }}</text>
+        <text v-if="teacher.isAdmin" class="admin-tag">管理员</text>
+        <text :class="['status-tag', teacher.isAvailable ? 'available' : 'disabled']">
+            {{ teacher.isAvailable ? '启用' : '停用' }}
+        </text>
     </view>
 </template>
 

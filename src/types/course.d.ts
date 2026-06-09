@@ -35,3 +35,14 @@ interface GetCourseListByStudentIdRequest {
 	currentPage: number;
 	pageSize: number;
 }
+
+interface UpdateCourseRequest {
+	courseId: number;
+	courseName: string;
+	courseType: number;
+	isAvailable: boolean;
+}
+
+interface UpdateCourseResponse {
+	effect: number;
+}

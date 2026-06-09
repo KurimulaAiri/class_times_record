@@ -284,6 +284,12 @@
 					"style": {
 						"navigationBarTitleText": "添加教师"
 					}
+				},
+				{
+					"path": "teacher/edit-teacher-info/index",
+					"style": {
+						"navigationBarTitleText": "编辑教师信息"
+					}
 				}
 			]
 		},

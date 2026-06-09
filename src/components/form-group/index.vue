@@ -526,12 +526,26 @@
 
 	/**
 	 * radio 单选变更事件处理
-	 * radio 的 value 为字符串，自动转为 Number 后写入
+	 * 修复：根据 options 中定义的原始类型，智能还原布尔值、数字或字符串
 	 * @param item - 触发变更的表单项配置
 	 * @param e - radio-group 的 change 事件对象
 	 */
 	const onRadioChange = (item: FormItemConfig, e: any): void => {
-		setValue(item.key, Number(e.detail.value));
+		const rawValue = e.detail.value; // 此时是字符串，例如 "true"、"false" 或 "1"
+
+		// 从原始配置 options 中找出对应的那个项
+		const matchedOpt = item.options?.find(
+			(opt) => String(opt.value) === rawValue,
+		);
+
+		if (matchedOpt) {
+			// 如果找到了匹配项，直接使用 options 里定义的、带有原生类型的 value (比如 false 就会是 boolean 类型的 false)
+			setValue(item.key, matchedOpt.value);
+		} else {
+			// 兜底逻辑：如果 options 没匹配到，再尝试转数字，否则保留字符串
+			const num = Number(rawValue);
+			setValue(item.key, isNaN(num) ? rawValue : num);
+		}
 	};
 
 	/**

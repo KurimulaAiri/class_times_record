@@ -35,12 +35,8 @@
 		loading?: boolean;
 	}>();
 
-	// 加这两行
-	console.log("[debug] teachers =", props.teachers);
-	console.log("[debug] loading =", props.loading);
-
 	const handleContact = (teacher: TeacherResponse) => {
-		jump(ROUTES.TEACHER_DETAIL, teacher, "navigate", true);
+		jump(ROUTES.EDIT_TEACHER_INFO, teacher);
 	};
 </script>
 

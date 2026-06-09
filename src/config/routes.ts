@@ -49,6 +49,7 @@ export const ROUTES = {
 	RECORD_DETAIL: "/pages/main/teacher/record-detail/index", // 教师端扣课记录详情
 	TEACHER_DETAIL: "/pages/main/teacher/teacher-detail/index", // 教师端教师详情
 	ADD_TEACHER: "/pages/main/teacher/add-teacher/index", // 教师端添加教师
+	EDIT_TEACHER_INFO: "/pages/main/teacher/edit-teacher-info/index", // 教师端编辑教师信息
 } as const;
 
 export type PagePath = (typeof ROUTES)[keyof typeof ROUTES];

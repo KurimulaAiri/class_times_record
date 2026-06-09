@@ -58,7 +58,7 @@
 	});
 
 	const toEditCourse = () => {
-		jump(ROUTES.EDIT_COURSE_INFO);
+		jump(ROUTES.EDIT_COURSE_INFO, form.value);
 	};
 </script>
 

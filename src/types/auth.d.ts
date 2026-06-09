@@ -16,3 +16,11 @@ interface LoginByTokenRequest {
 interface RefreshTokenRequest {
 	token: string;
 }
+
+interface GetUserAuthInfoByTeacherIdRequest {
+	teacherId: number;
+}
+
+interface GetUserAuthInfoByTeacherIdResponse {
+	account: string;
+}

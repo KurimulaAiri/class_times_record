@@ -6,6 +6,9 @@ interface TeacherListResponse {
 interface TeacherResponse {
 	teacherId: number;
 	username: string;
+	account: string;
+	isAdmin: boolean;
+	isAvailable: boolean;
 	institution: InstitutionResponse;
 }
 
@@ -20,8 +23,12 @@ interface GetTeachersByInstitutionIdRequest {
 }
 
 interface UpdateTeacherByIdRequest {
+	institutionId: number;
 	teacherId: number;
 	username: string;
+	account?: string;
+	isAvailable?: boolean;
+	password?: string;
 }
 
 interface UpdateTeacherByIdResponse {
