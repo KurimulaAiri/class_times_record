@@ -203,14 +203,14 @@
 		await loadData();
 	});
 
-	uni.$on("refreshDeductList", async () => {
-		console.log("refreshDeductList调用");
+	uni.$on("refreshDeductListStudent", async () => {
+		console.log("refreshDeductList调用, in deduct-by-student");
 		await loadData();
 	});
 
 	onUnmounted(() => {
 		uni.$off("updateStudent");
-		uni.$off("refreshDeductList");
+		uni.$off("refreshDeductListStudent");
 	});
 </script>
 

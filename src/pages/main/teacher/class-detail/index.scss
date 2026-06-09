@@ -1,7 +1,7 @@
 .container {
 	min-height: 100vh;
 	background-color: #f5f7fa;
-	padding-bottom: calc(140rpx + var(--window-bottom));
+	padding-bottom: calc(200rpx + var(--window-bottom));
 }
 
 // 顶部背景区
@@ -253,11 +253,6 @@
 		&.period-card-hover {
 			background-color: #f1f5f9 !important; // 整体变深一点的优雅灰
 			transform: scale(0.995); // 整体轻微下陷
-
-			// ✨ 联动：大卡片按下时，让内部小条目的背景也顺应变色，保持整体感
-			.slots-box .slot-item {
-				background-color: #eaedf2;
-			}
 		}
 
 		.period-header {
@@ -310,6 +305,10 @@
 				box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.01);
 				transition: background-color 0.1s ease; // 配合父级变色
 
+				&.slot-item-hover {
+					background-color: #eaedf2;
+				}
+
 				.slot-left {
 					display: flex;
 					align-items: center;
@@ -317,12 +316,19 @@
 
 					// 星期标签
 					.day-badge {
+						width: 50rpx;
 						font-size: 24rpx;
 						color: #70a9a2; // 沿用你的主题色
 						background-color: rgba(112, 169, 162, 0.1); // 主题色浅背景
 						padding: 4rpx 16rpx;
 						border-radius: 8rpx;
 						font-weight: bold;
+						white-space: nowrap;
+
+						// 空占位，保持对齐
+						&.day-badge-empty {
+							opacity: 0;
+						}
 					}
 
 					.time-range {
@@ -337,11 +343,29 @@
 				.slot-right {
 					display: flex;
 					align-items: center;
-					gap: 4rpx;
+					gap: 12rpx; // 控制教室和备注之间的间距
+
+					.classroom-box {
+						display: flex;
+						align-items: center;
+					}
 
 					.classroom-text {
 						font-size: 24rpx;
-						color: #64748b;
+						color: #999;
+					}
+
+					// 新增：时间段框末尾的备注样式
+					.slot-remark {
+						font-size: 22rpx;
+						color: $theme-color; // 也可以换成你的主题色 #70a9a2 或者淡灰色 #999
+						background-color: rgba($theme-color, 0.08); // 淡淡的背景色
+						padding: 4rpx 12rpx;
+						border-radius: 6rpx;
+						max-width: 160rpx; // 限制最大宽度，防止小手机上撑开变形
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
 					}
 				}
 			}
@@ -362,42 +386,7 @@
 	}
 }
 
-// 底部操作
-.bottom-bar {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	background: #fff;
-	padding: 20rpx 30rpx calc(20rpx + var(--window-bottom));
-	display: flex;
-	gap: 20rpx;
-	box-shadow: 0 -10rpx 20rpx rgba(0, 0, 0, 0.03);
 
-	.btn {
-		flex: 1;
-		height: 90rpx;
-		line-height: 90rpx;
-		font-size: 30rpx;
-		border-radius: 45rpx;
-		font-weight: bold;
-
-		&::after {
-			border: none;
-		}
-
-		&-outline {
-			background: #fff;
-			color: $theme-color;
-			border: 2rpx solid $theme-color;
-		}
-
-		&-main {
-			background: $theme-color;
-			color: #fff;
-		}
-	}
-}
 
 .empty-box {
 	display: flex;

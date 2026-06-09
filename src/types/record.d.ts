@@ -10,6 +10,7 @@ interface RecordResponse {
 	courseRecord: CourseRecordResponse;
 	student: StudentResponse;
 	course: CourseResponse;
+	operatorTeacher: TeacherResponse;
 }
 
 type RecordListResponse = {

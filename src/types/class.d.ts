@@ -74,6 +74,7 @@ interface StudentDeductRequest {
 type FastDeductRequest = {
 	remark: string;
 	recordTime: string;
+	operatorId: number;
 } & (
 	| {
 			mode: "student";

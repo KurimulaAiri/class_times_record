@@ -53,6 +53,11 @@
 					type: "input",
 				},
 				{
+					label: "操作人",
+					key: "operatorTeacher.username",
+					type: "input",
+				},
+				{
 					label: "扣课日期",
 					key: "recordTimeStr",
 					type: "input",

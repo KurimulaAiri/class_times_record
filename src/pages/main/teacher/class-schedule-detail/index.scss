@@ -68,37 +68,3 @@
 	}
 }
 
-.bottom-bar {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	display: flex;
-	gap: 24rpx;
-	padding: 20rpx 24rpx;
-	padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
-	background: #fff;
-	border-top: 1rpx solid #eee;
-
-	.btn {
-		flex: 1;
-		height: 88rpx;
-		border-radius: 44rpx;
-		font-size: 28rpx;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-
-		&.btn-outline {
-			border: 2rpx solid #70a9a2;
-			color: #70a9a2;
-			background: #fff;
-		}
-
-		&.btn-main {
-			background: linear-gradient(135deg, #70a9a2 0%, #5a9a92 100%);
-			color: #fff;
-			border: none;
-		}
-	}
-}

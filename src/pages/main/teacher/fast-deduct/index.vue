@@ -79,9 +79,15 @@
 	import PageFooter from "@/components/page-footer/index.vue";
 	import DeductByStudent from "./components/deduct-by-student/index.vue";
 	import DeductByCourse from "./components/deduct-by-course/index.vue";
+	import { useUserStore } from "@/stores/user";
 	// 引入你对应的扣课 API
 	import { deductByStudentId, deductByCourseId } from "@/api/course-record";
 	import { ROUTES } from "@/config/routes";
+	const userStore = useUserStore();
+	const operatorId =
+		userStore.userInfo?.roleId === 4
+			? userStore.userInfo?.identityInfo.teacherId || 0
+			: 0;
 
 	// 获取当前日期的辅助函数 (格式: YYYY-MM-DD)
 	const getTodayDate = () => {
@@ -135,8 +141,10 @@
 	const handleSubmit = async () => {
 		uni.showLoading({ title: "处理中...", mask: true });
 		let finalDate = deductDate.value + " 00:00:00";
+		let flag = "";
 		try {
 			if (deductMode.value === "student") {
+				flag = "student";
 				console.log("按学生扣课时的负载数据", studentPayload.value);
 
 				if (!studentPayload.value?.isValid) {
@@ -150,9 +158,11 @@
 					recordTime: finalDate,
 					remark: remark.value,
 					classes: studentPayload.value.classes,
+					operatorId: operatorId,
 				};
 				await deductByStudentId(finalData);
 			} else {
+				flag = "course";
 				console.log("按课程扣课时的负载数据", coursePayload.value);
 				if (!coursePayload.value?.isValid) {
 					return showToast({ msg: "请选择课程并至少勾选一名学生" });
@@ -165,6 +175,7 @@
 					recordTime: finalDate,
 					remark: remark.value,
 					students: coursePayload.value.students,
+					operatorId: operatorId,
 				};
 				await deductByCourseId(finalData);
 			}
@@ -174,7 +185,11 @@
 			remark.value = "";
 
 			// 成功后可以通过 uni.$emit 通知子组件刷新列表数据
-			uni.$emit("refreshDeductList");
+			if (flag === "student") {
+				uni.$emit("refreshDeductListStudent");
+			} else if (flag === "course") {
+				uni.$emit("refreshDeductListCourse");
+			}
 		} catch (err) {
 			uni.hideLoading();
 			console.error(err);

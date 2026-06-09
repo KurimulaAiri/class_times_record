@@ -39,10 +39,13 @@
 			mode="display"
 		></FormPage>
 
-		<view class="bottom-bar">
-			<button class="btn btn-outline" @tap="handleEdit">编辑排课</button>
-			<button class="btn btn-main" @tap="handleDelete">删除排课</button>
-		</view>
+		<PageFooter
+			:buttons="[
+				{ text: '编辑排课', type: 'secondary' },
+				{ text: '删除排课', type: 'danger' },
+			]"
+			@btn-click="handleFooterClick"
+		/>
 	</view>
 </template>
 
@@ -52,6 +55,7 @@
 	import { getClassByClassId } from "@/api/class";
 	import { getClassScheduleById } from "@/api/class-schedule";
 	import FormPage from "@/components/form-page/index.vue";
+	import PageFooter from "@/components/page-footer/index.vue";
 	import { ROUTES } from "@/config/routes";
 
 	const classInfo = ref<ClassResponse>();
@@ -121,11 +125,12 @@
 		},
 	]);
 
-	usePageData<PeriodItem>(async (schedule) => {
-		scheduleDetail.value = schedule;
-		if (schedule.timeSlots[0].classId) {
+	usePageData<EditClassScheduleInfoPageTransfer>(async (schedule) => {
+		scheduleDetail.value = schedule.data;
+		console.log("scheduleDetail.value:", scheduleDetail.value);
+		if (schedule.data.timeSlots[0].classId) {
 			try {
-				const res = await getClassByClassId(schedule.timeSlots[0].classId);
+				const res = await getClassByClassId(schedule.data.timeSlots[0].classId);
 				classInfo.value = res.classList?.[0];
 			} catch (err) {
 				console.error("获取班级信息失败:", err);
@@ -133,11 +138,30 @@
 		}
 	});
 
+	/** 底部按钮点击事件分发 */
+	const handleFooterClick = (index: number) => {
+		if (index === 0) handleEdit();
+		else if (index === 1) handleDelete();
+	};
+
 	const handleEdit = () => {
-		jump(ROUTES.EDIT_CLASS_SCHEDULE_INFO, {
-			refreshEventFunctionName: "needRefreshInClassScheduleDetail",
-			data: scheduleDetail.value,
-		} as EditClassScheduleInfoPageTransfer);
+		const s = scheduleDetail.value;
+		const periodData: PeriodItem = {
+			dateKey: `${s.startDate}_${s.endDate}`,
+			startDate: s.startDate,
+			endDate: s.endDate,
+			remark: s.remark,
+			timeSlots: [s.timeSlots[0]],
+		};
+		jump(
+			ROUTES.EDIT_CLASS_SCHEDULE_INFO,
+			{
+				refreshEventFunctionName: "needRefreshInClassScheduleDetail",
+				data: periodData,
+			} as EditClassScheduleInfoPageTransfer,
+			"navigate",
+			true,
+		);
 	};
 
 	const handleDelete = () => {

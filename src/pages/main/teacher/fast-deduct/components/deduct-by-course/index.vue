@@ -204,13 +204,13 @@
 		await loadStudents();
 	});
 
-	uni.$on("refreshDeductList", async () => {
-		console.log("refreshDeductList调用");
+	uni.$on("refreshDeductListCourse", async () => {
+		console.log("refreshDeductList调用, in deduct-by-course");
 		await loadStudents();
 	});
 
 	onUnmounted(() => {
-		uni.$off("refreshDeductList");
+		uni.$off("refreshDeductListCourse");
 		uni.$off("updateCourse");
 	});
 </script>

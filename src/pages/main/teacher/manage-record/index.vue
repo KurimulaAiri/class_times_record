@@ -41,6 +41,10 @@
 						<text class="label">备注：</text>
 						<text class="value">{{ item.recordRemark || "无" }}</text>
 					</view>
+					<view class="info-row">
+						<text class="label">操作人：</text>
+						<text class="value">{{ item.operatorTeacher?.username || "无" }}</text>
+					</view>
 				</view>
 
 				<view class="card-footer">

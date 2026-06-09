@@ -23,7 +23,7 @@
 					<text class="label">授课教师</text>
 					<text class="value">{{
 						classDetail?.teachers
-							.map((teacher) => teacher.username)
+							?.map((teacher) => teacher.username)
 							.join("、") || "无"
 					}}</text>
 				</view>
@@ -100,12 +100,10 @@
 			</view>
 		</view>
 
-		<!-- ✅ 排课时间列表区域 -->
 		<view class="list-section schedule-section">
 			<view class="section-header">
 				<view class="title-left">
 					<text class="title-text">排课时间</text>
-					<!-- 展示总共有多少个不同的日期服务周期 -->
 					<text class="count-tag">{{ aggregatedSchedule.length }}个周期</text>
 				</view>
 				<view class="action-right" @tap="handleEditSchedule">
@@ -114,17 +112,11 @@
 				</view>
 			</view>
 
-			<!-- 渲染聚合后的排课数据 -->
 			<view class="schedule-list" v-if="aggregatedSchedule.length > 0">
-				<!-- 第一层：渲染合并后的日期区间 -->
 				<view
 					class="period-card"
 					v-for="(period, pIndex) in aggregatedSchedule"
 					:key="period.dateKey"
-					hover-class="period-card-hover"
-					hover-stay-time="150"
-					@tap="handlePeriodTap(period)"
-					@longpress="handlePeriodLongPress(period)"
 				>
 					<view class="period-header">
 						<view class="date-range">
@@ -133,38 +125,49 @@
 								>{{ period.startDate }} 至 {{ period.endDate }}</text
 							>
 						</view>
-						<text class="period-remark" v-if="period.remark">{{
-							period.remark
-						}}</text>
 					</view>
 
-					<!-- 第二层：渲染该日期区间内包含的所有周内上课时间 -->
 					<view class="slots-box">
 						<view
 							class="slot-item"
 							v-for="(slot, sIndex) in period.timeSlots"
 							:key="slot.id || sIndex"
+							hover-class="slot-item-hover"
+							hover-stay-time="150"
+							@tap="handleSlotTap(slot)"
+							@longpress="handleSlotLongPress(slot)"
 						>
 							<view class="slot-left">
-								<view class="day-badge">{{
-									getDayOfWeekText(slot.dayOfWeek)
-								}}</view>
+								<view
+									v-if="
+										sIndex === 0 ||
+										period.timeSlots[sIndex - 1].dayOfWeek !== slot.dayOfWeek
+									"
+									class="day-badge"
+									>{{ getDayOfWeekText(slot.dayOfWeek) }}</view
+								>
+								<view v-else class="day-badge day-badge-empty"></view>
 								<view class="time-range">
 									<text class="time-text"
 										>{{ slot.startTimeStr }} - {{ slot.endTimeStr }}</text
 									>
 								</view>
 							</view>
-							<view class="slot-right" v-if="slot.classroom">
-								<uni-icons type="location" size="14" color="#999"></uni-icons>
-								<text class="classroom-text">{{ slot.classroom }}</text>
+
+							<view class="slot-right">
+								<view class="classroom-box" v-if="slot.classroom">
+									<uni-icons type="location" size="14" color="#999"></uni-icons>
+									<text class="classroom-text">{{ slot.classroom }}</text>
+								</view>
+								<text class="slot-remark" v-if="slot.remark">{{
+									slot.remark
+								}}</text>
 							</view>
 						</view>
 					</view>
 				</view>
 			</view>
 
-			<!-- 排课空状态 -->
 			<view class="empty-box min-empty" v-else>
 				<image
 					src="/static/icon/empty-search.svg"
@@ -175,10 +178,13 @@
 			</view>
 		</view>
 
-		<view class="bottom-bar">
-			<button class="btn btn-outline" @tap="handleEdit">编辑班级</button>
-			<button class="btn btn-main" @tap="handleAttendance">点名签到</button>
-		</view>
+		<PageFooter
+			:buttons="[
+				{ text: '编辑班级', type: 'secondary' },
+				{ text: '点名签到', type: 'primary' },
+			]"
+			@btn-click="handleFooterClick"
+		/>
 	</view>
 </template>
 
@@ -188,6 +194,7 @@
 	import { parseData, jump, showToast } from "@/utils/common";
 	import { getStudentListByClassId } from "@/api/student";
 	import { useStudentStore } from "@/stores/student";
+	import { useUserStore } from "@/stores/user";
 	import { ROUTES } from "@/config/routes";
 	import {
 		addStudentToClass,
@@ -196,9 +203,15 @@
 	} from "@/api/class";
 	import { getClassScheduleByClassId } from "@/api/class-schedule";
 	import { deductByClassId } from "@/api/course-record";
+	import PageFooter from "@/components/page-footer/index.vue";
 
 	const themeColor = ref("#70a9a2"); // 对应你的 $theme-color
 	const classDetail = ref<ClassResponse>();
+	const userStore = useUserStore();
+	const operatorId =
+		userStore.userInfo?.roleId === 4
+			? userStore.userInfo?.identityInfo.teacherId || 0
+			: 0;
 
 	const students = ref<StudentResponse[]>([]);
 	const currentStudent = ref<StudentResponse>();
@@ -212,7 +225,6 @@
 			dateKey: string;
 			startDate: string;
 			endDate: string;
-			remark?: string;
 			timeSlots: ClassScheduleResponse[];
 		}[] = [];
 
@@ -228,7 +240,6 @@
 					dateKey,
 					startDate: item.startDateStr,
 					endDate: item.endDateStr,
-					remark: item.remark,
 					timeSlots: [],
 				};
 				groups.push(group);
@@ -236,6 +247,14 @@
 
 			// 将当前的时间段推入该日期组中
 			group.timeSlots.push(item);
+		});
+
+		// 对每个分组内的 timeSlots 按 dayOfWeek 升序，同一天内按 startTimeStr 升序排列
+		groups.forEach((group) => {
+			group.timeSlots.sort((a, b) => {
+				if (a.dayOfWeek !== b.dayOfWeek) return a.dayOfWeek - b.dayOfWeek;
+				return a.startTimeStr.localeCompare(b.startTimeStr);
+			});
 		});
 
 		return groups;
@@ -480,6 +499,12 @@
 		jump(ROUTES.SELECT_STUDENT, { type: "multi" });
 	};
 
+	/** 底部按钮点击事件分发 */
+	const handleFooterClick = (index: number) => {
+		if (index === 0) handleEdit();
+		else if (index === 1) handleAttendance();
+	};
+
 	/** 跳转到编辑班级信息页面 */
 	const handleEdit = () => {
 		jump(ROUTES.EDIT_CLASS_INFO, classDetail.value, "navigate", true);
@@ -500,6 +525,7 @@
 						classId: classDetail.value?.id || 0,
 						recordTime: getTodayDate() + " 00:00:00",
 						remark: "班级集体扣课",
+						operatorId: operatorId,
 					});
 					if (res.result !== 0) {
 						showToast("点名失败");
@@ -533,47 +559,58 @@
 		jump(ROUTES.STUDENT_DETAIL);
 	};
 
-	/** 点击课程时段 */
-	const handlePeriodTap = (period: PeriodItem) => {
-		console.log("点击了排课周期:", period);
-		// 跳转到排课详情页
-		if (period.timeSlots && period.timeSlots.length > 0) {
-			jump(ROUTES.CLASS_SCHEDULE_DETAIL, period);
-		}
+	/** 点击时间段，跳转到排课详情 */
+	const handleSlotTap = (slot: ClassScheduleResponse) => {
+		jump(
+			ROUTES.CLASS_SCHEDULE_DETAIL,
+			{
+				refreshEventFunctionName: "needRefresh",
+				data: {
+					dateKey: `${slot.startDateStr}_${slot.endDateStr}`,
+					startDate: slot.startDateStr,
+					endDate: slot.endDateStr,
+					remark: slot.remark,
+					timeSlots: [slot],
+				} as PeriodItem,
+			} as EditClassScheduleInfoPageTransfer,
+			"navigate",
+			true,
+		);
 	};
 
-	/** 长按课程时段 */
-	const handlePeriodLongPress = (period: PeriodItem) => {
-		// 触发震动反馈
+	/** 长按时间段 */
+	const handleSlotLongPress = (slot: ClassScheduleResponse) => {
 		uni.vibrateShort();
-
-		console.log("长按了排课周期:", period);
-
 		uni.showActionSheet({
-			itemList: ["调整该周期排课", "删除该周期排课"],
+			itemList: ["编辑该排课", "删除该排课"],
 			itemColor: "#333",
 			success: (res) => {
 				switch (res.tapIndex) {
 					case 0:
-						console.log("点击调整该周期:", period.dateKey);
-						jump(ROUTES.EDIT_CLASS_SCHEDULE_INFO, {
-							refreshEventFunctionName: "needRefresh",
-							data: period,
-						} as EditClassScheduleInfoPageTransfer);
+						jump(
+							ROUTES.EDIT_CLASS_SCHEDULE_INFO,
+							{
+								refreshEventFunctionName: "needRefresh",
+								data: {
+									dateKey: `${slot.startDateStr}_${slot.endDateStr}`,
+									startDate: slot.startDateStr,
+									endDate: slot.endDateStr,
+									remark: slot.remark,
+									timeSlots: [slot],
+								} as PeriodItem,
+							} as EditClassScheduleInfoPageTransfer,
+							"navigate",
+							true,
+						);
 						break;
 					case 1:
 						uni.showModal({
-							title: "批量删除提示",
-							content: `确定要删除 [${period.startDate} 至 ${period.endDate}] 期间内的所有排课时间段吗？该操作不可撤销。`,
-							confirmColor: "#dd524d", // 警告类操作用红色按钮
+							title: "删除确认",
+							content: "确定要删除该排课时间段吗？",
+							confirmColor: "#dd524d",
 							success: (modalRes) => {
 								if (modalRes.confirm) {
-									console.log("执行批量删除，日期标识为:", period.dateKey);
-									// 这里可以过滤出该周期下所有 timeSlots 的 id 传给后端
-									const idsToDelete = period.timeSlots.map(
-										(slot: any) => slot.id,
-									);
-									console.log("待删除的排课ID列表:", idsToDelete);
+									console.log("删除排课ID:", slot.id);
 								}
 							},
 						});
