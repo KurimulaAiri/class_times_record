@@ -10,7 +10,7 @@ const getClassListByStudentId = async (
 	QueryForm: GetClassListByStudentIdRequest,
 ): Promise<ClassListResponse> => {
 	const res = await post<ClassListResponse>(
-		"/class/get_classes_by_student_id",
+		"/biz/class/get_classes_by_student_id",
 		QueryForm,
 	);
 	return res.data;
@@ -25,7 +25,7 @@ const getClassListByTeacherId = async (
 	QueryForm: GetClassListByTeacherIdRequest,
 ): Promise<ClassListResponse> => {
 	const res = await post<ClassListResponse>(
-		"/class/get_classes_by_teacher_id",
+		"/biz/class/get_classes_by_teacher_id",
 		QueryForm,
 	);
 	return res.data;
@@ -40,7 +40,7 @@ const getClassListByInstitutionId = async (
 	QueryForm: GetClassListByInstitutionIdRequest,
 ): Promise<ClassListResponse> => {
 	const res = await post<ClassListResponse>(
-		"/class/get_classes_by_institution_id",
+		"/biz/class/get_classes_by_institution_id",
 		QueryForm,
 	);
 	return res.data;
@@ -81,7 +81,7 @@ const addStudentToClass = async (
 ): Promise<number> => {
 	let result = 0;
 	await post<AddStudentToClassResponse>(
-		"/class/add_student_to_class",
+		"/biz/class/add_student_to_class",
 		form,
 	).then((res) => {
 		if (res.code === 200) {
@@ -102,7 +102,7 @@ const removeStudentFromClass = async (
 ): Promise<number> => {
 	let result = 0;
 	await post<RemoveStudentFromClassResponse>(
-		"/class/remove_student_from_class",
+		"/biz/class/remove_student_from_class",
 		form,
 	).then((res) => {
 		if (res.code === 200) {
@@ -121,7 +121,7 @@ const removeStudentFromClass = async (
 const getClassByClassId = async (
 	classId: number,
 ): Promise<ClassListResponse> => {
-	const res = await post<ClassListResponse>("/class/get_class_by_id", {
+	const res = await post<ClassListResponse>("/biz/class/get_class_by_id", {
 		classId,
 	});
 	return res.data;
@@ -134,7 +134,7 @@ const getClassByClassId = async (
  */
 const insertClass = async (form: InsertClassRequest): Promise<number> => {
 	let result = 0;
-	await post<InsertClassResponse>("/class/insert", form).then((res) => {
+	await post<InsertClassResponse>("/biz/class/insert", form).then((res) => {
 		if (res.code === 200) {
 			result = res.data.classId;
 			return result;
@@ -150,7 +150,7 @@ const insertClass = async (form: InsertClassRequest): Promise<number> => {
  */
 const updateClassById = async (form: UpdateClassRequest): Promise<number> => {
 	let result = 0;
-	await post<UpdateClassResponse>("/class/update_by_id", form).then((res) => {
+	await post<UpdateClassResponse>("/biz/class/update_by_id", form).then((res) => {
 		if (res.code === 200) {
 			result = res.data.result;
 			return result;

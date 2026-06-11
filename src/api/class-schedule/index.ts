@@ -11,7 +11,7 @@ const getClassScheduleByClassId = async (
 ): Promise<ClassScheduleResponse[]> => {
 	let res: ClassScheduleResponse[] = [];
 	await post<ClassScheduleListResponse>(
-		`/class_schedule/get_by_class_id`,
+		`/biz/class_schedule/get_by_class_id`,
 		query,
 	).then((resIn: ApiResponse<ClassScheduleListResponse>) => {
 		res = resIn.data.classSchedules || [];
@@ -29,7 +29,7 @@ const getClassScheduleByInstitutionId = async (
 ): Promise<ClassScheduleResponse[]> => {
 	let res: ClassScheduleResponse[] = [];
 	await post<ClassScheduleListResponse>(
-		`/class_schedule/get_by_institution_id`,
+		`/biz/class_schedule/get_by_institution_id`,
 		query,
 	).then((resIn: ApiResponse<ClassScheduleListResponse>) => {
 		res = resIn.data.classSchedules || [];
@@ -41,7 +41,7 @@ const getClassScheduleById = async (
 	query: GetClassScheduleByIdRequest,
 ): Promise<ClassScheduleResponse> => {
 	return (
-		await post<ClassScheduleListResponse>(`/class_schedule/get_by_id`, query)
+		await post<ClassScheduleListResponse>(`/biz/class_schedule/get_by_id`, query)
 	).data.classSchedules[0];
 };
 
@@ -50,7 +50,7 @@ const updateClassScheduleById = async (
 ): Promise<UpdateClassScheduleResponse> => {
 	return (
 		await post<UpdateClassScheduleResponse>(
-			`/class_schedule/update_by_id`,
+			`/biz/class_schedule/update_by_id`,
 			query,
 		)
 	).data;

@@ -12,7 +12,7 @@ const getStudentByStudentId = async (
 	studentId: number,
 ): Promise<StudentResponse> => {
 	let student: StudentResponse = {} as StudentResponse;
-	await post<StudentListResponse>("/student/get_by_student_id", {
+	await post<StudentListResponse>("/biz/student/get_by_student_id", {
 		studentId,
 	}).then((res) => {
 		student = res.data.list[0];
@@ -33,7 +33,7 @@ const getStudentListByParentId = async (
 		showToast("身份错误", "error");
 		return studentList;
 	}
-	await post<StudentListResponse>("/student/get_by_parent_id", query).then(
+	await post<StudentListResponse>("/biz/student/get_by_parent_id", query).then(
 		(res) => {
 			studentList = res.data.list;
 		},
@@ -54,7 +54,7 @@ const getStudentListByTeacherId = async (
 		showToast("身份错误", "error");
 		return studentList;
 	}
-	await post<StudentListResponse>("/student/get_by_teacher_id", query).then(
+	await post<StudentListResponse>("/biz/student/get_by_teacher_id", query).then(
 		(res) => {
 			studentList = res.data.list;
 		},
@@ -75,7 +75,7 @@ const getStudentListByClassId = async (
 		showToast("身份错误", "error");
 		return studentList;
 	}
-	await post<StudentListResponse>("/student/get_by_class_id", QueryForm).then(
+	await post<StudentListResponse>("/biz/student/get_by_class_id", QueryForm).then(
 		(res) => {
 			studentList = res.data.list;
 		},
@@ -96,7 +96,7 @@ const getStudentListByCourseId = async (
 		showToast("身份错误", "error");
 		return studentList;
 	}
-	await post<StudentListResponse>("/student/get_by_course_id", query).then(
+	await post<StudentListResponse>("/biz/student/get_by_course_id", query).then(
 		(res) => {
 			studentList = res.data.list;
 		},
@@ -117,7 +117,7 @@ const getStudentListByInstitutionId = async (
 		showToast("身份错误", "error");
 		return studentList;
 	}
-	await post<StudentListResponse>("/student/get_by_institution_id", query).then(
+	await post<StudentListResponse>("/biz/student/get_by_institution_id", query).then(
 		(res) => {
 			studentList = res.data.list;
 		},
@@ -163,7 +163,7 @@ const getStudent = async (
  * @returns 返回后端响应数据
  */
 const updateStudentInfo = (studentInfo: UpdateStudentInfoRequest) => {
-	return post<ApiResponse<any>>("/student/update", studentInfo);
+	return post<ApiResponse<any>>("/biz/student/update", studentInfo);
 };
 
 /**
@@ -173,7 +173,7 @@ const updateStudentInfo = (studentInfo: UpdateStudentInfoRequest) => {
  */
 const insertStudent = async (data: InsertStudentRequest): Promise<number> => {
 	let studentId = 0;
-	await post<InsertStudentResponse>("/student/insert", data).then((res) => {
+	await post<InsertStudentResponse>("/biz/student/insert", data).then((res) => {
 		console.log("插入学生响应:", res);
 		studentId = res.data.studentId;
 	});
@@ -187,7 +187,7 @@ const insertStudent = async (data: InsertStudentRequest): Promise<number> => {
  */
 const updateStudent = async (data: UpdateStudentRequest): Promise<number> => {
 	let studentId = 0;
-	await post<UpdateStudentResponse>("/student/update", data).then((res) => {
+	await post<UpdateStudentResponse>("/biz/student/update", data).then((res) => {
 		console.log("更新学生响应:", res);
 		studentId = res.data.studentId;
 	});

@@ -7,7 +7,7 @@ import { post } from "@/utils/request";
  * @returns 返回课程列表响应数据
  */
 const getCourseByInstitutionId = async (query: GetCourseByInstitutionIdRequest) => {
-	const res = await post<CourseListResponse>(`/course/get_course_by_institution_id`, query);
+	const res = await post<CourseListResponse>(`/biz/course/get_course_by_institution_id`, query);
 	return res.data;
 };
 
@@ -17,7 +17,7 @@ const getCourseByInstitutionId = async (query: GetCourseByInstitutionIdRequest) 
  * @returns 返回课程列表响应数据
  */
 const getCourseListByStudentId = async (query: GetCourseListByStudentIdRequest) => {
-	const res = await post<CourseListResponse>(`/course/get_course_by_student_id`, query);
+	const res = await post<CourseListResponse>(`/biz/course/get_course_by_student_id`, query);
 	return res.data;
 };
 
@@ -27,7 +27,7 @@ const getCourseListByStudentId = async (query: GetCourseListByStudentIdRequest) 
  * @returns 返回新增课程响应数据
  */
 const insertCourse = async (query: InsertCourseRequest) => {
-	const res = await post<InsertCourseResponse>(`/course/add_course`, query);
+	const res = await post<InsertCourseResponse>(`/biz/course/add_course`, query);
 	return res.data;
 };
 
@@ -37,7 +37,7 @@ const insertCourse = async (query: InsertCourseRequest) => {
  * @returns 返回影响的行数
  */
 const updateCourse = async (form: UpdateCourseRequest): Promise<number> => {
-	const res = await post<UpdateCourseResponse>(`/course/update_by_id`, form);
+	const res = await post<UpdateCourseResponse>(`/biz/course/update_by_id`, form);
 	return res.data.effect;
 };
 

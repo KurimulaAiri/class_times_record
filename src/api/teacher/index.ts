@@ -7,7 +7,7 @@ import { post } from "@/utils/request";
  * @returns 返回教师信息对象
  */
 const getTeacherById = async (id: number): Promise<TeacherResponse> => {
-	const res = await post<TeacherListResponse>(`/teacher/get_by_id`, {
+	const res = await post<TeacherListResponse>(`/biz/teacher/get_by_id`, {
 		teacherId: id,
 	});
 
@@ -25,7 +25,7 @@ const getTeachersByInstitutionId = async (
 	form: GetTeachersByInstitutionIdRequest,
 ): Promise<TeacherListResponse> => {
 	const res = await post<TeacherListResponse>(
-		`/teacher/get_teacher_by_institution_id`,
+		`/biz/teacher/get_teacher_by_institution_id`,
 		{
 			institutionId: form.institutionId,
 			currentPage: form.currentPage,
@@ -39,7 +39,7 @@ const updateTeacherById = async (
 	form: UpdateTeacherByIdRequest,
 ): Promise<number> => {
 	const res = await post<UpdateTeacherByIdResponse>(
-		`/teacher/update_by_id`,
+		`/biz/teacher/update_by_id`,
 		form,
 	);
 	return res.data.effect;
@@ -51,7 +51,7 @@ const updateTeacherById = async (
  * @returns 返回新创建的教师 ID
  */
 const insertTeacher = async (form: InsertTeacherRequest): Promise<TeacherResponse> => {
-	const res = await post<InsertTeacherResponse>(`/teacher/insert`, form);
+	const res = await post<InsertTeacherResponse>(`/biz/teacher/insert`, form);
 	return res.data.teacher;
 };
 

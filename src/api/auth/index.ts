@@ -33,7 +33,7 @@ const getOpenId = (): Promise<string> => {
 			success: async (res) => {
 				if (res.code) {
 					try {
-						const response = await post<LoginResponse>("/auth/get_open_id", {
+						const response = await post<LoginResponse>("/auth/auth/get_open_id", {
 							code: res.code,
 						});
 						console.log("OpenID 获取成功:", response);
@@ -60,7 +60,7 @@ const loginByPwd = async (
 	data: LoginByPwdRequest,
 ): Promise<ApiResponse<LoginResponse>> => {
 	try {
-		const loginRes = await post<LoginResponse>("/auth/login_by_pwd", {
+		const loginRes = await post<LoginResponse>("/auth/auth/login_by_pwd", {
 			...data,
 			// #ifdef MP-WEIXIN
 			platform: "WEIXIN",
@@ -87,7 +87,7 @@ const loginNoPwd = () => {
 			provider: "weixin",
 			success: (res) => {
 				if (res.code) {
-					post<LoginResponse>("/auth/login_no_pwd", {
+					post<LoginResponse>("/auth/auth/login_no_pwd", {
 						code: res.code,
 						role: userInfo.roleId,
 					}).then((res) => {
@@ -110,7 +110,7 @@ const loginByToken = async (
 	params: LoginByTokenRequest,
 ): Promise<ApiResponse<LoginResponse>> => {
 	try {
-		const loginRes = await post<LoginResponse>("/auth/login_by_token", {
+		const loginRes = await post<LoginResponse>("/auth/auth/login_by_token", {
 			...params,
 			// #ifdef MP-WEIXIN
 			platform: "weixin",
@@ -137,7 +137,7 @@ const refreshAccessToken = async (): Promise<boolean> => {
 	}
 
 	try {
-		const res = await post<LoginResponse>("/auth/refresh", {
+		const res = await post<LoginResponse>("/auth/auth/refresh", {
 			token: refreshToken,
 		} as RefreshTokenRequest);
 
@@ -166,7 +166,7 @@ const logOut = (targetRoute: string = ROUTES.INDEX, params: any = null) => {
 
 	const token = uni.getStorageSync("accessToken");
 
-	post("/auth/logout", { token })
+	post("/auth/auth/logout", { token })
 		.then((res) => {
 			console.log("后端同步登出成功:", res);
 		})
@@ -191,7 +191,7 @@ const getUserAuthInfoByTeacherId = async (
 	data : GetUserAuthInfoByTeacherIdRequest
 ): Promise<ApiResponse<GetUserAuthInfoByTeacherIdResponse>> => {
 	try {
-		const res = await post<GetUserAuthInfoByTeacherIdResponse>("/auth/get_user_auth_info_by_teacher_id", {
+		const res = await post<GetUserAuthInfoByTeacherIdResponse>("/auth/auth/get_user_auth_info_by_teacher_id", {
 			...data,
 		});
 		return res;

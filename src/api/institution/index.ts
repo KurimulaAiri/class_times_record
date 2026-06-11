@@ -5,7 +5,7 @@ const getInstitutionById = async (
 ): Promise<InstitutionResponse | null> => {
 	try {
 		const res = await post<GetInstitutionByIdResponse>(
-			`/institution/get_by_id`,
+			`/biz/institution/get_by_id`,
 			data,
 		);
 		console.log("getInstitutionById 响应:", res);
@@ -27,7 +27,7 @@ const getInstitutionByOpenId = async (
 
 	try {
 		const res = await post<GetInstitutionByOpenIdResponse>(
-			`/institution/get_by_open_id`,
+			`/biz/institution/get_by_open_id`,
 			{
 				...data,
 				platform: platform,
@@ -46,7 +46,7 @@ const getInstitutionByCode = async (
 ): Promise<InstitutionResponse | null> => {
 	try {
 		const res = await post<GetInstitutionByCodeResponse>(
-			`/institution/get_by_institution_code`,
+			`/biz/institution/get_by_institution_code`,
 			data,
 		);
 		// 确保数组有数据时才返回第一项
@@ -66,7 +66,7 @@ const updateInstitution = async (
 	let res = {} as UpdateInstitutionResponse;
 	try {
 		const resIn = await post<UpdateInstitutionResponse>(
-			`/institution/update`,
+			`/biz/institution/update`,
 			data,
 		);
 		res = resIn?.data || {};

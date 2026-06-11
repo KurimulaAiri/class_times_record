@@ -4,12 +4,9 @@ import { showToast } from "@/utils/common";
 
 /** API 基础地址，根据环境变量自动切换 */
 let baseUrl: string;
-console.log("process.env.NODE_ENV:", process.env.NODE_ENV);
 switch (process.env.NODE_ENV) {
 	case "development":
-		baseUrl = "http://localhost:9999";
-		// baseUrl = "https://api.kurimula-airi.top";
-
+		baseUrl = "http://localhost:9080";
 		break;
 	case "production":
 		baseUrl = "https://api.kurimula-airi.top";
@@ -24,9 +21,21 @@ switch (process.env.NODE_ENV) {
 /** 请求超时时间（毫秒） */
 const timeout = 10000;
 
+/**
+ * Gateway 路由前缀常量
+ *
+ * Gateway 路由规则（stripPrefix=1，会去掉第一段路径）：
+ *   /auth/** → auth-service    （去掉 /auth 后到达 Controller）
+ *   /biz/**  → business-service（去掉 /biz  后到达 Controller）
+ *
+ * 前端 API 路径必须以这些前缀开头，才能被 Gateway 正确路由。
+ */
+const AUTH_PREFIX = "/auth";
+const BIZ_PREFIX = "/biz";
+
 /** 请求配置选项 */
 type RequestOptions = {
-	/** 请求路径 */
+	/** 请求路径（必须以 /auth 或 /biz 开头） */
 	url: string;
 	/** 请求方法，默认 GET */
 	method?: "GET" | "POST" | "PUT" | "DELETE";
@@ -71,7 +80,6 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 	let loading = true;
 
 	if (loading) {
-		console.log("loading:", url);
 		uni.showLoading({
 			title: "加载中...",
 			mask: true,
@@ -80,8 +88,7 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 
 	const { sign, timestamp, nonce } = generateSign(data);
 
-	const safeUrl = url.startsWith("/") ? url : "/" + url;
-	const fullUrl = baseUrl + safeUrl;
+	const fullUrl = baseUrl + url;
 
 	console.log("请求URL:", fullUrl);
 
@@ -95,7 +102,7 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 				data,
 				header: {
 					"Content-Type": "application/json",
-					token: accessToken,
+					Authorization: accessToken ? `Bearer ${accessToken}` : "",
 					...header,
 					"x-sign": sign,
 					"x-timestamp": timestamp,
@@ -111,7 +118,10 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 							if (responseData.code === 200) {
 								resolve(responseData as T);
 							} else {
-								showToast({ msg: responseData.message || "业务逻辑错误", icon: "none" });
+								showToast({
+									msg: responseData.message || "业务逻辑错误",
+									icon: "none",
+								});
 								reject(responseData as T);
 							}
 							break;
@@ -137,7 +147,10 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 							reject(res as T);
 							break;
 						default:
-							showToast({ msg: `${responseData.message || "未知错误"}`, icon: "none" });
+							showToast({
+								msg: `${responseData.message || "未知错误"}`,
+								icon: "none",
+							});
 							reject(res as T);
 							break;
 					}
@@ -153,7 +166,6 @@ const request = <T>(options: RequestOptions): Promise<T> => {
 				},
 				complete: () => {
 					if (loading) {
-						console.log("hideLoading:", url);
 						uni.hideLoading();
 					}
 				},
@@ -185,7 +197,7 @@ const handle401 = (
 	reject: Function,
 	_res: any,
 ) => {
-	if (url === "/auth/refresh") {
+	if (url === `${AUTH_PREFIX}/auth/refresh`) {
 		uni.removeStorageSync("accessToken");
 		uni.removeStorageSync("refreshToken");
 		showToast({ msg: "登录过期，请重新登录", icon: "none" });
@@ -213,7 +225,7 @@ const handle401 = (
 		}
 
 		uni.request({
-			url: baseUrl + "/auth/refresh",
+			url: baseUrl + `${AUTH_PREFIX}/auth/refresh`,
 			method: "POST",
 			data: { token: refreshToken },
 			header: { "Content-Type": "application/json" },
@@ -285,15 +297,13 @@ const retryRequest = (
 	const { sign, timestamp, nonce } = generateSign(data);
 	const accessToken = uni.getStorageSync("accessToken") || "";
 
-	const fullUrl = baseUrl + (url.startsWith("/") ? url : "/" + url);
-
 	uni.request({
-		url: fullUrl,
+		url: baseUrl + url,
 		method: method as any,
 		data,
 		header: {
 			"Content-Type": "application/json",
-			token: accessToken,
+			Authorization: accessToken ? `Bearer ${accessToken}` : "",
 			...header,
 			"x-sign": sign,
 			"x-timestamp": timestamp,
@@ -323,7 +333,7 @@ const retryRequest = (
 
 /**
  * 发送 GET 请求
- * @param url 请求路径
+ * @param url 请求路径（必须以 /auth 或 /biz 开头）
  * @param data 查询参数，默认 {}
  * @param options 额外请求配置，默认 {}
  */
@@ -342,7 +352,7 @@ export const get = <T>(
 
 /**
  * 发送 POST 请求
- * @param url 请求路径
+ * @param url 请求路径（必须以 /auth 或 /biz 开头）
  * @param data 请求体数据，默认 {}
  * @param options 额外请求配置，默认 {}
  */
@@ -361,7 +371,7 @@ export const post = <T>(
 
 /**
  * 发送 PUT 请求
- * @param url 请求路径
+ * @param url 请求路径（必须以 /auth 或 /biz 开头）
  * @param data 请求体数据，默认 {}
  * @param options 额外请求配置，默认 {}
  */
@@ -380,7 +390,7 @@ export const put = <T>(
 
 /**
  * 发送 DELETE 请求
- * @param url 请求路径
+ * @param url 请求路径（必须以 /auth 或 /biz 开头）
  * @param data 请求体数据，默认 {}
  * @param options 额外请求配置，默认 {}
  */

@@ -10,7 +10,7 @@ const getCourseRecordList = async (
 	data: GetCourseRecordListRequest,
 ): Promise<CourseRecordResponse[]> => {
 	const res = await post<CourseRecordListResponse>(
-		"/course_record/new_get",
+		"/biz/course_record/new_get",
 		data,
 	);
 	return res.data.courseRecords;
@@ -20,7 +20,7 @@ const getCourseRecordListByStudentId = async (
 	data: GetCourseRecordListByStudentIdRequest,
 ): Promise<CourseRecordResponse[]> => {
 	const res = await post<CourseRecordListResponse>(
-		"/course_record/get_by_student_id",
+		"/biz/course_record/get_by_student_id",
 		data,
 	);
 	return res.data.courseRecords;
@@ -30,7 +30,7 @@ const insertCourseRecord = async (
 	form: InsertCourseRecordRequest,
 ): Promise<CourseRecordResponse> => {
 	let result = {} as CourseRecordResponse;
-	await post<CourseRecordResponse>("/course_record/insert", form).then(
+	await post<CourseRecordResponse>("/biz/course_record/insert", form).then(
 		(res) => {
 			if (res.code === 200) {
 				result = res.data;
@@ -50,7 +50,7 @@ const deductByStudentId = async (
 	data: FastDeductRequest & { mode: "student" },
 ): Promise<FastDeductResponse> => {
 	const res = await post<FastDeductResponse>(
-		"/course_record/deduct_by_student_id",
+		"/biz/course_record/deduct_by_student_id",
 		data,
 	);
 	return res.data;
@@ -65,7 +65,7 @@ const deductByCourseId = async (
 	data: FastDeductRequest & { mode: "course" },
 ): Promise<FastDeductResponse> => {
 	return (
-		await post<FastDeductResponse>("/course_record/deduct_by_course_id", data)
+		await post<FastDeductResponse>("/biz/course_record/deduct_by_course_id", data)
 	).data;
 };
 
@@ -73,14 +73,14 @@ const deductByClassId = async (
 	data: FastDeductRequest & { mode: "class" },
 ): Promise<FastDeductResponse> => {
 	return (
-		await post<FastDeductResponse>("/course_record/deduct_by_class_id", data)
+		await post<FastDeductResponse>("/biz/course_record/deduct_by_class_id", data)
 	).data;
 };
 
 const updateCourseRecordById = async (
 	form: UpdateCourseRecordRequest,
 ): Promise<number> => {
-	const res = await post<number>("/course_record/update", form);
+	const res = await post<number>("/biz/course_record/update", form);
 	return res.data;
 };
 

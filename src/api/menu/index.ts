@@ -7,7 +7,7 @@ import { post } from "@/utils/request";
  * @returns 返回菜单列表响应数据
  */
 const getMenuList = (QueryForm: GetMenuListRequest) => {
-    return post<MenuListResponse>("/menu/get_menu_by_role", QueryForm);
+    return post<MenuListResponse>("/auth/menu/get_menu_by_role", QueryForm);
 };
 
 export { getMenuList };
