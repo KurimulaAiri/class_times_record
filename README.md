@@ -2,14 +2,39 @@
 
 教育培训机构课时管理微信小程序，面向教师和家长提供学生管理、班级管理、课程管理、课时扣费、排课等功能。
 
+## 系统架构
+
+```
+微信小程序 → Nginx(:9080) → Gateway(:9999) → auth-service(:10002)
+                                           → business-service(:10001)
+```
+
+| 组件 | 端口 | 说明 |
+|------|------|------|
+| Nginx | 9080 | 反向代理，动态 DNS 转发到 Gateway |
+| Gateway | 9999 | JWT 认证 + 路由分发（StripPrefix=1） |
+| auth-service | 10002 | 认证/菜单/权限 |
+| business-service | 10001 | 学生/教师/班级/课程/课时/机构/记录 |
+| Nacos | 8848 | 服务注册/配置中心 |
+| MySQL | 3306 | 数据库（121.196.229.10） |
+
+## Gateway 路由规则
+
+| 前端路径前缀 | 目标服务 | 说明 |
+|-------------|---------|------|
+| `/auth/**` | auth-service | 认证、菜单（stripPrefix=1） |
+| `/biz/**` | business-service | 所有业务接口（stripPrefix=1） |
+
 ## 技术栈
 
-- **框架**: uni-app (Vue 3 Composition API)
-- **语言**: TypeScript
-- **构建**: Vite 5
-- **状态管理**: Pinia
-- **加密**: sm-crypto (SM2 + SM3 国密算法)
-- **目标平台**: 微信小程序 (主要) / H5
+| 类别 | 技术 |
+|------|------|
+| 框架 | uni-app (Vue 3 Composition API) |
+| 语言 | TypeScript |
+| 构建 | Vite 5 |
+| 状态管理 | Pinia |
+| 加密 | sm-crypto (SM2 + SM3 国密算法) |
+| 目标平台 | 微信小程序 (主要) / H5 |
 
 ## 快速开始
 
@@ -35,16 +60,6 @@ pnpm type-check
 ```
 src/
 ├── api/                    # API 接口层（按业务模块分目录）
-│   ├── auth/               # 认证（登录、登出、Token 刷新）
-│   ├── menu/               # 菜单
-│   ├── student/            # 学生
-│   ├── teacher/            # 教师
-│   ├── class/              # 班级
-│   ├── course/             # 课程
-│   ├── course-record/      # 课卡记录 + 扣课
-│   ├── class-schedule/     # 班级课表
-│   ├── institution/        # 机构/校区
-│   └── record/             # 扣课记录
 ├── components/             # 通用组件
 ├── config/                 # 路由常量、数据映射
 ├── pages/                  # 页面（主包 + 分包）
@@ -64,22 +79,13 @@ src/
 └── static/                 # 静态资源
 ```
 
-## 后端架构
-
-前端请求链路：**小程序 → Nginx(:9080) → Gateway(:9999) → 微服务**
-
-| Gateway 前缀 | 目标服务 | 说明 |
-|-------------|---------|------|
-| `/auth/**` | auth-service | 认证、菜单（stripPrefix=1） |
-| `/biz/**` | business-service | 所有业务接口（stripPrefix=1） |
-
-### API 路径示例
+## API 路径示例
 
 ```
-登录:     POST /auth/auth/login_by_pwd
-刷新Token: POST /auth/auth/refresh
-获取学生:  POST /biz/student/get_by_student_id
-扣课:     POST /biz/course_record/deduct_by_student_id
+登录:       POST /auth/auth/login_by_pwd
+刷新Token:   POST /auth/auth/refresh
+获取学生:    POST /biz/student/get_by_student_id
+扣课:       POST /biz/course_record/deduct_by_student_id
 ```
 
 ## 功能模块
@@ -113,15 +119,7 @@ src/
 | development | `http://localhost:9080` |
 | production | `https://api.kurimula-airi.top` |
 
-## 类型系统
-
-业务类型定义在 `src/types/*.d.ts`，全局可用无需 import。
-
-核心类型：
-- `ApiResponse<T>` — 统一响应包装
-- `UserResponse` — 用户信息（联合类型，roleId 区分角色）
-- `LoginResponse` — 登录响应（含 accessToken/refreshToken）
-
 ## 相关文档
 
-- [AGENTS.md](./AGENTS.md) — AI 协作指南（详细的架构约定和编码规范）
+- [AGENTS.md](./AGENTS.md) — AI 协作指南（目录约定、核心模块、编码规范）
+- [架构设计文档](./docs/architecture.md) — 完整的系统架构、核心机制、安全设计、页面路由、编码规范
